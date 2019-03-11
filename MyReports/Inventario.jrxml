@@ -2,23 +2,163 @@
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Inventario" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f18e278d-d08f-447e-816b-d6c69525dacb">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAXelapan"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<queryString>
-		<![CDATA[]]>
+		<![CDATA[select
+main.*, coalesce(sal.saldo,0) saldo
+from(
+select
+cm.cta_id,cm.code, cm.cta_name,
+rp.tag_name_padre,
+rh.tag_name_hijo
+from
+(
+select id cta_id, code, "name" cta_name
+from account_account
+)as cm
+inner join
+(
+select
+rct.account_account_id cta_id,
+case 
+when tg."name" = 'A' then 'Activo'
+when tg."name" = 'P' then 'Pasivo'
+when tg."name" = 'C' then 'Capital'
+end tag_name_padre
+from account_account_account_tag as rct
+inner join account_account_tag as tg
+on rct.account_account_tag_id = tg.id
+where tg."name" in ('A','P','C')
+) as rp
+on cm.cta_id = rp.cta_id
+inner join
+(
+select 
+rct.account_account_id cta_id,
+case
+when "name" = '1 Capital-RP' then 'Capital'
+when "name" = '2 Pasivo Laboral-RP' then 'Pasivo Laboral'
+when "name" = '1 Pasivo Corriente-RP' then 'Pasivo Corriente'
+when "name" = '5 Otros activos no corrientes-RP' then 'Otros activos no corrientes'
+when "name" = '3 Activos Fijos-RP' then 'Activos Fijos'
+when "name" = '4 Activos Intangibles-RP' then 'Activos Intangibles'
+when "name" = '2 Activo No corriente-RP' then 'Activo No corriente'
+when "name" = '1 Activo Corriente-RP' then 'Activo Corriente'
+end tag_name_hijo
+from account_account_tag as act
+inner join account_account_account_tag rct
+on act.id = rct.account_account_tag_id
+where ((act.id between 123 and 134) and (act.id not in (123,129,133)))
+) as rh
+on cm.cta_id = rh.cta_id
+) as main
+left join
+(
+select aml.account_id cta_id, sum(aml.debit)debe, sum(aml.credit) haber,
+sum(aml.debit)-sum(aml.credit) saldo
+from account_move_line as aml
+group by aml.account_id
+) as sal
+on main.cta_id = sal.cta_id
+order by main.code]]>
 	</queryString>
+	<field name="cta_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="cta_id"/>
+	</field>
+	<field name="code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="code"/>
+	</field>
+	<field name="cta_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cta_name"/>
+	</field>
+	<field name="tag_name_padre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tag_name_padre"/>
+	</field>
+	<field name="tag_name_hijo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tag_name_hijo"/>
+	</field>
+	<field name="saldo" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo"/>
+	</field>
+	<group name="Padre">
+		<groupExpression><![CDATA[$F{tag_name_padre}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<textField>
+					<reportElement x="0" y="3" width="286" height="20" uuid="bb32b462-d21b-4e05-b51c-aa650479b8a4"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tag_name_padre}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="Hijo">
+		<groupExpression><![CDATA[$F{tag_name_hijo}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement x="0" y="0" width="286" height="20" uuid="02e15583-c6a9-4df9-bf19-bfeb78dc336e"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tag_name_hijo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch"/>
 	</title>
-	<pageHeader>
-		<band height="35" splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band height="61" splitType="Stretch"/>
-	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch"/>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="286" height="18" uuid="6871c60a-f47b-4102-a612-05fd3bfe378d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="37b22098-f848-40b7-aafe-832d3b4cda28"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cta_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="286" y="0" width="286" height="18" uuid="24cef91c-a087-497b-b405-f373d7a5381e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="63049ec1-6cca-4be9-91db-0246082e1c01"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+		</band>
 	</detail>
 	<columnFooter>
 		<band height="45" splitType="Stretch"/>

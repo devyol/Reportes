@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Libro_Diario_Xelapan" pageWidth="675" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="655" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="42b6bd7c-683c-4668-88fe-d21ac2a1d891">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Libro_Diario_Xelapan" pageWidth="612" pageHeight="1008" whenNoDataType="NoDataSection" columnWidth="592" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="42b6bd7c-683c-4668-88fe-d21ac2a1d891">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAXelapan"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -111,7 +111,7 @@ order by
 		<groupHeader>
 			<band height="15">
 				<textField pattern="dd/MM/yyyy">
-					<reportElement x="90" y="0" width="350" height="15" uuid="8e74794a-c805-4e36-b043-e6294519b0da"/>
+					<reportElement x="75" y="0" width="350" height="15" uuid="8e74794a-c805-4e36-b043-e6294519b0da"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -124,12 +124,15 @@ order by
 					<textFieldExpression><![CDATA[$F{fecha_hasta}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="0" y="0" width="90" height="15" uuid="a1efbf98-9ff8-492d-b6de-a665afd8acaa"/>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="75" height="15" uuid="a1efbf98-9ff8-492d-b6de-a665afd8acaa"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<leftPen lineWidth="1.0"/>
 						<rightPen lineWidth="1.0"/>
 					</box>
+					<textElement>
+						<font size="9"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{pda}]]></textFieldExpression>
 				</textField>
 			</band>
@@ -137,7 +140,7 @@ order by
 		<groupFooter>
 			<band height="15" splitType="Stretch">
 				<textField isStretchWithOverflow="true">
-					<reportElement x="90" y="0" width="350" height="15" uuid="4b7a4e9e-a888-4037-8059-b85e7724a63a"/>
+					<reportElement x="75" y="0" width="350" height="15" uuid="4b7a4e9e-a888-4037-8059-b85e7724a63a"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -150,7 +153,7 @@ order by
 					<textFieldExpression><![CDATA[$F{name_configuracion}]]></textFieldExpression>
 				</textField>
 				<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-					<reportElement x="440" y="0" width="100" height="15" uuid="91c4f78e-6ff1-4709-9680-9aee0bce851b"/>
+					<reportElement x="425" y="0" width="85" height="15" uuid="91c4f78e-6ff1-4709-9680-9aee0bce851b"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -158,12 +161,12 @@ order by
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="11" isBold="true"/>
+						<font size="9" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{debe_global}]]></textFieldExpression>
 				</textField>
 				<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-					<reportElement x="540" y="0" width="100" height="15" uuid="175edf5f-37b3-4a68-af12-20ece5bb9a42"/>
+					<reportElement x="510" y="0" width="85" height="15" uuid="175edf5f-37b3-4a68-af12-20ece5bb9a42"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -171,18 +174,21 @@ order by
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font size="11" isBold="true"/>
+						<font size="9" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{haber_global}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="0" y="0" width="90" height="15" uuid="50b61505-3cf4-4cd2-b042-af1b4e1a10ad"/>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="75" height="15" uuid="50b61505-3cf4-4cd2-b042-af1b4e1a10ad"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
+					<textElement>
+						<font size="9"/>
+					</textElement>
 				</textField>
 			</band>
 		</groupFooter>
@@ -191,9 +197,9 @@ order by
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="101">
+		<band height="89">
 			<staticText>
-				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="440" y="86" width="100" height="15" uuid="3bad03eb-9864-490b-923d-3dbe4de2033d"/>
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="425" y="74" width="85" height="15" uuid="3bad03eb-9864-490b-923d-3dbe4de2033d"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -206,7 +212,7 @@ order by
 				<text><![CDATA[DEBE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="90" y="86" width="350" height="15" uuid="246dc70d-c5de-4e74-8a23-52d56b925256"/>
+				<reportElement positionType="Float" x="75" y="74" width="350" height="15" uuid="246dc70d-c5de-4e74-8a23-52d56b925256"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -219,7 +225,7 @@ order by
 				<text><![CDATA[Cuentas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="540" y="86" width="100" height="15" uuid="5a92e0ad-76ea-435b-87ad-90e05b40fb44"/>
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="510" y="74" width="85" height="15" uuid="5a92e0ad-76ea-435b-87ad-90e05b40fb44"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -232,7 +238,7 @@ order by
 				<text><![CDATA[HABER]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="86" width="90" height="15" uuid="e4ad8e5e-33d8-420e-b4ad-6151907210c1"/>
+				<reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="74" width="75" height="15" uuid="e4ad8e5e-33d8-420e-b4ad-6151907210c1"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -245,28 +251,28 @@ order by
 				<text><![CDATA[PDA]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="276" y="33" width="100" height="20" uuid="89b12fbf-f766-4985-8838-87c8fdf4c419"/>
+				<reportElement x="239" y="33" width="100" height="20" uuid="89b12fbf-f766-4985-8838-87c8fdf4c419"/>
 				<textElement textAlignment="Center">
 					<font fontName="Century Gothic" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fecha_hasta}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="231" y="6" width="200" height="20" uuid="d42c6f70-4b4d-4438-b344-d2268734e757"/>
+				<reportElement x="194" y="6" width="200" height="20" uuid="d42c6f70-4b4d-4438-b344-d2268734e757"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="Century Gothic" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Alimentos Xelapan, S. A.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="276" y="19" width="100" height="20" uuid="9a8c285e-cb32-4a3f-900d-001ac48769d8"/>
+				<reportElement x="239" y="19" width="100" height="20" uuid="9a8c285e-cb32-4a3f-900d-001ac48769d8"/>
 				<textElement textAlignment="Center">
 					<font fontName="Century Gothic" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Libro Diario]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="231" y="47" width="199" height="20" uuid="79f1dd0c-8a4c-4fe2-b8c9-8e7fc122bf3d"/>
+				<reportElement x="194" y="47" width="199" height="20" uuid="79f1dd0c-8a4c-4fe2-b8c9-8e7fc122bf3d"/>
 				<textElement textAlignment="Center">
 					<font fontName="Century Gothic" size="10" isBold="true"/>
 				</textElement>
@@ -278,7 +284,7 @@ order by
 		<band height="15" splitType="Stretch">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}!=1?true:false]]></printWhenExpression>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement x="440" y="0" width="100" height="15" isRemoveLineWhenBlank="true" uuid="ea7e917e-f695-43ba-8c35-ca783e101102"/>
+				<reportElement x="425" y="0" width="85" height="15" isRemoveLineWhenBlank="true" uuid="ea7e917e-f695-43ba-8c35-ca783e101102"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -286,12 +292,12 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Dialog" size="11" isBold="true"/>
+					<font fontName="Dialog" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Variable_1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#" isBlankWhenNull="true">
-				<reportElement x="540" y="0" width="100" height="15" isRemoveLineWhenBlank="true" uuid="f49aaf6a-73b2-401d-b480-b8b2763c0ad2"/>
+				<reportElement x="510" y="0" width="85" height="15" isRemoveLineWhenBlank="true" uuid="f49aaf6a-73b2-401d-b480-b8b2763c0ad2"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -299,12 +305,12 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Dialog" size="11" isBold="true"/>
+					<font fontName="Dialog" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Variable_2}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="90" y="0" width="350" height="15" isRemoveLineWhenBlank="true" uuid="a44a4030-4bcc-4156-b413-b021ead53bc0"/>
+				<reportElement x="75" y="0" width="350" height="15" isRemoveLineWhenBlank="true" uuid="a44a4030-4bcc-4156-b413-b021ead53bc0"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -317,20 +323,23 @@ order by
 				<text><![CDATA[VIENEN]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="90" height="15" uuid="d9c1f06e-a57e-4f34-b26a-64060447c63c"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="75" height="15" uuid="d9c1f06e-a57e-4f34-b26a-64060447c63c"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
+				<textElement>
+					<font size="9"/>
+				</textElement>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-				<reportElement x="440" y="0" width="100" height="15" uuid="a7178455-53dc-4265-9c6f-ed23c7ed7c40">
+				<reportElement x="425" y="0" width="85" height="15" uuid="a7178455-53dc-4265-9c6f-ed23c7ed7c40">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4fc06a0d-a0c4-4304-82de-31a444e52d7c"/>
 				</reportElement>
 				<box>
@@ -340,12 +349,12 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font size="11"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{debe_line}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-				<reportElement x="540" y="0" width="100" height="15" uuid="875ce54f-a8b3-4172-8d22-1f039ab4cd61">
+				<reportElement x="510" y="0" width="85" height="15" uuid="875ce54f-a8b3-4172-8d22-1f039ab4cd61">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b46c56bf-13cd-49ec-bd96-2620fef203da"/>
 				</reportElement>
 				<box>
@@ -355,12 +364,12 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font size="11"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{haber_line}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="90" y="0" width="170" height="15" uuid="b472d8eb-d0bb-4f7c-9f25-048b3ff8a083"/>
+				<reportElement stretchType="RelativeToTallestObject" x="75" y="0" width="170" height="15" uuid="b472d8eb-d0bb-4f7c-9f25-048b3ff8a083"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -373,7 +382,7 @@ order by
 				<textFieldExpression><![CDATA[$F{name_debe}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="260" y="0" width="180" height="15" uuid="e8b00195-4e76-4180-9b2b-bbf6e0c707cc"/>
+				<reportElement stretchType="RelativeToTallestObject" x="245" y="0" width="180" height="15" uuid="e8b00195-4e76-4180-9b2b-bbf6e0c707cc"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -386,13 +395,16 @@ order by
 				<textFieldExpression><![CDATA[$F{name_haber}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="90" height="15" uuid="3ea64897-e983-420f-ac81-704eb16edf03"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="75" height="15" uuid="3ea64897-e983-420f-ac81-704eb16edf03"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
+				<textElement>
+					<font size="9"/>
+				</textElement>
 			</textField>
 		</band>
 	</detail>
@@ -400,7 +412,7 @@ order by
 		<band height="20" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get( "isLastPage" ) == null ? true:false]]></printWhenExpression>
 			<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" isPrintRepeatedValues="false" x="440" y="0" width="100" height="15" isRemoveLineWhenBlank="true" uuid="1145adc0-d3cc-428e-8f92-76c0c38b09dc"/>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="425" y="0" width="85" height="15" isRemoveLineWhenBlank="true" uuid="1145adc0-d3cc-428e-8f92-76c0c38b09dc"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -408,12 +420,12 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Dialog" size="11" isBold="true"/>
+					<font fontName="Dialog" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Variable_1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" isPrintRepeatedValues="false" x="540" y="0" width="100" height="15" isRemoveLineWhenBlank="true" uuid="3376fc4c-9fd0-4abd-998d-450fbf6427a9"/>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="510" y="0" width="85" height="15" isRemoveLineWhenBlank="true" uuid="3376fc4c-9fd0-4abd-998d-450fbf6427a9"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -421,12 +433,12 @@ order by
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Dialog" size="11" isBold="true"/>
+					<font fontName="Dialog" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{Variable_2}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="90" y="0" width="350" height="15" isRemoveLineWhenBlank="true" uuid="6ef1442a-b90c-487e-8bf8-811c7bdb19b8"/>
+				<reportElement positionType="Float" x="75" y="0" width="350" height="15" isRemoveLineWhenBlank="true" uuid="6ef1442a-b90c-487e-8bf8-811c7bdb19b8"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -439,13 +451,16 @@ order by
 				<text><![CDATA[VAN]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement positionType="Float" x="0" y="0" width="90" height="15" uuid="83322940-23c7-40ec-a6c1-af622697fc3a"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="75" height="15" uuid="83322940-23c7-40ec-a6c1-af622697fc3a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
+				<textElement>
+					<font size="9"/>
+				</textElement>
 			</textField>
 		</band>
 	</columnFooter>

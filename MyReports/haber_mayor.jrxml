@@ -25,7 +25,7 @@ to_char(
 to_date(anio||'/'||mes||'/'||cast(extract (day from (select to_date(anio||'/'||mes,'yyyy/mm/dd') +'1month' ::interval -'1sec' ::interval)) as text),'yyyy/mm/dd') 
 ,'dd/mm/yyyy') as fecha,
 monto as haber,
-sum(monto)over(order by mes) as saldo,yyyy,mm
+sum(monto)over(order by yyyy,mm) as saldo,yyyy,mm
 from(
 select
 distinct(mes) as mes,
@@ -86,9 +86,9 @@ order by yyyy,mm
 		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
 	</variable>
 	<detail>
-		<band height="165" splitType="Stretch">
+		<band height="12">
 			<textField>
-				<reportElement x="0" y="0" width="200" height="15" uuid="bb10f691-7174-4c2e-8b95-bbeca0046e57">
+				<reportElement x="0" y="0" width="200" height="12" uuid="bb10f691-7174-4c2e-8b95-bbeca0046e57">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dd76db60-0c1b-426b-8d86-02083f253259"/>
 				</reportElement>
 				<box>
@@ -103,7 +103,7 @@ order by yyyy,mm
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Q#,##0.00;Q-#,##0.00">
-				<reportElement x="200" y="0" width="145" height="15" uuid="eca72f82-c079-4554-beec-209fd59233ad">
+				<reportElement x="200" y="0" width="145" height="12" uuid="eca72f82-c079-4554-beec-209fd59233ad">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="628c527d-d5d5-450d-8ea0-31a908004978"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -112,7 +112,7 @@ order by yyyy,mm
 				<textFieldExpression><![CDATA[$F{haber}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Q#,##0.00;Q-#,##0.00">
-				<reportElement x="345" y="0" width="145" height="15" uuid="a35bdd4b-a088-4eab-9ac3-35647abde0fb">
+				<reportElement x="345" y="0" width="145" height="12" uuid="a35bdd4b-a088-4eab-9ac3-35647abde0fb">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d5ef69cd-f4e7-4c8b-a94a-b98acc170296"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -122,19 +122,4 @@ order by yyyy,mm
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="15">
-			<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="490" height="15" uuid="18aa60b8-59c8-4f8d-8f2b-5fb2549aac96"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_haber}]]></textFieldExpression>
-			</textField>
-		</band>
-	</columnFooter>
 </jasperReport>

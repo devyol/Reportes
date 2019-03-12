@@ -86,9 +86,9 @@ order by yyyy,mm
 		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
 	</variable>
 	<detail>
-		<band height="165" splitType="Stretch">
+		<band height="12">
 			<textField>
-				<reportElement x="0" y="0" width="200" height="15" uuid="3e54d7ec-b6e2-4da7-84a9-3fdabcbd0439">
+				<reportElement x="0" y="0" width="200" height="12" uuid="3e54d7ec-b6e2-4da7-84a9-3fdabcbd0439">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c7ea71e-c4b9-414a-a27f-b55abc79014e"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -97,7 +97,7 @@ order by yyyy,mm
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Q#,##0.00;Q-#,##0.00">
-				<reportElement x="200" y="0" width="145" height="15" uuid="c4ba0a99-525e-42d5-a26d-87825f8a4740">
+				<reportElement x="200" y="0" width="145" height="12" uuid="c4ba0a99-525e-42d5-a26d-87825f8a4740">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="117bd8ca-df40-4453-8cc6-27736674c26c"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -106,7 +106,7 @@ order by yyyy,mm
 				<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Q#,##0.00;Q-#,##0.00">
-				<reportElement positionType="FixRelativeToBottom" x="345" y="0" width="145" height="15" uuid="fd052b10-f44f-4b3f-97d6-00fd17491138">
+				<reportElement positionType="FixRelativeToBottom" x="345" y="0" width="145" height="12" uuid="fd052b10-f44f-4b3f-97d6-00fd17491138">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3674ca24-3cd8-4240-9c40-272556b7157b"/>
 				</reportElement>
 				<box>
@@ -122,19 +122,4 @@ order by yyyy,mm
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="15">
-			<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="490" height="15" uuid="fc15efa8-b585-4036-a330-6d92a6ed2b4e"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_debe}]]></textFieldExpression>
-			</textField>
-		</band>
-	</columnFooter>
 </jasperReport>

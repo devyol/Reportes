@@ -84,7 +84,7 @@ order by cta.id]]>
 		</band>
 	</title>
 	<detail>
-		<band height="230" splitType="Stretch">
+		<band height="235" splitType="Stretch">
 			<textField>
 				<reportElement positionType="Float" mode="Opaque" x="201" y="0" width="580" height="20" backcolor="#CCC8C8" uuid="2e363b74-ce20-46d2-92d1-25357c1ad7ad">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ba869de8-d48d-406d-b34b-f953bf74c391"/>
@@ -112,7 +112,7 @@ order by cta.id]]>
 				<subreportExpression><![CDATA["haber_mayor.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport overflowType="Stretch">
-				<reportElement positionType="Float" x="1" y="35" width="490" height="180" uuid="a356ac21-512a-4954-96e9-28c1e9abafa8"/>
+				<reportElement x="1" y="35" width="490" height="180" uuid="a356ac21-512a-4954-96e9-28c1e9abafa8"/>
 				<subreportParameter name="p_id">
 					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -123,7 +123,7 @@ order by cta.id]]>
 					<subreportParameterExpression><![CDATA[$F{fecha_final}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["debe_mayor.jasper" ]]></subreportExpression>
+				<subreportExpression><![CDATA["debe_mayor.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement mode="Opaque" x="1" y="0" width="200" height="20" backcolor="#CCC8C8" uuid="5e239954-899f-4811-910a-81dd7ff18822"/>
@@ -238,11 +238,39 @@ order by cta.id]]>
 				<text><![CDATA[Saldo]]></text>
 			</staticText>
 			<line>
-				<reportElement x="491" y="35" width="1" height="180" uuid="2a0cb4a1-e3e4-43cc-8823-a8dde2984ced"/>
+				<reportElement x="491" y="35" width="1" height="195" uuid="2a0cb4a1-e3e4-43cc-8823-a8dde2984ced"/>
 				<graphicElement>
 					<pen lineWidth="1.0" lineStyle="Solid"/>
 				</graphicElement>
 			</line>
+			<subreport>
+				<reportElement x="1" y="215" width="490" height="20" uuid="864a3904-d197-4d19-9eb4-c67db7443849"/>
+				<subreportParameter name="p_id">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_fecha_inicial">
+					<subreportParameterExpression><![CDATA[$F{fecha_inicial}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_fecha_final">
+					<subreportParameterExpression><![CDATA[$F{fecha_final}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["total_Debe.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="491" y="215" width="490" height="20" uuid="cb6837fa-a0aa-4c15-be44-38f17433ae63"/>
+				<subreportParameter name="p_id">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_fecha_inicial">
+					<subreportParameterExpression><![CDATA[$F{fecha_inicial}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_fecha_final">
+					<subreportParameterExpression><![CDATA[$F{fecha_final}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["total_Haber.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 </jasperReport>

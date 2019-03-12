@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="total_Debe" pageWidth="490" pageHeight="20" columnWidth="490" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a77bf1d9-3d07-4138-a11b-120df86e25b0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAXelapan"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_id" class="java.lang.Integer"/>
+	<parameter name="p_fecha_inicial" class="java.lang.String"/>
+	<parameter name="p_fecha_final" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+sum(debe) as total
+from(
+select
+id_cta,
+to_char(
+to_date(anio||'/'||mes||'/'||cast(extract (day from (select to_date(anio||'/'||mes,'yyyy/mm/dd') +'1month' ::interval -'1sec' ::interval)) as text),'yyyy/mm/dd') 
+,'dd/mm/yyyy') as fecha,
+monto as debe, 
+sum(monto)over(order by mes) as saldo,yyyy,mm
+from(
+select
+distinct(mes) as mes,
+anio,
+id_cta,
+sum(monto) as monto,mm,yyyy
+from
+(
+select
+id_cta, sum(monto) as monto,mes,anio, mm,yyyy
+from(
+select
+cta.id as id_cta,
+acm."name" as partida,
+aml.id as id_partida,
+aml.debit as monto,
+to_char(aml."date", 'dd-mm-yyyy') as  fecha,
+to_char(aml."date", 'mm') as mes,
+to_char(aml."date", 'yyyy') as anio,
+to_char(aml."date", 'mm')::int as mm,
+to_char(aml."date", 'yyyy')::int as yyyy
+from
+account_move acm
+inner join account_move_line aml
+on acm.id = aml.move_id
+inner join account_account cta
+on aml.account_id = cta.id
+where aml.debit != 0
+and cta.id = $P{p_id}
+and aml."date" between to_date($P{p_fecha_inicial},'dd-mm-yyyy') and to_date($P{p_fecha_final},'dd-mm-yyyy')
+) as pc
+group by
+id_cta,mes,anio,mm, yyyy
+order by yyyy,mm
+) as sub
+group by
+mes,
+anio,
+id_cta,mm,yyyy
+order by yyyy,mm
+) as d
+order by yyyy,mm
+) as debe]]>
+	</queryString>
+	<field name="total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+	</field>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="490" height="15" uuid="a2618507-1ee9-4aa1-8e4a-c76bea9ba82a"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

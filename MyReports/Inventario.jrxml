@@ -83,9 +83,9 @@ order by main.code]]>
 	<group name="Padre">
 		<groupExpression><![CDATA[$F{tag_name_padre}]]></groupExpression>
 		<groupHeader>
-			<band height="23">
+			<band height="20">
 				<textField>
-					<reportElement x="0" y="3" width="286" height="20" uuid="bb32b462-d21b-4e05-b51c-aa650479b8a4"/>
+					<reportElement x="0" y="0" width="286" height="20" uuid="bb32b462-d21b-4e05-b51c-aa650479b8a4"/>
 					<box>
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -143,7 +143,7 @@ order by main.code]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cta_name}]]></textFieldExpression>
 			</textField>
-			<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
+			<textField pattern="Q #,##0.00;Q -#,##0.00" isBlankWhenNull="true">
 				<reportElement x="286" y="0" width="286" height="18" uuid="24cef91c-a087-497b-b405-f373d7a5381e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="63049ec1-6cca-4be9-91db-0246082e1c01"/>
 				</reportElement>
@@ -153,7 +153,7 @@ order by main.code]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>

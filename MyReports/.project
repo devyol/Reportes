@@ -20,4 +20,56 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>net.sf.jasperreports.nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Libro_Diario_Xelapan.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/Libro_Diario_Xelapan.jasper</location>
+		</link>
+		<link>
+			<name>Libro_Diario_Xelapan.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/Libro_Diario_Xelapan.jrxml</location>
+		</link>
+		<link>
+			<name>Libro_Mayor_Xelapan.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/Libro_Mayor_Xelapan.jasper</location>
+		</link>
+		<link>
+			<name>Libro_Mayor_Xelapan.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/Libro_Mayor_Xelapan.jrxml</location>
+		</link>
+		<link>
+			<name>cheque_xelapan.jasper</name>
+			<type>1</type>
+			<location>/media/erik/023263FB3263F259/BK Erik/Xela/MyReports/cheque_xelapan.jasper</location>
+		</link>
+		<link>
+			<name>cheque_xelapan.jrxml</name>
+			<type>1</type>
+			<location>/media/erik/023263FB3263F259/BK Erik/Xela/MyReports/cheque_xelapan.jrxml</location>
+		</link>
+		<link>
+			<name>debe_mayor.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/debe_mayor.jasper</location>
+		</link>
+		<link>
+			<name>debe_mayor.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/debe_mayor.jrxml</location>
+		</link>
+		<link>
+			<name>haber_mayor.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/haber_mayor.jasper</location>
+		</link>
+		<link>
+			<name>haber_mayor.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/haber_mayor.jrxml</location>
+		</link>
+	</linkedResources>
 </projectDescription>

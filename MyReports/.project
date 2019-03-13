@@ -47,11 +47,6 @@
 			<location>/media/erik/023263FB3263F259/BK Erik/Xela/MyReports/cheque_xelapan.jasper</location>
 		</link>
 		<link>
-			<name>cheque_xelapan.jrxml</name>
-			<type>1</type>
-			<location>/media/erik/023263FB3263F259/BK Erik/Xela/MyReports/cheque_xelapan.jrxml</location>
-		</link>
-		<link>
 			<name>debe_mayor.jasper</name>
 			<type>1</type>
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/debe_mayor.jasper</location>

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Inventario" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f18e278d-d08f-447e-816b-d6c69525dacb">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Inventario" pageWidth="612" pageHeight="1008" columnWidth="592" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="f18e278d-d08f-447e-816b-d6c69525dacb">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAXelapan"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<queryString>
 		<![CDATA[select
 main.*, coalesce(sal.saldo,0) saldo
@@ -80,6 +89,9 @@ order by main.code]]>
 	<field name="saldo" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="saldo"/>
 	</field>
+	<variable name="v_saldo" class="java.lang.Double" resetType="Group" resetGroup="Hijo" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
 	<group name="Padre">
 		<groupExpression><![CDATA[$F{tag_name_padre}]]></groupExpression>
 		<groupHeader>
@@ -120,17 +132,35 @@ order by main.code]]>
 			</band>
 		</groupHeader>
 	</group>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
 	<title>
-		<band height="79" splitType="Stretch"/>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement x="196" y="10" width="200" height="15" uuid="63e66ea8-62b3-4f16-846c-29d900a0eed8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Alimentos Xelapan S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="25" width="200" height="15" uuid="84fb9025-ea34-4e89-85dc-76413139a82b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Inventario]]></text>
+			</staticText>
+		</band>
 	</title>
-	<detail>
-		<band height="18" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="286" height="18" uuid="6871c60a-f47b-4102-a612-05fd3bfe378d">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="37b22098-f848-40b7-aafe-832d3b4cda28"/>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<printWhenExpression><![CDATA[IF( $V{v_saldo}==null,false,IF( $V{PAGE_NUMBER}!=1,true,false))]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="0" width="286" height="20" uuid="8c8602c6-337d-4d95-88df-f3c7cf1e5cec">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -138,14 +168,52 @@ order by main.code]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VIENEN]]></text>
+			</staticText>
+			<textField pattern="Q #,##0.00;Q -#,##0.00" isBlankWhenNull="false">
+				<reportElement x="286" y="0" width="286" height="20" uuid="d221be85-2b6d-4e53-a97a-cb98bdeb4c55">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_saldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="286" height="20" uuid="6871c60a-f47b-4102-a612-05fd3bfe378d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="37b22098-f848-40b7-aafe-832d3b4cda28"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cta_name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Q #,##0.00;Q -#,##0.00" isBlankWhenNull="true">
-				<reportElement x="286" y="0" width="286" height="18" uuid="24cef91c-a087-497b-b405-f373d7a5381e">
+				<reportElement x="286" y="0" width="286" height="20" uuid="24cef91c-a087-497b-b405-f373d7a5381e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="63049ec1-6cca-4be9-91db-0246082e1c01"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -153,7 +221,7 @@ order by main.code]]>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
@@ -161,12 +229,55 @@ order by main.code]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="31">
+			<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get( "isLastPage" ) == null ? true:false]]></printWhenExpression>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="286" height="20" uuid="1c45b3f2-8ae5-4c93-ac61-89fcf228cb71">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VAN]]></text>
+			</staticText>
+			<textField pattern="Q #,##0.00;Q -#,##0.00">
+				<reportElement positionType="Float" x="286" y="0" width="286" height="20" uuid="fe191c30-57af-4f19-a34f-b1fdfe485125">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_saldo}]]></textFieldExpression>
+			</textField>
+		</band>
 	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch"/>
-	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="6">
+			<textField>
+				<reportElement x="197" y="1" width="100" height="5" uuid="ad2a26c9-4a61-4645-872d-466853043177">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.put( "isLastPage", true )]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

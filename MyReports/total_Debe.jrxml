@@ -12,65 +12,40 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="p_id" class="java.lang.Integer"/>
-	<parameter name="p_fecha_inicial" class="java.lang.String"/>
-	<parameter name="p_fecha_final" class="java.lang.String"/>
+	<parameter name="p_id_company" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_mes" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_anio" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_id_cta" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select
 sum(debe) as total
 from(
-select
-id_cta,
-to_char(
-to_date(anio||'/'||mes||'/'||cast(extract (day from (select to_date(anio||'/'||mes,'yyyy/mm/dd') +'1month' ::interval -'1sec' ::interval)) as text),'yyyy/mm/dd') 
-,'dd/mm/yyyy') as fecha,
-monto as debe, 
-sum(monto)over(order by mes) as saldo,yyyy,mm
-from(
-select
-distinct(mes) as mes,
-anio,
-id_cta,
-sum(monto) as monto,mm,yyyy
-from
-(
-select
-id_cta, sum(monto) as monto,mes,anio, mm,yyyy
-from(
-select
-cta.id as id_cta,
-acm."name" as partida,
-aml.id as id_partida,
-aml.debit as monto,
-to_char(aml."date", 'dd-mm-yyyy') as  fecha,
-to_char(aml."date", 'mm') as mes,
-to_char(aml."date", 'yyyy') as anio,
-to_char(aml."date", 'mm')::int as mm,
-to_char(aml."date", 'yyyy')::int as yyyy
-from
-account_move acm
-inner join account_move_line aml
-on acm.id = aml.move_id
-inner join account_account cta
-on aml.account_id = cta.id
-where aml.debit != 0
-and cta.id = $P{p_id}
-and aml."date" between to_date($P{p_fecha_inicial},'dd-mm-yyyy') and to_date($P{p_fecha_final},'dd-mm-yyyy')
-) as pc
-group by
-id_cta,mes,anio,mm, yyyy
-order by yyyy,mm
-) as sub
-group by
+select 
+cta_id id_cta,
 mes,
 anio,
-id_cta,mm,yyyy
-order by yyyy,mm
-) as d
-order by yyyy,mm
+to_char(fecha,'dd/mm/yyyy') as fecha,
+pda,
+debe,
+sum(debe)over(order by anio, mes, pda) as saldo
+from(
+select ldl.account_id cta_id, ld."month" mes, ld."year" anio, ld.fecha_hasta fecha, ld.pda, sum(ldl.debe) debe
+from mc_libro_diario_config as conf
+inner join mc_libro_diario as ld
+on conf.id = ld.libro_diario_config_id
+inner join mc_libro_diario_line as ldl
+on ld.id = ldl.libro_diario_id
+where ldl.debe != 0
+and $X{IN,conf.company_id,p_id_company}
+and $X{IN,ld."month",p_mes}
+and $X{IN,ld."year",p_anio}
+and ldl.account_id = $P{p_id_cta}
+group by ldl.account_id, ld.fecha_hasta, ld.pda, ld."month", ld."year"
+) as t
+group by cta_id, mes, anio, fecha, pda, debe
 ) as debe]]>
 	</queryString>
-	<field name="total" class="java.math.BigDecimal">
+	<field name="total" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="total"/>
 	</field>
 	<detail>

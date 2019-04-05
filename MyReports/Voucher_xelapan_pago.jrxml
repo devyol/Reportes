@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Voucher_xelapan" pageWidth="612" pageHeight="792" columnWidth="567" leftMargin="25" rightMargin="20" topMargin="20" bottomMargin="20" uuid="873c2eee-35ea-448b-a8db-5e1394ebbf9d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAXelapan"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p_cheque" class="java.lang.Integer"/>
+	<parameter name="p_pago" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select
+rp."name" rp_name,
+rp.street,
+rp."ref" as nit,
+ap.check_number,
+ap.payment_date,
+ap.amount,
+prov."name" prov_name,
+ap."name" ap_name,
+li."name" "number",
+ap.payment_date date_invoice,
+ap.amount amount_total
+from account_payment as ap
+join mc_guatemala_liquidaciones as li
+on li.id = ap.liquidaciones_id
+join res_company as rc
+on rc.id = ap.company_id
+join res_partner as rp
+on rp.id = rc.partner_id
+join res_partner as prov
+on prov.id = ap.partner_id
+where
+	case
+		when ($P{p_cheque} is not null
+		and $P{p_cheque} <> 0) then ap.check_number = $P{p_cheque}
+		else ap."name" = $P{p_pago}
+	end
+order by
+	ap.check_number]]>
+	</queryString>
+	<field name="rp_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="rp_name"/>
+	</field>
+	<field name="street" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="street"/>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nit"/>
+	</field>
+	<field name="check_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="check_number"/>
+	</field>
+	<field name="payment_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="payment_date"/>
+	</field>
+	<field name="amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount"/>
+	</field>
+	<field name="prov_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prov_name"/>
+	</field>
+	<field name="ap_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ap_name"/>
+	</field>
+	<field name="number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="number"/>
+	</field>
+	<field name="date_invoice" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date_invoice"/>
+	</field>
+	<field name="amount_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_total"/>
+	</field>
+	<group name="gpo_vaucher" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{check_number}]]></groupExpression>
+		<groupHeader>
+			<band height="191">
+				<textField>
+					<reportElement x="0" y="88" width="180" height="12" uuid="cee1e66a-e524-4c9c-96e2-752efbf8fa40"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{rp_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="100" width="180" height="12" uuid="d8179f0a-7799-4383-89f3-a872067889a7"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{street}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="112" width="180" height="12" uuid="64941734-ce13-4205-b335-f12c777550c4"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="461" y="88" width="100" height="12" uuid="3e7161f0-8053-423e-963a-b7ecc824dd4e"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{check_number}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="461" y="100" width="100" height="12" uuid="394fad33-8642-4bee-b951-b50acc014d99"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="461" y="112" width="100" height="12" uuid="a9843acb-7400-4d13-b9df-dba67380f4cd"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="225" y="140" width="230" height="15" uuid="053fdfbf-34e1-4d13-a045-709433789a25"/>
+					<textFieldExpression><![CDATA[$F{prov_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="361" y="88" width="100" height="12" uuid="ad913dc1-7a02-459f-8e2b-5c8f0bdd9c6d"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[No. Cheque:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="361" y="100" width="100" height="12" uuid="6b6358da-ae6c-4a07-8d75-6ecc91b6af6f"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="361" y="112" width="100" height="12" uuid="64fa9553-6f4d-40bd-8231-24d0dbb0ad64"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Monto:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="125" y="140" width="100" height="15" uuid="002cd250-9877-42d1-abc5-fd19fe874de6"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Proveedor:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="175" width="189" height="15" uuid="61705e37-da5a-4737-a102-64f5c2c73633"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha Docto.]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="190" width="567" height="1" uuid="e7c83745-8ace-42c8-8e5c-bccc2b5d513e"/>
+				</line>
+				<staticText>
+					<reportElement x="189" y="175" width="189" height="15" uuid="f02f9d10-54ea-4956-8f1c-d0c8900c00ea"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[No Docto.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="378" y="175" width="189" height="15" uuid="02ec3fe0-a108-418a-91f3-2e2c0d821a06"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Monto Docto.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="195" y="155" width="198" height="15" uuid="4d5f6be0-037f-471b-9325-cb6724b0881e"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Comprobante de Pago:]]></text>
+				</staticText>
+				<image scaleImage="FillFrame">
+					<reportElement x="4" y="3" width="180" height="80" uuid="0df74501-aa45-4cca-8e40-75fd21ffc27d"/>
+					<imageExpression><![CDATA["repo:/reports/Voucher/LogoXP.png"]]></imageExpression>
+				</image>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="240">
+				<line>
+					<reportElement x="208" y="126" width="150" height="1" uuid="f1d1f0db-e029-41c8-b740-2d7a9cc60456"/>
+				</line>
+				<staticText>
+					<reportElement x="108" y="111" width="100" height="15" uuid="0b41e39d-bf1a-47a1-a9fb-4e1b0645baa9"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombre:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="108" y="136" width="100" height="15" uuid="551160cc-d40c-470a-86bc-23f455f41701"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Firma:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="208" y="151" width="150" height="1" uuid="443fc662-951e-4a31-b001-ba9f80b79235"/>
+				</line>
+				<staticText>
+					<reportElement x="108" y="161" width="100" height="15" uuid="831ac0ae-11d4-4198-86b0-12f23a48198a"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[No. DPI:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="208" y="176" width="150" height="1" uuid="5d905fbc-3796-4f00-8e3b-84733f5e3214"/>
+				</line>
+				<staticText>
+					<reportElement x="108" y="186" width="100" height="15" uuid="8b76cb59-d462-49d2-8efc-3155d293ef99"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+				<line>
+					<reportElement x="208" y="201" width="150" height="1" uuid="c767953c-0b63-4249-9112-1d793fbcdd7f"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="189" y="0" width="189" height="15" uuid="24c5eb55-e589-4943-be37-66157a38c0be"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="189" height="15" uuid="badf0956-8823-4a14-a967-0108844584f0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{date_invoice}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="378" y="0" width="189" height="15" uuid="3c4fe025-1ff8-448c-bcfa-0bc337fdd87d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{amount_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15"/>
+	</pageFooter>
+</jasperReport>

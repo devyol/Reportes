@@ -3,83 +3,54 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="debe_mayor" pageWidth="490" pageHeight="200" columnWidth="490" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="022cda30-9c64-472a-aa81-85aa49a56564">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAXelapan"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="p_id" class="java.lang.Integer"/>
-	<parameter name="p_fecha_inicial" class="java.lang.String"/>
-	<parameter name="p_fecha_final" class="java.lang.String"/>
+	<parameter name="p_id_company" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_mes" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_anio" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_id_cta" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select
-id_cta, fecha, debe, saldo
-from(
-select
-id_cta,
-to_char(
-to_date(anio||'/'||mes||'/'||cast(extract (day from (select to_date(anio||'/'||mes,'yyyy/mm/dd') +'1month' ::interval -'1sec' ::interval)) as text),'yyyy/mm/dd') 
-,'dd/mm/yyyy') as fecha,
-monto as debe, 
-sum(monto)over(order by mes) as saldo,yyyy,mm
-from(
-select
-distinct(mes) as mes,
-anio,
-id_cta,
-sum(monto) as monto,mm,yyyy
-from
-(
-select
-id_cta, sum(monto) as monto,mes,anio, mm,yyyy
-from(
-select
-cta.id as id_cta,
-acm."name" as partida,
-aml.id as id_partida,
-aml.debit as monto,
-to_char(aml."date", 'dd-mm-yyyy') as  fecha,
-to_char(aml."date", 'mm') as mes,
-to_char(aml."date", 'yyyy') as anio,
-to_char(aml."date", 'mm')::int as mm,
-to_char(aml."date", 'yyyy')::int as yyyy
-from
-account_move acm
-inner join account_move_line aml
-on acm.id = aml.move_id
-inner join account_account cta
-on aml.account_id = cta.id
-where aml.debit != 0
-and cta.id = $P{p_id}
-and aml."date" between to_date($P{p_fecha_inicial},'dd-mm-yyyy') and to_date($P{p_fecha_final},'dd-mm-yyyy')
-) as pc
-group by
-id_cta,mes,anio,mm, yyyy
-order by yyyy,mm
-) as sub
-group by
+		<![CDATA[select 
+cta_id id_cta,
 mes,
 anio,
-id_cta,mm,yyyy
-order by yyyy,mm
-) as d
-order by yyyy,mm
-) as debe]]>
+to_char(fecha,'dd/mm/yyyy') as fecha,
+pda,
+debe,
+sum(debe)over(order by anio, mes, pda) as saldo
+from(
+select ldl.account_id cta_id, ld."month" mes, ld."year" anio, ld.fecha_hasta fecha, ld.pda, sum(ldl.debe) debe
+from mc_libro_diario_config as conf
+inner join mc_libro_diario as ld
+on conf.id = ld.libro_diario_config_id
+inner join mc_libro_diario_line as ldl
+on ld.id = ldl.libro_diario_id
+where ldl.debe != 0
+and $X{IN,conf.company_id,p_id_company}
+and $X{IN,ld."month",p_mes}
+and $X{IN,ld."year",p_anio}
+and ldl.account_id = $P{p_id_cta}
+group by ldl.account_id, ld.fecha_hasta, ld.pda, ld."month", ld."year"
+) as t
+group by cta_id, mes, anio, fecha, pda, debe]]>
 	</queryString>
 	<field name="id_cta" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="id_cta"/>
 	</field>
+	<field name="mes" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="mes"/>
+	</field>
+	<field name="anio" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="anio"/>
+	</field>
 	<field name="fecha" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
 	</field>
-	<field name="debe" class="java.math.BigDecimal">
+	<field name="pda" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pda"/>
+	</field>
+	<field name="debe" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="debe"/>
 	</field>
-	<field name="saldo" class="java.math.BigDecimal">
+	<field name="saldo" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.label" value="saldo"/>
 	</field>
 	<variable name="total_debe" class="java.lang.Double" calculation="Sum">
@@ -88,36 +59,21 @@ order by yyyy,mm
 	<detail>
 		<band height="12">
 			<textField>
-				<reportElement x="0" y="0" width="200" height="12" uuid="3e54d7ec-b6e2-4da7-84a9-3fdabcbd0439">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0c7ea71e-c4b9-414a-a27f-b55abc79014e"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Century Gothic" size="9"/>
-				</textElement>
+				<reportElement x="0" y="0" width="124" height="12" uuid="ca41bf34-3aba-423a-b580-514cf1f64edc"/>
 				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="124" y="0" width="122" height="12" uuid="04b54591-c9d3-4815-9976-70870d30bbe0"/>
+				<textFieldExpression><![CDATA[$F{pda}]]></textFieldExpression>
+			</textField>
 			<textField pattern="Q#,##0.00;Q-#,##0.00">
-				<reportElement x="200" y="0" width="145" height="12" uuid="c4ba0a99-525e-42d5-a26d-87825f8a4740">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="117bd8ca-df40-4453-8cc6-27736674c26c"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Century Gothic" size="9"/>
-				</textElement>
+				<reportElement x="246" y="0" width="122" height="12" uuid="35542e2e-f660-4c4f-a4a6-54e615b760dd"/>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
 			</textField>
 			<textField pattern="Q#,##0.00;Q-#,##0.00">
-				<reportElement positionType="FixRelativeToBottom" x="345" y="0" width="145" height="12" uuid="fd052b10-f44f-4b3f-97d6-00fd17491138">
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3674ca24-3cd8-4240-9c40-272556b7157b"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Century Gothic" size="9"/>
-				</textElement>
+				<reportElement x="368" y="0" width="122" height="12" uuid="3f8e77f7-1789-43a2-a1cc-8002c26d601a"/>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
 			</textField>
 		</band>

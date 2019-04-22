@@ -360,6 +360,21 @@ order by
 					<font size="9"/>
 				</textElement>
 			</textField>
+			<textField pattern="Q#,##0.00;Q-#,##0.00">
+				<reportElement x="510" y="0" width="85" height="15" uuid="3dcdd4cc-96e7-46fb-b5e2-57b17a9709b6">
+					<printWhenExpression><![CDATA[SUM($V{Variable_2} )!=null?false:true]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Dialog" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[0]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -487,6 +502,21 @@ order by
 				<textElement>
 					<font size="9"/>
 				</textElement>
+			</textField>
+			<textField pattern="Q#,##0.00;Q-#,##0.00">
+				<reportElement x="510" y="0" width="85" height="15" uuid="e4faa604-7f37-4de2-82d5-dcb5c3dd6eb1">
+					<printWhenExpression><![CDATA[SUM($V{Variable_2} )!=null?false:true]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Dialog" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[0]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>

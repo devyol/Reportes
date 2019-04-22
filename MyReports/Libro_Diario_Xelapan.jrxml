@@ -375,6 +375,21 @@ order by
 				</textElement>
 				<textFieldExpression><![CDATA[0]]></textFieldExpression>
 			</textField>
+			<textField pattern="Q#,##0.00;Q-#,##0.00">
+				<reportElement x="425" y="0" width="85" height="15" uuid="1642cbc1-ab9c-4855-910b-9cd6e48897e3">
+					<printWhenExpression><![CDATA[SUM($V{Variable_1} )!=null?false:true]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Dialog" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[0]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -506,6 +521,21 @@ order by
 			<textField pattern="Q#,##0.00;Q-#,##0.00">
 				<reportElement x="510" y="0" width="85" height="15" uuid="e4faa604-7f37-4de2-82d5-dcb5c3dd6eb1">
 					<printWhenExpression><![CDATA[SUM($V{Variable_2} )!=null?false:true]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Dialog" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[0]]></textFieldExpression>
+			</textField>
+			<textField pattern="Q#,##0.00;Q-#,##0.00">
+				<reportElement x="425" y="0" width="85" height="15" uuid="67457851-18ee-47db-9a10-c86a40650760">
+					<printWhenExpression><![CDATA[SUM($V{Variable_1} )!=null?false:true]]></printWhenExpression>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>

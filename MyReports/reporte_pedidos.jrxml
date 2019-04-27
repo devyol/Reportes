@@ -311,12 +311,20 @@ order by ov.id]]>
 		<property name="com.jaspersoft.studio.field.label" value="?column?"/>
 	</field>
 	<title>
-		<band height="36" splitType="Stretch"/>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="969" height="30" uuid="a514a94d-4e20-4992-890d-6e6713888215"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="13" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reporte de Pedidos Del "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+		</band>
 	</title>
 	<detail>
-		<band height="82" splitType="Stretch">
+		<band height="90" splitType="Stretch">
 			<componentElement>
-				<reportElement isPrintRepeatedValues="false" x="0" y="-8" width="2360" height="90" uuid="869b82ac-44ea-407a-8041-3f5fc5682c8a">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="2360" height="90" uuid="869b82ac-44ea-407a-8041-3f5fc5682c8a">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>

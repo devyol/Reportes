@@ -100,6 +100,9 @@
 	<subDataset name="DTSPedidos" uuid="7d382f20-c212-403c-b842-4e858efdc34b">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAIpisa"/>
+		<parameter name="p_id_cliente_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
+		<parameter name="p_fecha_inicial_t" class="java.util.Date"/>
+		<parameter name="p_fecha_final_t" class="java.util.Date"/>
 		<queryString language="SQL">
 			<![CDATA[select 
 ov.name pedido,
@@ -221,7 +224,9 @@ order by id' --este es el sql de las columnas
 ) as prec
 ("order_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)) as prec
 on ov.id = prec.order_id
-order by ov.id	]]>
+where ov.date_order between $P{p_fecha_inicial_t} and $P{p_fecha_final_t}
+and $X{IN,ov.partner_id,p_id_cliente_t}
+order by ov.id]]>
 		</queryString>
 		<field name="pedido" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="pedido"/>
@@ -296,6 +301,9 @@ order by ov.id	]]>
 			<variableExpression><![CDATA[$F{total}]]></variableExpression>
 		</variable>
 	</subDataset>
+	<parameter name="p_id_cliente" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_fecha_inicial" class="java.util.Date"/>
+	<parameter name="p_fecha_final" class="java.util.Date"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>
@@ -313,9 +321,19 @@ order by ov.id	]]>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="DTSPedidos" uuid="6d0b8073-b462-4f78-847f-8affbc8e8782">
+					<datasetRun subDataset="DTSPedidos" uuid="6196ac86-218e-4cf8-b766-8cd7b851ef93">
+						<datasetParameter name="p_id_cliente_t">
+							<datasetParameterExpression><![CDATA[$P{p_id_cliente}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_fecha_inicial_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_fecha_final_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_final}]]></datasetParameterExpression>
+						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="110" uuid="eb3626e6-50bc-4ef5-9401-2bec5497d900">

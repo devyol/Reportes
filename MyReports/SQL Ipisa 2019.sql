@@ -195,3 +195,77 @@ on fact.id = infdoc.fact_id
 where fact.state != 'cancel'
 and fact.date_invoice between $P{p_fecha_inicial_t} and $P{p_fecha_final_t}
 order by fact.id desc
+
+
+--Reporte de Saldos Ipisa
+
+select
+nven."name" vendedor,
+coalesce(trim(ub.x_departamento),'sin ubicacion')||'  -  '||trim(cli."name") cliente,
+fact."number" factura,
+date_invoice fecha,
+coalesce(cast(current_date-date_invoice as double precision),0) dias_transcurridos,
+dic."name" dias_credito,
+info."0-2", info."3-5", info."6-8", info."9-10", info."mas de 10",
+residual saldo
+from account_invoice as fact
+inner join res_users as ven
+on fact.user_id = ven.id
+inner join res_partner as nven
+on ven.partner_id = nven.id
+inner join res_partner as cli
+on cli.id = fact.partner_id
+inner join sale_order as pe
+on fact.origin = pe."name"
+left join x_ubicacion_partner as uc
+on uc.id = pe.x_ubicacion_id
+left join x_ubicacion as ub
+on uc."name" = ub.id
+inner join account_payment_term as dic
+on fact.payment_term_id = dic.id
+inner join (
+select
+id,
+coalesce(cast("0-2" as double precision),0) as "0-2",
+coalesce(cast("3-5" as double precision),0) as "3-5",
+coalesce(cast("6-8" as double precision),0) as "6-8",
+coalesce(cast("9-10" as double precision),0) as "9-10",
+coalesce(cast("mas de 10" as double precision),0) as "mas de 10"
+from(
+select *
+from crosstab(
+'select
+id,
+case 
+	when current_date-date_invoice between 0 and 2 then ''0-2''
+	when current_date-date_invoice between 3 and 5 then ''3-5''
+	when current_date-date_invoice between 6 and 8 then ''6-8''
+	when current_date-date_invoice between 9 and 10 then ''9-10''
+	when current_date-date_invoice > 10 then ''mas de 10''
+end rango,
+residual
+from account_invoice
+where current_date-date_invoice > 0',
+'select rango
+from(
+select ''0-2'' as rango
+union
+select ''3-5'' as rango
+union
+select ''6-8'' as rango
+union
+select ''9-10'' as rango
+union
+select ''mas de 10'' as rango) as r
+order by 1'
+)as(id numeric, "0-2" varchar, "3-5" varchar, "6-8" varchar, "9-10" varchar, "mas de 10" varchar))as inf
+) as info
+on fact.id = info.id
+where current_date-fact.date_invoice > 0
+and fact.payment_term_id not in (1,6)
+and fact.residual > 0
+order by date_invoice
+
+
+
+

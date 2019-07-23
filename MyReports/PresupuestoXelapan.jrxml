@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PresupuestoXelapan" pageWidth="612" pageHeight="792" columnWidth="592" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="b764acc1-596a-4a63-907f-a9dd9b88aa81">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="OdooXelapan"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="de" class="java.sql.Date" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+cb."name" as presupuesto,
+aaap."name" as cta_anali_padre, 
+aaa."name" as cta_anali_hijo,
+aat."name" as cuenta_padre,
+aa.code as cuenta, 
+aa."name" as name_cuenta,
+abp."name" as posicion_presupuestaria,
+cbl.planned_amount,
+coalesce((sum(aml.credit)- sum(aml.debit)),null,0) as importe_real,
+case
+	when coalesce((sum(aml.credit)- sum(aml.debit)),null,0) = 0 then 0
+	else cbl.planned_amount/(sum(aml.credit)- sum(aml.debit))
+end as porcentaje,
+cbl.date_from, cbl.date_to
+from crossovered_budget as cb
+inner join crossovered_budget_lines as cbl
+on cb.id = cbl.crossovered_budget_id
+inner join account_analytic_account as aaa
+on cbl.analytic_account_id = aaa.id
+inner join account_analytic_account as aaap
+on aaa.parent_id = aaap.id
+inner join account_budget_post as abp
+on cbl.general_budget_id = abp.id
+inner join account_budget_rel as abr
+on abp.id = abr.budget_id
+inner join account_account aa
+on abr.account_id = aa.id
+inner join account_account_account_tag as aaat
+on aa.id = aaat.account_account_id
+inner join account_account_tag as aat
+on aaat.account_account_tag_id = aat.id
+left join account_move_line as aml
+on aa.id = aml.account_id
+and aaa.id = aml.analytic_account_id
+group by
+cb."name",
+aaap."name", 
+aaa."name",
+aat."name",
+aa.code, 
+aa."name",
+abp."name",
+cbl.planned_amount
+, cbl.date_from, cbl.date_to
+order by aa.code]]>
+	</queryString>
+	<field name="presupuesto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="presupuesto"/>
+	</field>
+	<field name="cta_anali_padre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cta_anali_padre"/>
+	</field>
+	<field name="cta_anali_hijo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cta_anali_hijo"/>
+	</field>
+	<field name="cuenta_padre" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cuenta_padre"/>
+	</field>
+	<field name="cuenta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cuenta"/>
+	</field>
+	<field name="name_cuenta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name_cuenta"/>
+	</field>
+	<field name="posicion_presupuestaria" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="posicion_presupuestaria"/>
+	</field>
+	<field name="planned_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="planned_amount"/>
+	</field>
+	<field name="importe_real" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="importe_real"/>
+	</field>
+	<field name="porcentaje" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="porcentaje"/>
+	</field>
+	<field name="date_from" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date_from"/>
+	</field>
+	<field name="date_to" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date_to"/>
+	</field>
+	<variable name="total_importe" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{planned_amount}]]></variableExpression>
+	</variable>
+	<variable name="total_importe_real" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe_real}]]></variableExpression>
+	</variable>
+	<variable name="total_porcentaje" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{porcentaje}]]></variableExpression>
+	</variable>
+	<group name="gpo_pre" isStartNewColumn="true">
+		<groupExpression><![CDATA[$F{cta_anali_padre}]]></groupExpression>
+		<groupHeader>
+			<band height="46">
+				<textField>
+					<reportElement x="0" y="0" width="250" height="20" uuid="847d4cee-43e4-4bee-86b1-4cd96a172781"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cta_anali_padre}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="16" y="20" width="250" height="20" uuid="2439359e-d8df-4002-8d81-eb3e55f39257"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cuenta_padre}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="266" y="21" width="110" height="20" uuid="55652a27-f6d1-42ce-9828-e70591d95217"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Importe Planificado"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="376" y="21" width="110" height="20" uuid="d2b2acf1-d0ab-42bd-b30b-f0896bf923fc"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Importe Real"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="17" y="41" width="249" height="1" uuid="0610a658-a1e2-47f9-87c2-3f6332e3eba0"/>
+				</line>
+				<textField>
+					<reportElement x="487" y="21" width="100" height="20" uuid="e5fc5ef4-018d-433b-8db2-ad80529217bd"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Porcentaje"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="44">
+				<textField>
+					<reportElement x="32" y="1" width="230" height="15" uuid="f8a9b342-4e81-4c1c-b00d-f5cd4cf4b585"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤#,##0.00;¤-#,##0.00">
+					<reportElement x="266" y="1" width="110" height="15" uuid="f36ae206-113b-4369-a6d6-caaea8307b2d"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{total_importe}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤#,##0.00;¤-#,##0.00">
+					<reportElement x="376" y="1" width="110" height="15" uuid="2b19c11b-13f2-4453-9a2d-10edb1d31610"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{total_importe_real}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="270" y="0" width="317" height="1" uuid="fea24d76-4e37-4da2-99b8-3a02c0a00c88"/>
+				</line>
+				<textField pattern="#,##0.##%">
+					<reportElement x="487" y="1" width="100" height="15" uuid="158cf8ba-f7f7-461f-bd91-9ff7d201e707"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{total_porcentaje}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="50"/>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="32" y="2" width="234" height="15" uuid="8295971c-4fa2-47bc-b63b-b58b8851cf65"/>
+				<textFieldExpression><![CDATA[$F{posicion_presupuestaria}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="266" y="2" width="110" height="15" uuid="e7cf45c4-ce9c-43f5-9bd2-a7c0bcc40585"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{planned_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="376" y="2" width="110" height="15" uuid="6646b1d0-0862-4904-9453-c863e3cf40a6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{importe_real}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00%">
+				<reportElement x="487" y="2" width="100" height="15" uuid="5dd116bf-f4bb-4617-b90c-5ab5e047f904">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="af1b3fbd-e903-46e7-9a73-b58b61df34e8"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{porcentaje}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

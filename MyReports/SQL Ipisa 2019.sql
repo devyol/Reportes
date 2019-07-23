@@ -201,7 +201,7 @@ order by fact.id desc
 
 select
 nven."name" vendedor,
-coalesce(trim(ub.x_departamento),'sin ubicacion')||'  -  '||trim(cli."name") cliente,
+trim(cli."ref")||'  -  '||trim(cli."name") cliente,
 fact."number" factura,
 date_invoice fecha,
 coalesce(cast(current_date-date_invoice as double precision),0) dias_transcurridos,
@@ -215,12 +215,6 @@ inner join res_partner as nven
 on ven.partner_id = nven.id
 inner join res_partner as cli
 on cli.id = fact.partner_id
-inner join sale_order as pe
-on fact.origin = pe."name"
-left join x_ubicacion_partner as uc
-on uc.id = pe.x_ubicacion_id
-left join x_ubicacion as ub
-on uc."name" = ub.id
 inner join account_payment_term as dic
 on fact.payment_term_id = dic.id
 inner join (

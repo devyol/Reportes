@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pagare Libro Protesto" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eb60b397-ec6d-40a3-8039-7b87611fe9d2">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<detail>
+		<band height="129" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="51" width="100" height="30" uuid="49171c3a-b4c0-4098-bc37-ad20e0ae4a99"/>
+				<textFieldExpression><![CDATA["PAGARÉ LIBRE DE PROTESTO
+
+	
+
+Yo, WALTER JESUS RODOLFO GONZALEZ ALVARADO, de 30 años de edad, casado, guatemalteco, comerciante, de este domicilio, me identifico con el Documento Personal de Identificación Código Único de Identificación (CUI) número 2226 82248 0101 en adelante “La Parte Deudora”, por el presente PAGARÉ LIBRE DE PROTESTO prometo incondicionalmente pagar a OPERADORA DE EFECTIVOS, SOCIEDAD ANONIMA en adelante “El Acreedor”, la suma de Q. 32,432.16 monto que incluye el capital, intereses y seguro, de la cual me reconozco liso  y llano DEUDOR. El plazo para cancelar la cantidad antes indicada será de SEIS MESES,  contado a partir de la presente fecha, por lo que dicho plazo vencerá el día 08 de SEPTIEMBRE de 2019.
+
+FORMA DE PAGO: El monto adeudado indicado anteriormente se pagará de la siguiente forma: a) DEL INTERÉS: Mediante SEIS AMORTIZACIONES  MENSUALES  Y CONSECUTIVAS de Q. 2,238.83 cada una, que corresponden al total de los intereses devengados y calculados conforme a la tasa de interés que más adelante se indica; b) DEL SEGURO DE AUTOMÓVILES: Mediante SEIS pagos de forma MENSUALES Y CONSECUTIVAS de Q. 296.24 en concepto de SEGURO contra TODO RIESGO, que se describirá más adelante en el presente título de crédito; y c) UN PAGO FINAL de Q. 17,221.75 que constituye el capital adeudado y que debe cancelarse al vencimiento del plazo del presente pagaré libre de protesto. Las amortizaciones mensuales indicadas en la literal a) y b), respectivamente, deben efectuarse sin necesidad de cobro o requerimiento alguno el ocho de cada mes, a partir del mes siguiente a la fecha del presente pagaré libre de protesto. El pago referido en la literal c) debe efectuarse sin necesidad de cobro o requerimiento alguno al vencimiento del plazo del presente pagaré libre de protesto.  Todos los pagos se efectuarán en la cuenta de depósitos monetarios número cuatrocientos cincuenta y tres guión cero cero ocho mil ciento veintiuno guión siete (453-008121-7) del BANCO INDUSTRIAL, SOCIEDAD ANÓNIMA, la cual se encuentra a nombre de “OPERADORA DE EFECTIVOS, S.A.”, debiendo notificar de inmediato al acreedor sobre el pago efectuado y, al mismo tiempo, enviar la boleta de depósito monetario vía internet a la dirección de correo electrónico siguiente: “legales@auto-efectivo.com”. Dichos pagos se abonarán a la deuda únicamente a partir de que el depósito haya sido liberado por el Banco; de no ser así, se tendra el pago como no realizado, y por ende, generará los intereses moratorios aqui pactados. 
+
+INTERESES: El presente pagaré libre de protesto devengará una tasa de intereses a razón del trece por ciento (13%) mensual. Los intereses se devengarán calculados sobre la cantidad de Q. 17,221.75 suma que constituye el capital adeudado y que la parte deudora debe cancelar al vencimiento del plazo del presente pagaré libre de protesto. El acreedor podrá modificar la tasa de interés sin necesidad de ningún requisito formal. Adicionalmente, el acreedor cargará una tasa de interés moratorio del seis por ciento (6%) mensual sobre cada cuota que se pague con atraso, sin perjuicio del derecho del acreedor de dar por vencido el plazo de este pagaré libre de protesto y cobrar ejecutivamente el saldo."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="215"/>
+	</detail>
+</jasperReport>

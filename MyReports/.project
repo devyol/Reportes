@@ -47,6 +47,16 @@
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/Voucher_xelapan_pago.jrxml</location>
 		</link>
 		<link>
+			<name>cheque_autofin.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/cheque_autofin.jasper</location>
+		</link>
+		<link>
+			<name>cheque_autofin.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/cheque_autofin.jrxml</location>
+		</link>
+		<link>
 			<name>cheque_xelapan.jasper</name>
 			<type>1</type>
 			<location>/media/erik/023263FB3263F259/BK Erik/Xela/MyReports/cheque_xelapan.jasper</location>

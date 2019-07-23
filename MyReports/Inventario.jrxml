@@ -109,6 +109,9 @@ order by main.code]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{tag_name_padre}]]></textFieldExpression>
 				</textField>
+				<rectangle>
+					<reportElement x="286" y="0" width="286" height="20" uuid="c061a335-9a6e-40ed-9644-2fc9faae306c"/>
+				</rectangle>
 			</band>
 		</groupHeader>
 	</group>
@@ -129,6 +132,9 @@ order by main.code]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{tag_name_hijo}]]></textFieldExpression>
 				</textField>
+				<rectangle>
+					<reportElement x="286" y="0" width="286" height="20" uuid="baf93686-f0bb-4fbc-97d3-6f2760a977d8"/>
+				</rectangle>
 			</band>
 		</groupHeader>
 	</group>

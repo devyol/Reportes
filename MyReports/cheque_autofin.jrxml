@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cheque_xelapan" pageWidth="612" pageHeight="792" whenNoDataType="BlankPage" columnWidth="592" leftMargin="20" rightMargin="0" topMargin="20" bottomMargin="20" uuid="b353f521-ede6-436a-9621-fbb30ef3ce6e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAAutofin"/>
+	<parameter name="p_pago" class="java.lang.String" evaluationTime="Early"/>
+	<queryString language="SQL">
+		<![CDATA[select	
+	ap.name,
+	rp.name as empresa,
+	'Guatemala, '||to_char(ap.payment_date,'DD "de "')||
+	case
+	when to_char(now(), 'MM')::numeric = 1 then 'Enero'
+	when to_char(now(), 'MM')::numeric = 2 then 'Febrero'
+	when to_char(now(), 'MM')::numeric = 3 then 'Marzo'
+	when to_char(now(), 'MM')::numeric = 4 then 'Abril'
+	when to_char(now(), 'MM')::numeric = 5 then 'Mayo'
+	when to_char(now(), 'MM')::numeric = 6 then 'Junio'
+	when to_char(now(), 'MM')::numeric = 7 then 'Julio'
+	when to_char(now(), 'MM')::numeric = 8 then 'Agosto'
+	when to_char(now(), 'MM')::numeric = 9 then 'Septiembre'
+	when to_char(now(), 'MM')::numeric = 10 then 'Octubre'
+	when to_char(now(), 'MM')::numeric = 11 then 'Noviembre'
+	when to_char(now(), 'MM')::numeric = 12 then 'Diciembre'
+	end
+	||to_char(ap.payment_date,'" del" yyyy')  payment_date,
+	round(ap.amount::numeric,2) amount,
+	f_moneda(1,
+	ap.amount) as amount_letra,	
+	aj."name" as diario
+from
+	account_payment as ap
+inner join res_partner as rp on
+	ap.partner_id = rp.id
+inner join account_journal as aj on
+	ap.journal_id = aj.id
+where
+	ap.payment_type = 'outbound'
+and 
+ap."name" = $P{p_pago}]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="empresa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="empresa"/>
+	</field>
+	<field name="payment_date" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="payment_date"/>
+	</field>
+	<field name="amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount"/>
+	</field>
+	<field name="amount_letra" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="amount_letra"/>
+	</field>
+	<field name="diario" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="diario"/>
+	</field>
+	<group name="gpo_cheque" isStartNewPage="true">
+		<groupHeader>
+			<band height="180">
+				<textField>
+					<reportElement x="251" y="50" width="310" height="15" uuid="93099711-5637-4dd4-b81d-c71163781986"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA["*** "+$F{empresa}+" ***"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="201" y="33" width="248" height="15" uuid="148b5b37-d72d-4851-93b0-0df8ed03be5c"/>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,###.00#" isBlankWhenNull="true">
+					<reportElement x="510" y="33" width="75" height="15" uuid="fbc8df11-87b4-4904-b06e-95ee5f6224ec"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="181" y="68" width="380" height="15" uuid="3a09499a-0f09-4a75-a85d-10fd44221173"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{amount_letra}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="10" width="100" height="15" uuid="17e752d8-ae0c-41d2-b037-7e7f55b71de1"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{diario}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+</jasperReport>

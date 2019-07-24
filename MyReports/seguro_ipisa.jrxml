@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="seguro_ipisa" pageWidth="2000" pageHeight="595" orientation="Landscape" columnWidth="2000" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="c632e6cf-9505-4fbe-962d-ebeb7d69fdf5">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#D2691E">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dtsSeguro" uuid="10cc837d-67bd-4470-b749-481c7329b789">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
+		<parameter name="p_fecha_inicio_t" class="java.util.Date"/>
+		<parameter name="p_fecha_final_t" class="java.util.Date"/>
+		<queryString language="SQL">
+			<![CDATA[select 
+uni.x_corredor as corredor, 
+tra."name" as transportista,
+uni."name" as unidad,
+uni.x_placa as placa,
+fac.date_invoice as fecha,
+fac."number" as factura,
+fac.origin as pedido,
+cli."ref" ||' '||cli."name" cliente,
+sum(det.quantity) as volumen,
+round(sum(det.quantity)*0.056,2) as seguro
+from account_invoice as fac
+inner join x_tranportista as tra
+on fac.x_transportista_id = tra.id
+inner join x_tranporte as uni
+on fac.x_transporte_id = uni.id
+inner join res_partner as cli
+on fac.partner_id = cli.id
+inner join account_invoice_line as det
+on fac.id = det.invoice_id
+where state in ('open','paid')
+and fac.date_invoice between $P{p_fecha_inicio_t} and $P{p_fecha_final_t}
+group by
+uni.x_corredor, 
+tra."name",
+fac.date_invoice,
+fac."number",
+fac.origin,
+cli."ref" ||' '||cli."name",
+uni."name",
+uni.x_placa
+order by 
+fac.date_invoice]]>
+		</queryString>
+		<field name="corredor" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="corredor"/>
+		</field>
+		<field name="transportista" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="transportista"/>
+		</field>
+		<field name="unidad" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="unidad"/>
+		</field>
+		<field name="placa" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="placa"/>
+		</field>
+		<field name="fecha" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+		</field>
+		<field name="factura" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="factura"/>
+		</field>
+		<field name="pedido" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="pedido"/>
+		</field>
+		<field name="cliente" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="cliente"/>
+		</field>
+		<field name="volumen" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="volumen"/>
+		</field>
+		<field name="seguro" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="seguro"/>
+		</field>
+	</subDataset>
+	<parameter name="p_fecha_inicio" class="java.util.Date"/>
+	<parameter name="p_fecha_final" class="java.util.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select 1]]>
+	</queryString>
+	<detail>
+		<band height="120" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="30" width="2000" height="90" uuid="f8eee29e-6bb0-4a03-b23c-5f3f6aa25d49">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dtsSeguro" uuid="e7c0387a-5b57-43f0-b7a2-ec8ff4f9418e">
+						<datasetParameter name="p_fecha_inicio_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_inicio}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_fecha_final_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="130" uuid="6b705bb1-b6b7-40b9-bcc3-ea37dcf92258">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="30" forecolor="#FFFFFF" uuid="c5fa9d4d-d9ce-4b1a-9b6b-8f5f68ed3e3b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Corredor]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="130" height="30" uuid="bca16acd-4ee5-4950-bd35-a53a23f50b48"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{corredor}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="380" uuid="8a5bc699-1a8f-438d-a11f-97b902c2299d">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="380" height="30" forecolor="#FFFFFF" uuid="46591b66-2c93-4a83-acfd-8ef880b87edf"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Transportista]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="380" height="30" uuid="23ed5862-48bd-43fe-99f1-90f5d15d042e"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{transportista}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="170" uuid="0f30b0b3-ab99-471a-9a0f-77ce5aa28320">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="170" height="30" forecolor="#FFFFFF" uuid="5882239a-078c-410c-90e8-78f177d02020"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Unidad]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="170" height="30" uuid="fc9de6c9-2705-4748-ad16-312631c00853"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{unidad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="160" uuid="ea336549-61f2-408a-a37a-18de0fb743d2">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="160" height="30" forecolor="#FFFFFF" uuid="9da28671-259b-47bd-82af-634f49e5f729"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Placa]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="160" height="30" uuid="fd9fc7b3-0b07-48cd-a20d-2bcb5e18be20"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="ada151ef-9017-42d7-9ec1-9e74f9295099">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="eedac73a-00f6-4309-beb2-44558c9afb50"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Fecha]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="140" height="30" uuid="4dca24ad-5d65-4e8d-867e-84f40898ca66"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="210" uuid="a12d4920-18f8-45e5-976b-698946243ba9">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="210" height="30" forecolor="#FFFFFF" uuid="a8aecc55-d45a-4da0-9f9d-be6c9126989f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Factura]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="210" height="30" uuid="74441589-f540-4164-a8ba-166e37f2ce8a"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{factura}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="cc3aa56c-74b6-4cff-b6b1-c87e248f8cb3">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="150" height="30" forecolor="#FFFFFF" uuid="6eb860ba-d037-449c-b855-5c7933f6cc84"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Pedido]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="150" height="30" uuid="026b4de7-0f06-4c70-9336-485f54ddd7df"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{pedido}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="370" uuid="0ae96c40-35c0-476e-99ac-03a86da44dbc">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="370" height="30" forecolor="#FFFFFF" uuid="abb0f81c-eee0-459c-8078-de201d0bbdb8"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Cliente]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="370" height="30" uuid="a30a6b3b-d8af-474a-885a-3647b3c3a0f2"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="150" uuid="80bdc4c2-2bec-4272-b459-20c9a567e32a">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="150" height="30" forecolor="#FFFFFF" uuid="b70ca6c3-59a0-4b46-aa63-731703581c2b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Volumen]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="#,##0.###">
+								<reportElement x="0" y="0" width="150" height="30" uuid="b2e17c43-8b33-494b-9c63-fde5b3cd4d91"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{volumen}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="bcc4f764-8ab2-435e-8eff-6c7d7b7e4d1b">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="8b2c55ea-d7a7-4207-8f1f-d9dd354fea35"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="14"/>
+								</textElement>
+								<text><![CDATA[Seguro]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="30"/>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="140" height="30" uuid="f8b878ac-9626-4060-84cc-83056323ed1c"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{seguro}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement x="0" y="0" width="840" height="30" uuid="8072b5ad-8336-4981-9afc-7c8b695a9400"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reporte de Seguros Del: " + new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicio})+" Al "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

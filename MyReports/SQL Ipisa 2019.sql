@@ -260,6 +260,42 @@ and fact.payment_term_id not in (1,6)
 and fact.residual > 0
 order by date_invoice
 
+----Reporte de Seguro
+
+
+select 
+uni.x_corredor as corredor, 
+tra."name" as transportista,
+uni."name" as unidad,
+uni.x_placa as placa,
+fac.date_invoice as fecha,
+fac."number" as factura,
+fac.origin as pedido,
+cli."ref" ||' '||cli."name" cliente,
+sum(det.quantity) as volumen,
+round(sum(det.quantity)*0.056,2) as seguro
+from account_invoice as fac
+inner join x_tranportista as tra
+on fac.x_transportista_id = tra.id
+inner join x_tranporte as uni
+on fac.x_transporte_id = uni.id
+inner join res_partner as cli
+on fac.partner_id = cli.id
+inner join account_invoice_line as det
+on fac.id = det.invoice_id
+where state in ('open','paid')
+group by
+uni.x_corredor, 
+tra."name",
+fac.date_invoice,
+fac."number",
+fac.origin,
+cli."ref" ||' '||cli."name",
+uni."name",
+uni.x_placa
+
+
+
 
 
 

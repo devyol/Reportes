@@ -66,7 +66,7 @@ on fac.partner_id = cli.id
 inner join account_invoice_line as det
 on fac.id = det.invoice_id
 where state in ('open','paid')
-and fac.date_invoice between $P{p_fecha_inicio_t} and $P{p_fecha_final_t}
+and to_date(fac.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicio_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
 group by
 uni.x_corredor, 
 tra."name",

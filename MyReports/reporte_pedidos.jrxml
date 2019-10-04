@@ -2,7 +2,6 @@
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_pedidos" pageWidth="2360" pageHeight="200" orientation="Landscape" columnWidth="2360" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="01cacefd-5aa5-4ecf-83c9-65b9bf21e10c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAIpisa"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -12,6 +11,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -99,15 +99,15 @@
 	</style>
 	<subDataset name="DTSPedidos" uuid="7d382f20-c212-403c-b842-4e858efdc34b">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAIpisa"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
 		<parameter name="p_id_cliente_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
-		<parameter name="p_fecha_inicial_t" class="java.util.Date"/>
-		<parameter name="p_fecha_final_t" class="java.util.Date"/>
+		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
+		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<queryString language="SQL">
 			<![CDATA[select 
 ov.name pedido,
 coalesce(fact."number",'') factura,
-ov.date_order fecha_pedido,
+ov.validity_date fecha_pedido,
 cli."name" cliente,
 nusu."name" vendedor,
 coalesce(nub."name",'') destino,
@@ -224,7 +224,7 @@ order by id' --este es el sql de las columnas
 ) as prec
 ("order_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)) as prec
 on ov.id = prec.order_id
-where ov.date_order between $P{p_fecha_inicial_t} and $P{p_fecha_final_t}
+where to_date(ov.validity_date::text,'dd-mm-yyyy') between to_date($P{p_fecha_inicial_t}::text,'dd-mm-yyyy') and to_date($P{p_fecha_final_t}::text,'dd-mm-yyyy')
 and $X{IN,ov.partner_id,p_id_cliente_t}
 order by ov.id]]>
 		</queryString>
@@ -234,7 +234,7 @@ order by ov.id]]>
 		<field name="factura" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="factura"/>
 		</field>
-		<field name="fecha_pedido" class="java.sql.Timestamp">
+		<field name="fecha_pedido" class="java.sql.Date">
 			<property name="com.jaspersoft.studio.field.label" value="fecha_pedido"/>
 		</field>
 		<field name="cliente" class="java.lang.String">
@@ -302,8 +302,8 @@ order by ov.id]]>
 		</variable>
 	</subDataset>
 	<parameter name="p_id_cliente" class="java.util.Collection" nestedType="java.lang.Integer"/>
-	<parameter name="p_fecha_inicial" class="java.util.Date"/>
-	<parameter name="p_fecha_final" class="java.util.Date"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>
@@ -409,7 +409,7 @@ order by ov.id]]>
 						<jr:columnFooter style="Table 2_CH" height="30"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
-							<textField>
+							<textField pattern="dd/MM/yyyy">
 								<reportElement x="0" y="0" width="140" height="30" uuid="57d2a776-d290-4e6f-8d5c-d1bf4511f8c8"/>
 								<box leftPadding="0"/>
 								<textElement textAlignment="Left" verticalAlignment="Middle">

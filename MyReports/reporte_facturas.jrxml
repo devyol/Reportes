@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_facturas" pageWidth="2506" pageHeight="600" orientation="Landscape" columnWidth="2506" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="8a0e94ba-00cc-40a9-91e6-eaa5a1c67093">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAIpisa"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -41,7 +41,7 @@
 	</style>
 	<subDataset name="DTSFactura" uuid="29b7de38-d235-4b2c-a1c3-6a99d856e682">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DTAIpisa"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
 		<parameter name="p_fecha_inicial_t" class="java.util.Date"/>
 		<parameter name="p_fecha_final_t" class="java.util.Date"/>
 		<queryString language="SQL">
@@ -99,7 +99,7 @@ order by id'
 ) as infdoc
 on fact.id = infdoc.fact_id
 where fact.state != 'cancel'
-and fact.date_invoice between $P{p_fecha_inicial_t} and $P{p_fecha_final_t}
+and to_date(fact.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicial_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
 order by fact.id desc]]>
 		</queryString>
 		<field name="fecha" class="java.sql.Date">
@@ -192,7 +192,7 @@ order by fact.id desc]]>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField>
+							<textField pattern="dd/MM/yyyy">
 								<reportElement mode="Transparent" x="0" y="0" width="140" height="30" backcolor="#FFFFFF" uuid="8cf00294-aac2-4e7c-9de8-b39242cc8c47"/>
 								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12"/>

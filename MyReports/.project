@@ -32,6 +32,16 @@
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/Libro_Mayor_Xelapan.jasper</location>
 		</link>
 		<link>
+			<name>cheque_autoefectivo_pago.jasper</name>
+			<type>1</type>
+			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/cheque_autoefectivo_pago.jasper</location>
+		</link>
+		<link>
+			<name>cheque_autoefectivo_pago.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/cheque_autoefectivo_pago.jrxml</location>
+		</link>
+		<link>
 			<name>cheque_autofin.jasper</name>
 			<type>1</type>
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/cheque_autofin.jasper</location>

@@ -3,7 +3,7 @@
 select 
 ov.name pedido,
 coalesce(fact."number",'') factura,
-ov.date_order fecha_pedido,
+ov.validity_date fecha_pedido,
 cli."name" cliente,
 nusu."name" vendedor,
 coalesce(nub."name",'') destino,
@@ -120,7 +120,7 @@ order by id' --este es el sql de las columnas
 ) as prec
 ("order_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)) as prec
 on ov.id = prec.order_id
-where ov.date_order between $P{p_fecha_inicial_t} and $P{p_fecha_final_t}
+where to_date(ov.validity_date::text,'dd-mm-yyyy') between to_date($P{p_fecha_inicial_t}::text,'dd-mm-yyyy') and to_date($P{p_fecha_final_t}::text,'dd-mm-yyyy')
 and $X{IN,ov.partner_id,p_id_cliente_t}
 order by ov.id
 
@@ -193,7 +193,7 @@ order by id'
 ) as infdoc
 on fact.id = infdoc.fact_id
 where fact.state != 'cancel'
-and fact.date_invoice between $P{p_fecha_inicial_t} and $P{p_fecha_final_t}
+and to_date(fact.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicial_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
 order by fact.id desc
 
 
@@ -239,7 +239,7 @@ case
 end rango,
 residual
 from account_invoice
-where current_date-date_invoice > 0',
+where current_date-date_invoice>=0',
 'select rango
 from(
 select ''0-2'' as rango
@@ -255,7 +255,7 @@ order by 1'
 )as(id numeric, "0-2" varchar, "3-5" varchar, "6-8" varchar, "9-10" varchar, "mas de 10" varchar))as inf
 ) as info
 on fact.id = info.id
-where current_date-fact.date_invoice > 0
+where current_date-fact.date_invoice>=0
 and fact.payment_term_id not in (1,6)
 and fact.residual > 0
 order by date_invoice
@@ -284,6 +284,7 @@ on fac.partner_id = cli.id
 inner join account_invoice_line as det
 on fac.id = det.invoice_id
 where state in ('open','paid')
+and to_date(fac.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicio_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
 group by
 uni.x_corredor, 
 tra."name",
@@ -293,6 +294,8 @@ fac.origin,
 cli."ref" ||' '||cli."name",
 uni."name",
 uni.x_placa
+order by 
+fac.date_invoice
 
 
 

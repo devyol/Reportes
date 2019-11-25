@@ -4,11 +4,11 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="autofin"/>
 	<property name="com.jaspersoft.studio.unit." value="cm"/>
-	<parameter name="p_prestamo" class="java.lang.String"/>
+	<parameter name="p_diario" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_cheque" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select
 	ap.id id_pago,
-	ap.loan_id prestamo_id,
 	lo."name" prestamo,
 	rp.nombre_cliente as empresa,
 		to_char(ap.payment_date,'DD "de "')||
@@ -30,18 +30,25 @@
 	round(ap.amount::numeric,2) amount,
 	f_moneda(1,
 	ap.amount) as amount_letra,
-	ap.description_pay descripcion,
+	case
+		when ap.description_pay is null then 
+			ap.communication||' - No. Cheque: '||ap.check_number
+		else
+			ap.description_pay||' - No. Cheque: '||ap.check_number
+	end descripcion,
 	cta.code cuenta,
 	cta."name" as descripcion_linea,
 	li.debit,
-	li.credit
+	li.credit,
+	ap.journal_id,
+	ap.check_number
 from
 	account_payment as ap
 inner join res_partner as rp on
 	ap.partner_id = rp.id
 inner join account_journal as aj on
 	ap.journal_id = aj.id
-inner join partner_loan_details as lo on
+left join partner_loan_details as lo on
 	ap.loan_id = lo.id
 inner join account_move_line as li on
 	li.payment_id = ap.id
@@ -49,13 +56,11 @@ inner join account_account as cta on
 	cta.id = li.account_id
 where
 	ap.payment_type = 'outbound'
-	and lo."name" = $P{p_prestamo}]]>
+	and $X{IN,ap.journal_id,p_diario}	
+	and check_number = $P{p_cheque}]]>
 	</queryString>
 	<field name="id_pago" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="id_pago"/>
-	</field>
-	<field name="prestamo_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="prestamo_id"/>
 	</field>
 	<field name="prestamo" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="prestamo"/>
@@ -87,12 +92,18 @@ where
 	<field name="credit" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.label" value="credit"/>
 	</field>
+	<field name="journal_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="journal_id"/>
+	</field>
+	<field name="check_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="check_number"/>
+	</field>
 	<group name="gpo_cheque" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{id_pago}]]></groupExpression>
 		<groupHeader>
 			<band height="280">
 				<textField>
-					<reportElement x="96" y="81" width="310" height="21" uuid="93099711-5637-4dd4-b81d-c71163781986"/>
+					<reportElement x="96" y="81" width="434" height="21" uuid="93099711-5637-4dd4-b81d-c71163781986"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="SansSerif" size="11"/>
 					</textElement>
@@ -113,11 +124,11 @@ where
 					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="75" y="112" width="380" height="15" uuid="3a09499a-0f09-4a75-a85d-10fd44221173"/>
+					<reportElement x="75" y="110" width="455" height="15" uuid="3a09499a-0f09-4a75-a85d-10fd44221173"/>
 					<textElement verticalAlignment="Top">
 						<font fontName="SansSerif" size="11"/>
 					</textElement>
-					<textFieldExpression><![CDATA["*** "+$F{amount_letra}+" ***"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["** "+$F{amount_letra}+" **"]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="91" y="60" width="65" height="15" uuid="e70cdcc7-4253-4d02-b0e1-eed3bec5c678"/>
@@ -127,9 +138,9 @@ where
 					<text><![CDATA[Guatemala, ]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="9" y="230" width="519" height="30" uuid="b86076cd-ae93-472b-85c9-4579dc949e26"/>
+					<reportElement x="9" y="230" width="421" height="30" uuid="b86076cd-ae93-472b-85c9-4579dc949e26"/>
 					<textElement verticalAlignment="Middle">
-						<font fontName="SansSerif" size="11"/>
+						<font fontName="SansSerif" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
 				</textField>
@@ -157,6 +168,7 @@ where
 			</textField>
 			<textField>
 				<reportElement x="353" y="0" width="85" height="30" uuid="a88452b2-69f2-4f18-8c68-9e12404c27c4"/>
+				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>
@@ -164,6 +176,7 @@ where
 			</textField>
 			<textField>
 				<reportElement x="438" y="0" width="85" height="30" uuid="3858174a-cc5e-4516-9b84-f9f2f1fc6b24"/>
+				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="11"/>
 				</textElement>

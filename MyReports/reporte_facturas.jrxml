@@ -42,8 +42,8 @@
 	<subDataset name="DTSFactura" uuid="29b7de38-d235-4b2c-a1c3-6a99d856e682">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
-		<parameter name="p_fecha_inicial_t" class="java.util.Date"/>
-		<parameter name="p_fecha_final_t" class="java.util.Date"/>
+		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
+		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<queryString language="SQL">
 			<![CDATA[select
 fact.date_invoice fecha,
@@ -99,8 +99,8 @@ order by id'
 ) as infdoc
 on fact.id = infdoc.fact_id
 where fact.state != 'cancel'
-and to_date(fact.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicial_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
-order by fact.id desc]]>
+and cast(fact.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
+order by fact.date_invoice]]>
 		</queryString>
 		<field name="fecha" class="java.sql.Date">
 			<property name="com.jaspersoft.studio.field.label" value="fecha"/>
@@ -145,8 +145,8 @@ order by fact.id desc]]>
 			<property name="com.jaspersoft.studio.field.label" value="total"/>
 		</field>
 	</subDataset>
-	<parameter name="p_fecha_inicial" class="java.util.Date"/>
-	<parameter name="p_fecha_final" class="java.util.Date"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>

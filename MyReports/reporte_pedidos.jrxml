@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_pedidos" pageWidth="2360" pageHeight="200" orientation="Landscape" columnWidth="2360" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="01cacefd-5aa5-4ecf-83c9-65b9bf21e10c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_pedidos" pageWidth="2450" pageHeight="200" orientation="Landscape" columnWidth="2450" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="01cacefd-5aa5-4ecf-83c9-65b9bf21e10c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -11,7 +12,6 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -104,7 +104,7 @@
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<queryString language="SQL">
-			<![CDATA[select 
+			<![CDATA[select
 ov.name pedido,
 coalesce(fact."number",'') factura,
 ov.validity_date fecha_pedido,
@@ -143,8 +143,15 @@ cast(ov.amount_total as double precision) total,
 	when fact.state = 'paid' then 'pagada'
 	when fact.state = 'draft' then 'borrador'
 	when fact.state = 'cancel' then 'cancelado'
-	when fact.state is null then 'sin factura'
-end)estado
+	when fact.state is null then 'no aplica'
+end)estado,
+case
+	when ov.state = 'draft' then 'presupuesto'
+	when ov.state = 'sale' then 'pedido de venta'
+	when ov.state = 'sent' then 'presupuesto enviado'
+	when ov.state = 'done' then 'bloqueado'
+	when ov.state = 'cancel' then 'cancelado'
+end estado_ov
 from sale_order as ov
 left join account_invoice as fact
 on fact.origin = ov."name"
@@ -224,9 +231,9 @@ order by id' --este es el sql de las columnas
 ) as prec
 ("order_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)) as prec
 on ov.id = prec.order_id
-where to_date(ov.validity_date::text,'dd-mm-yyyy') between to_date($P{p_fecha_inicial_t}::text,'dd-mm-yyyy') and to_date($P{p_fecha_final_t}::text,'dd-mm-yyyy')
+where cast(ov.validity_date::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
 and $X{IN,ov.partner_id,p_id_cliente_t}
-order by ov.id]]>
+order by ov.validity_date]]>
 		</queryString>
 		<field name="pedido" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="pedido"/>
@@ -285,6 +292,9 @@ order by ov.id]]>
 		<field name="estado" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="estado"/>
 		</field>
+		<field name="estado_ov" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="estado_ov"/>
+		</field>
 		<variable name="v_total_super" class="java.lang.Double" calculation="Sum">
 			<variableExpression><![CDATA[$F{super}]]></variableExpression>
 		</variable>
@@ -324,7 +334,7 @@ order by ov.id]]>
 	<detail>
 		<band height="90" splitType="Stretch">
 			<componentElement>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="2360" height="90" uuid="869b82ac-44ea-407a-8041-3f5fc5682c8a">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="2450" height="90" uuid="869b82ac-44ea-407a-8041-3f5fc5682c8a">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
@@ -345,7 +355,8 @@ order by ov.id]]>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="110" uuid="eb3626e6-50bc-4ef5-9401-2bec5497d900">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="110" height="30" forecolor="#FFFFFF" uuid="4fa0f501-86e3-41af-adc5-066e7e3a4ae6"/>
@@ -356,7 +367,7 @@ order by ov.id]]>
 								<text><![CDATA[Pedido]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>
@@ -370,7 +381,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="159" uuid="e43010c2-222c-46c0-bd2b-d9df40fe68c1">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="159" height="30" forecolor="#FFFFFF" uuid="87d6b9c9-07d8-4342-8f6d-f87a6d60f279"/>
@@ -381,7 +393,7 @@ order by ov.id]]>
 								<text><![CDATA[Factura]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>
@@ -395,7 +407,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="140" uuid="ae908952-a93e-4d61-9a96-d331f0a529bb">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="e796eff8-1cd2-4228-9ec5-fdcfb79aa9cd"/>
@@ -406,7 +419,7 @@ order by ov.id]]>
 								<text><![CDATA[Fecha]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField pattern="dd/MM/yyyy">
@@ -420,7 +433,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="560" uuid="f62e9e30-31d4-40e1-b646-2b3351bd9e41">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="560" height="30" forecolor="#FFFFFF" uuid="1d8397f7-cf33-4f91-8cee-8c75fd8753d8"/>
@@ -431,7 +445,7 @@ order by ov.id]]>
 								<text><![CDATA[Cliente]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>
@@ -445,7 +459,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="140" uuid="0eaa73d6-d567-4a95-b67d-ae28f0bc59a0">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" forecolor="#FFFFFF" uuid="16ab1f4c-593b-41df-990b-9913eda44bff"/>
@@ -456,7 +471,7 @@ order by ov.id]]>
 								<text><![CDATA[Vendedor]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>
@@ -470,7 +485,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="211" uuid="302ae66a-d0e4-4aed-84db-57e5363fbc5c">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="211" height="30" forecolor="#FFFFFF" uuid="20a14554-0c28-46c2-890b-ed06e2bc3e26"/>
@@ -481,7 +497,7 @@ order by ov.id]]>
 								<text><![CDATA[Destino]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>
@@ -495,7 +511,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="50" uuid="c13077dc-bd43-4169-8f43-7bc46463a420">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="50" height="30" forecolor="#FFFFFF" uuid="100ceb87-d784-41cb-9f19-8d0f1642e51c"/>
@@ -506,7 +523,7 @@ order by ov.id]]>
 								<text><![CDATA[Tipo]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>
@@ -520,7 +537,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="427d15dc-2b56-4299-8fba-dec82950b7ce">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="7f8b6a5f-df72-4868-9cd2-22c815e4fe3b"/>
@@ -531,7 +549,7 @@ order by ov.id]]>
 								<text><![CDATA[Unidad]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>
@@ -545,7 +563,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="0facee5f-1dc6-4fe3-8b2d-8327b6a8aafb">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="9461809a-cac7-49c7-b978-e630e60ccd92"/>
@@ -556,7 +575,7 @@ order by ov.id]]>
 								<text><![CDATA[Super]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30">
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1">
 							<textField pattern="#,##0.###">
 								<reportElement mode="Transparent" x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="b9a8901b-faf1-4c3d-bfb8-5c1f35632b63"/>
 								<box rightPadding="0"/>
@@ -579,7 +598,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="dce4f829-e0b7-404d-81a0-b576c3c035fa">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="8a8a0a73-b3ac-4d6e-b315-6f6a95d507bc"/>
@@ -590,7 +610,7 @@ order by ov.id]]>
 								<text><![CDATA[Regular]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30">
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1">
 							<textField pattern="#,##0.###">
 								<reportElement mode="Transparent" x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="9bcd8e74-08cf-425c-ad7c-d41dcd4b9018"/>
 								<box rightPadding="0"/>
@@ -613,7 +633,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="5eb24efd-736d-403c-b857-76ba5967f65c">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="203ca2c9-ef92-4bb3-b495-bfe0ff02c209"/>
@@ -624,7 +645,7 @@ order by ov.id]]>
 								<text><![CDATA[Diesel]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30">
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1">
 							<textField pattern="#,##0.###">
 								<reportElement mode="Transparent" x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="dcc986dd-d217-4917-bafc-3e429ddb89bc"/>
 								<box rightPadding="0"/>
@@ -647,7 +668,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="16b09b2b-0e31-41be-8254-33166e1c3b58">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="040240f9-8253-47f3-8127-43349776dd9c"/>
@@ -658,7 +680,7 @@ order by ov.id]]>
 								<text><![CDATA[Flete]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0" rightPadding="0"/>
 							<textField pattern="#,##0.###">
@@ -672,7 +694,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="33a015a9-75a9-454d-afea-da93aeed1e84">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="50fa7467-9930-4d2e-b884-2935c3c82450"/>
@@ -683,7 +706,7 @@ order by ov.id]]>
 								<text><![CDATA[SuperPR]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0" rightPadding="0"/>
 							<textField pattern="Q#,##0.00;Q-#,##0.00">
@@ -697,7 +720,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="08719348-2252-424d-8c0f-afa083c3add9">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="f0dfbe7f-f235-462a-926c-ab0a82676bf2"/>
@@ -708,7 +732,7 @@ order by ov.id]]>
 								<text><![CDATA[RegularPR]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0" rightPadding="0"/>
 							<textField pattern="Q#,##0.00;Q-#,##0.00">
@@ -722,7 +746,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="d4a10753-94d3-4da3-b5c9-c1919344c86e">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="179ea69d-a78c-4fb0-b5d3-19f764b91368"/>
@@ -733,7 +758,7 @@ order by ov.id]]>
 								<text><![CDATA[DieselPR]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0" rightPadding="0"/>
 							<textField pattern="Q#,##0.00;Q-#,##0.00">
@@ -747,7 +772,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="15ae852e-7f6c-4778-ba01-33a95c5e8769">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="0a27f66b-cf36-4cd9-bcb9-73e794868dd6"/>
@@ -758,7 +784,7 @@ order by ov.id]]>
 								<text><![CDATA[FletePR]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0" rightPadding="0"/>
 							<textField pattern="Q#,##0.00;Q-#,##0.00">
@@ -772,7 +798,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="22f682d4-bbb2-4fd5-8509-cb52cf28ffe8">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="a9e6768c-b140-4447-bf76-5c339ff9567d"/>
@@ -783,7 +810,7 @@ order by ov.id]]>
 								<text><![CDATA[IDP]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30">
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1">
 							<textField pattern="Q#,##0.00;Q-#,##0.00">
 								<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="b5c4832e-ebf8-4b01-8ccb-cf03ab65d667"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -805,7 +832,8 @@ order by ov.id]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="100" uuid="69e9a5ae-8db2-450a-b391-40efaaca8133">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="100" height="30" forecolor="#FFFFFF" uuid="de68bd17-2940-4220-ba5e-b0467ae23616"/>
@@ -816,7 +844,7 @@ order by ov.id]]>
 								<text><![CDATA[Total]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30">
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1">
 							<textField pattern="Q#,##0.00;Q-#,##0.00">
 								<reportElement x="0" y="0" width="100" height="30" forecolor="#FFFFFF" uuid="4aa560da-2131-4ab7-b45d-ab0735677c3c"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -837,8 +865,33 @@ order by ov.id]]>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
+					<jr:column width="90" uuid="2316da3f-552e-41fd-be28-ef59195e3c74">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="611b20d7-da3a-483e-81ea-f2a4159fc307"/>
+								<box leftPadding="0"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Estado O.V]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="Table 2_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" uuid="57f89efc-d3fe-4d5d-9173-829227bb8c58"/>
+								<box leftPadding="0"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{estado_ov}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
 					<jr:column width="90" uuid="77e29ec5-980b-4773-80bc-5c26a654f6b6">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="f0a605f7-8ad9-4277-93c3-7a577e05d4f5"/>
@@ -846,10 +899,10 @@ order by ov.id]]>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12"/>
 								</textElement>
-								<text><![CDATA[Estado]]></text>
+								<text><![CDATA[Estado Fact]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<box leftPadding="0"/>
 							<textField>

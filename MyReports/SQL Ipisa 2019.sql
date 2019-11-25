@@ -1,6 +1,6 @@
 --Reporte de Pedidos Ipisa
 
-select 
+select
 ov.name pedido,
 coalesce(fact."number",'') factura,
 ov.validity_date fecha_pedido,
@@ -39,8 +39,15 @@ cast(ov.amount_total as double precision) total,
 	when fact.state = 'paid' then 'pagada'
 	when fact.state = 'draft' then 'borrador'
 	when fact.state = 'cancel' then 'cancelado'
-	when fact.state is null then 'sin factura'
-end)estado
+	when fact.state is null then 'no aplica'
+end)estado,
+case
+	when ov.state = 'draft' then 'presupuesto'
+	when ov.state = 'sale' then 'pedido de venta'
+	when ov.state = 'sent' then 'presupuesto enviado'
+	when ov.state = 'done' then 'bloqueado'
+	when ov.state = 'cancel' then 'cancelado'
+end estado_ov
 from sale_order as ov
 left join account_invoice as fact
 on fact.origin = ov."name"
@@ -120,9 +127,9 @@ order by id' --este es el sql de las columnas
 ) as prec
 ("order_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)) as prec
 on ov.id = prec.order_id
-where to_date(ov.validity_date::text,'dd-mm-yyyy') between to_date($P{p_fecha_inicial_t}::text,'dd-mm-yyyy') and to_date($P{p_fecha_final_t}::text,'dd-mm-yyyy')
+where cast(ov.validity_date::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
 and $X{IN,ov.partner_id,p_id_cliente_t}
-order by ov.id
+order by ov.validity_date
 
 --Se debe ejecutar esta sentencia para que aplique la funcion crosstab en el servidor
 CREATE EXTENSION IF NOT EXISTS tablefunc;
@@ -193,8 +200,8 @@ order by id'
 ) as infdoc
 on fact.id = infdoc.fact_id
 where fact.state != 'cancel'
-and to_date(fact.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicial_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
-order by fact.id desc
+and cast(fact.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
+order by fact.date_invoice
 
 
 --Reporte de Saldos Ipisa
@@ -284,7 +291,7 @@ on fac.partner_id = cli.id
 inner join account_invoice_line as det
 on fac.id = det.invoice_id
 where state in ('open','paid')
-and to_date(fac.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicio_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
+and cast(fac.date_invoice::text as date) between cast($P{p_fecha_inicio_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
 group by
 uni.x_corredor, 
 tra."name",
@@ -299,6 +306,176 @@ fac.date_invoice
 
 
 
+----Reporte Facturacion
+
+
+
+select 
+fact.id,
+fact."number",
+case 
+	when position('-' in fact."number")-1 > 0 then
+		 substr(fact."number",1,position('-' in fact."number")-1)
+	 else	 	
+	 	substr(fact."number",1,position('/' in fact."number")+position('/' in substr(fact."number",position('/' in fact."number")+1))-1)
+ end serie,
+case 
+	when position('-' in fact."number")-1 > 0 then
+		cast(substr(fact."number",(position('-' in fact."number")+1)) as integer)
+	else
+		cast(substr(substr(fact."number",position('/' in fact."number")+1),position('/' in substr(fact."number",position('/' in fact."number")+1))+1) as integer)
+end numero,
+fact.date_invoice as fecha,
+cli.vat as nit,
+cli."name" as nombre,
+cli.street as direccion,
+coalesce(cast(cant.super as double precision),0) super,
+coalesce(cast(cant.regular as double precision),0) regular,
+coalesce(cast(cant.diesel as double precision),0) diesel,
+coalesce(cast(cant.flete as double precision),0) flete,
+coalesce(cast(total.totsuper as double precision),0) totsuper,
+coalesce(cast(total.totregular as double precision),0) totregular,
+coalesce(cast(total.totdiesel as double precision),0) totdiesel,
+coalesce(cast(total.totflete as double precision),0) totflete,
+coalesce(cast(imp.idpsuper as double precision),0) idpsuper,
+coalesce(cast(imp.idpregular as double precision),0) idpregular,
+coalesce(cast(imp.idpdiesel as double precision),0) idpdiesel,
+coalesce(cast(imp.iva as double precision),0) iva,
+fact.amount_total as total,
+case 
+	when fact.state = 'open' then 'Abierta'
+	when fact.state = 'paid' then 'Pagada'
+	when fact.state = 'draft' then 'Borrador'
+	when fact.state = 'cancel' then 'Cancelado'
+end estado
+from account_invoice as fact
+inner join res_partner as cli
+on fact.partner_id = cli.id
+inner join account_journal as di
+on fact.journal_id = di.id
+left join (
+select cant.invoice_id, cant.super, cant.regular, cant.diesel, cant.flete
+from crosstab(
+'select 
+info.invoice_id,
+pla.descripcion,
+info.cantidad
+from (
+select id produc_id, "name" descripcion
+from product_template
+where id in (8,9,10,12)) as pla
+left join
+(	
+select 
+ai.id invoice_id,
+ail.product_id, 
+sum(ail.quantity) cantidad
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in (8,9,10,12)
+group by ai.id, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by invoice_id desc',
+'select "name" descripcion
+from product_template
+where id in (8,9,10,12)
+order by id'
+)as cant
+("invoice_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)
+) as cant
+on fact.id = cant.invoice_id
+left join (
+select prec.invoice_id, prec.totsuper, prec.totregular, prec.totdiesel, prec.totflete
+from crosstab(
+'select 
+info.invoice_id,
+pla.descripcion,
+info.total
+from (
+select id produc_id, "name" descripcion
+from product_template
+where id in (8,9,10,12)) as pla
+left join
+(	
+select 
+ai.id invoice_id,
+ail.product_id, 
+sum(ail.price_subtotal) total
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in (8,9,10,12)
+group by ai.id, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by invoice_id desc',
+'select "name" descripcion
+from product_template
+where id in (8,9,10,12)
+order by id'
+)as prec
+("invoice_id" numeric, "totsuper" varchar, "totregular" varchar, "totdiesel" varchar, "totflete" varchar)
+) as total
+on fact.id = total.invoice_id
+left join (
+select tax.invoice_id, tax.idpsuper, tax.idpregular, tax.idpdiesel, tax.iva
+from crosstab(
+'select 
+info.invoice_id,
+tax.descripcion,
+info.imp
+from (
+select id, "name" descripcion
+from account_tax
+where id in (2,4,6,8)) as tax
+left join
+(	
+select 
+ai.id invoice_id,
+ait.tax_id, 
+sum(ait.amount) imp
+from account_invoice as ai
+left join account_invoice_tax as ait
+on ai.id = ait.invoice_id
+where ait.tax_id in (2,4,6,8)
+group by ai.id, ait.tax_id
+) as info
+on tax.id = info.tax_id
+order by invoice_id desc',
+'select d.descripcion
+from(
+select
+case 
+	when id = 6 then 1
+	when id = 4 then 2
+	when id = 8 then 3
+	when id = 2 then 4
+end ide,
+"name" descripcion
+from account_tax
+where id in (2,4,6,8)
+order by ide) as d'
+)as tax
+("invoice_id" numeric, "idpsuper" varchar, "idpregular" varchar, "idpdiesel" varchar, "iva" varchar)
+) as imp
+on fact.id = imp.invoice_id
+where fact."type" = 'out_invoice'
+and cast(fact.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
+and $X{IN,fact.partner_id,p_id_cliente_t}
+order by fact.date_invoice
+
+--Para el filtro de clientes en Jasper Server
+select rp.id,
+case when rp.vat is null then
+	rp."name"
+	else
+	rp."name"||' - '||vat
+end as name
+from res_partner rp
+where rp.customer = 'true'
+order by rp."name"
 
 
 

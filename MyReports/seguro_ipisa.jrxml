@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="seguro_ipisa" pageWidth="2000" pageHeight="595" orientation="Landscape" columnWidth="2000" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="c632e6cf-9505-4fbe-962d-ebeb7d69fdf5">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -41,7 +41,7 @@
 	</style>
 	<subDataset name="dtsSeguro" uuid="10cc837d-67bd-4470-b749-481c7329b789">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
 		<parameter name="p_fecha_inicio_t" class="java.util.Date"/>
 		<parameter name="p_fecha_final_t" class="java.util.Date"/>
 		<queryString language="SQL">
@@ -66,7 +66,7 @@ on fac.partner_id = cli.id
 inner join account_invoice_line as det
 on fac.id = det.invoice_id
 where state in ('open','paid')
-and to_date(fac.date_invoice::text,'DD/MM/YYYY') between to_date($P{p_fecha_inicio_t}::text,'DD/MM/YYYY') and to_date($P{p_fecha_final_t}::text,'DD/MM/YYYY')
+and cast(fac.date_invoice::text as date) between cast($P{p_fecha_inicio_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
 group by
 uni.x_corredor, 
 tra."name",
@@ -110,8 +110,8 @@ fac.date_invoice]]>
 			<property name="com.jaspersoft.studio.field.label" value="seguro"/>
 		</field>
 	</subDataset>
-	<parameter name="p_fecha_inicio" class="java.util.Date"/>
-	<parameter name="p_fecha_final" class="java.util.Date"/>
+	<parameter name="p_fecha_inicio" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>

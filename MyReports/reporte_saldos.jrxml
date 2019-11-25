@@ -91,7 +91,6 @@ order by 1'
 ) as info
 on fact.id = info.id
 where current_date-fact.date_invoice >=0
-and fact.payment_term_id not in (1,6)
 and fact.residual > 0
 order by date_invoice]]>
 		</queryString>

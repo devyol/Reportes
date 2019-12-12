@@ -1,21 +1,43 @@
+--Cheque
+--Consulta General (Control "Banco" Jasper) - (el identificador es p_diario)
+
+select id, "name"
+from account_journal aj
+where type = 'bank'
+and check_manual_sequencing = true
+order by "name"
+
+--consulta que depende de la General (Control "Cheque" Jasper) - (el identificador es p_cheque)
+
+select ap.check_number as p_cheque, ap.check_number as cheque
+from account_payment ap
+where ap.payment_type = 'outbound'
+and ap.state != 'cancelled'
+and ap.check_number is not null
+and $X{IN,ap.journal_id,p_diario}
+order by ap.check_number desc
+
+
+--Consulta del Reporte de Cheques
+
 select
 	ap.id id_pago,
 	lo."name" prestamo,
 	rp.nombre_cliente as empresa,
 		to_char(ap.payment_date,'DD "de "')||
 	case
-	when to_char(now(), 'MM')::numeric = 1 then 'Enero'
-	when to_char(now(), 'MM')::numeric = 2 then 'Febrero'
-	when to_char(now(), 'MM')::numeric = 3 then 'Marzo'
-	when to_char(now(), 'MM')::numeric = 4 then 'Abril'
-	when to_char(now(), 'MM')::numeric = 5 then 'Mayo'
-	when to_char(now(), 'MM')::numeric = 6 then 'Junio'
-	when to_char(now(), 'MM')::numeric = 7 then 'Julio'
-	when to_char(now(), 'MM')::numeric = 8 then 'Agosto'
-	when to_char(now(), 'MM')::numeric = 9 then 'Septiembre'
-	when to_char(now(), 'MM')::numeric = 10 then 'Octubre'
-	when to_char(now(), 'MM')::numeric = 11 then 'Noviembre'
-	when to_char(now(), 'MM')::numeric = 12 then 'Diciembre'
+	when to_char(ap.payment_date, 'MM')::numeric = 1 then 'Enero'
+	when to_char(ap.payment_date, 'MM')::numeric = 2 then 'Febrero'
+	when to_char(ap.payment_date, 'MM')::numeric = 3 then 'Marzo'
+	when to_char(ap.payment_date, 'MM')::numeric = 4 then 'Abril'
+	when to_char(ap.payment_date, 'MM')::numeric = 5 then 'Mayo'
+	when to_char(ap.payment_date, 'MM')::numeric = 6 then 'Junio'
+	when to_char(ap.payment_date, 'MM')::numeric = 7 then 'Julio'
+	when to_char(ap.payment_date, 'MM')::numeric = 8 then 'Agosto'
+	when to_char(ap.payment_date, 'MM')::numeric = 9 then 'Septiembre'
+	when to_char(ap.payment_date, 'MM')::numeric = 10 then 'Octubre'
+	when to_char(ap.payment_date, 'MM')::numeric = 11 then 'Noviembre'
+	when to_char(ap.payment_date, 'MM')::numeric = 12 then 'Diciembre'
 	end
 	||to_char(ap.payment_date,'" del" yyyy')  payment_date,
 	round(ap.amount::numeric,2) amount,
@@ -48,4 +70,57 @@ inner join account_account as cta on
 where
 	ap.payment_type = 'outbound'
 	and $X{IN,ap.journal_id,p_diario}	
-	and check_number = $P{p_cheque}
+	and $X{IN,ap.check_number,p_cheque}
+	order by ap.check_number desc
+
+
+
+
+
+
+
+
+
+
+--Comprobante
+--Consulta General (Control "Diario" Jasper) - (el identificador es p_diario)
+
+select id, "name" as diario
+from account_journal aj
+where type = 'sale'
+order by "name"
+
+
+--consulta que depende de la General (Control "Documento" Jasper) - (el identificador es p_documento)
+
+
+select ai.id, ai."number"
+from account_invoice ai
+inner join account_journal aj
+on ai.journal_id = aj.id
+where aj."type" = 'sale' 
+and $X{IN,ai.journal_id,p_diario}
+order by ai.id desc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

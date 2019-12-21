@@ -58,7 +58,7 @@ where
 	ap.payment_type = 'outbound'
 	and $X{IN,ap.journal_id,p_diario}	
 	and $X{IN,ap.check_number,p_cheque}
-	order by ap.check_number desc]]>
+	order by ap.check_number]]>
 	</queryString>
 	<field name="id_pago" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="id_pago"/>

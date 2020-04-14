@@ -103,24 +103,51 @@ and $X{IN,ai.journal_id,p_diario}
 order by ai.id desc
 
 
+select *
+from(
+select ai.id, ai."number"
+from account_invoice ai
+inner join account_journal aj
+on ai.journal_id = aj.id
+where ai."type" = 'out_invoice'
+and $X{IN,ai.journal_id,p_diario}
+order by ai.id desc) as t limit 50
 
 
 
 
+--REPORTE DE COBROS
 
 
+select * from (
+select pr."name" prestamo, cli.nombre_cliente,
+pr.fecha_vencimiento_vigente, 
+case 
+	when pr.saldo_pendiente < 0 then 0
+	when pr.saldo_pendiente >= 0 then pr.saldo_pendiente/pr.interes_seguro_cuota
+end factor,
+pr.cuota_interes,
+pr.cuota_seguro,
+pr.cuota_mora,
+pr.cuota_interes+pr.cuota_seguro+pr.cuota_mora as CSM,
+pr.saldo_pendiente
+from partner_loan_details as pr
+inner join res_partner as cli
+on pr.partner_id = cli.id
+where pr.state = 'actual'
+and cast(pr.fecha_vencimiento_vigente::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
+) as da
+order by da.factor desc
 
 
+--PARAMETROS
 
+/*
 
+p_fecha_inicial
+p_fecha_final
 
-
-
-
-
-
-
-
+*/
 
 
 

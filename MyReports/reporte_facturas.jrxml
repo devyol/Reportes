@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_facturas" pageWidth="2506" pageHeight="600" orientation="Landscape" columnWidth="2506" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="8a0e94ba-00cc-40a9-91e6-eaa5a1c67093">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa_local"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -41,7 +41,7 @@
 	</style>
 	<subDataset name="DTSFactura" uuid="29b7de38-d235-4b2c-a1c3-6a99d856e682">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa_local"/>
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<queryString language="SQL">
@@ -59,7 +59,7 @@ cli.vat nit,
 coalesce(cast(infdoc.super as double precision),0) super,
 coalesce(cast(infdoc.regular as double precision),0) regular,
 coalesce(cast(infdoc.diesel as double precision),0) diesel,
-fact.amount_total total
+coalesce(cast(infdoc.super as double precision),0)+coalesce(cast(infdoc.regular as double precision),0)+coalesce(cast(infdoc.diesel as double precision),0) as total
 from account_invoice as fact
 inner join sale_order as ped
 on fact.origin = ped."name"
@@ -83,7 +83,7 @@ from product_template
 where id in (8,9,10)) as cat
 left join
 (
-select invoice_id fact_id, pro.id, sum(price_subtotal) total
+select invoice_id fact_id, pro.id, sum(quantity) total
 from account_invoice_line as li
 inner join product_template as pro
 on li.product_id = pro.id
@@ -402,7 +402,7 @@ order by fact.date_invoice]]>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField pattern="Q#,##0.00;Q-#,##0.00">
+							<textField pattern="#,##0.###">
 								<reportElement mode="Transparent" x="0" y="0" width="140" height="30" backcolor="#FFFFFF" uuid="574771de-0d8b-4080-9ef5-af75e1c1ac0a"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12"/>
@@ -423,7 +423,7 @@ order by fact.date_invoice]]>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField pattern="Q#,##0.00;Q-#,##0.00">
+							<textField pattern="#,##0.###">
 								<reportElement mode="Transparent" x="0" y="0" width="140" height="30" backcolor="#FFFFFF" uuid="0bcdec5f-b4f2-4b9d-8951-53783d32f083"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12"/>
@@ -444,7 +444,7 @@ order by fact.date_invoice]]>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField pattern="Q#,##0.00;Q-#,##0.00">
+							<textField pattern="#,##0.###">
 								<reportElement mode="Transparent" x="0" y="0" width="140" height="30" backcolor="#FFFFFF" uuid="2ee10d5e-70a6-430b-b814-75c097c46d30"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12"/>
@@ -465,7 +465,7 @@ order by fact.date_invoice]]>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField pattern="Q#,##0.00;Q-#,##0.00">
+							<textField pattern="#,##0.###">
 								<reportElement mode="Transparent" x="0" y="0" width="146" height="30" backcolor="#FFFFFF" uuid="2dad53e1-b99c-487a-ad43-39ff0203c8be"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12"/>

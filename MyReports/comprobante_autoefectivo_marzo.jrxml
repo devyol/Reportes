@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="comprobante_autoefectivo" pageWidth="612" pageHeight="396" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="02436078-f617-4d1f-baf1-1b96368bcce9">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_autofin"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_odoo_auto"/>
 	<property name="com.jaspersoft.studio.unit." value="inch"/>
 	<parameter name="p_diario" class="java.util.Collection" nestedType="java.lang.Integer" isForPrompting="false"/>
 	<parameter name="p_documento" class="java.util.Collection" nestedType="java.lang.String" isForPrompting="false"/>
@@ -99,9 +99,9 @@ order by fa.id]]>
 	<group name="GpNumero" isStartNewPage="true">
 		<groupExpression><![CDATA[$F{numero}]]></groupExpression>
 		<groupHeader>
-			<band height="131">
+			<band height="152">
 				<textField pattern="dd/M/yyyy">
-					<reportElement x="416" y="0" width="100" height="40" uuid="cea518f8-3748-4b67-9620-84dc888cd6c1"/>
+					<reportElement x="416" y="21" width="100" height="40" uuid="cea518f8-3748-4b67-9620-84dc888cd6c1"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<rightPen lineWidth="1.0"/>
@@ -112,7 +112,7 @@ order by fa.id]]>
 					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="150" y="0" width="266" height="40" uuid="b440cf39-e810-4a95-968c-ed9afa565eb1"/>
+					<reportElement x="150" y="21" width="266" height="40" uuid="b440cf39-e810-4a95-968c-ed9afa565eb1"/>
 					<box topPadding="5">
 						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -125,7 +125,7 @@ order by fa.id]]>
 					<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="36" y="101" width="100" height="30" uuid="53d11482-9214-4620-a15d-95a5e6eae0cd">
+					<reportElement x="36" y="122" width="100" height="30" uuid="53d11482-9214-4620-a15d-95a5e6eae0cd">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f6ab1cbb-9407-47ca-a213-f3acb9a6c3b3"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
@@ -141,7 +141,7 @@ order by fa.id]]>
 					<text><![CDATA[Cantidad]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="136" y="101" width="280" height="30" uuid="02f2c3ba-2e84-488e-b32d-dc208136f113">
+					<reportElement x="136" y="122" width="280" height="30" uuid="02f2c3ba-2e84-488e-b32d-dc208136f113">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d37990b1-317f-4e34-9885-3e28462a46af"/>
 					</reportElement>
 					<box>
@@ -156,7 +156,7 @@ order by fa.id]]>
 					<text><![CDATA[Descripción]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="416" y="101" width="100" height="30" uuid="61aae6bb-69d6-4231-a37a-8124f46b628f">
+					<reportElement x="416" y="122" width="100" height="30" uuid="61aae6bb-69d6-4231-a37a-8124f46b628f">
 						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1abda139-e6ef-418b-89fa-e59788e3db28"/>
 					</reportElement>
 					<box>
@@ -171,7 +171,7 @@ order by fa.id]]>
 					<text><![CDATA[Precio]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="150" y="40" width="266" height="20" uuid="aca8a14e-e92d-4ad7-a4e7-3b0a0744f4d4"/>
+					<reportElement x="150" y="61" width="266" height="20" uuid="aca8a14e-e92d-4ad7-a4e7-3b0a0744f4d4"/>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -184,7 +184,7 @@ order by fa.id]]>
 					<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" x="150" y="60" width="266" height="41" uuid="270ed602-5d26-4262-9743-88a3376f8cb5"/>
+					<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" x="150" y="81" width="266" height="41" uuid="270ed602-5d26-4262-9743-88a3376f8cb5"/>
 					<box topPadding="3" bottomPadding="0">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -197,7 +197,7 @@ order by fa.id]]>
 					<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="36" y="0" width="114" height="40" uuid="9c93a067-5580-4e26-b152-6687e69637db"/>
+					<reportElement x="36" y="21" width="114" height="40" uuid="9c93a067-5580-4e26-b152-6687e69637db"/>
 					<box topPadding="7" leftPadding="0" rightPadding="5">
 						<topPen lineWidth="1.0"/>
 						<leftPen lineWidth="1.0"/>
@@ -208,7 +208,7 @@ order by fa.id]]>
 					<text><![CDATA[Cliente:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="36" y="40" width="114" height="20" uuid="e4db7571-a423-4761-b484-a5c46ff2d006"/>
+					<reportElement x="36" y="61" width="114" height="20" uuid="e4db7571-a423-4761-b484-a5c46ff2d006"/>
 					<box leftPadding="0" rightPadding="5">
 						<leftPen lineWidth="1.0"/>
 					</box>
@@ -218,7 +218,7 @@ order by fa.id]]>
 					<text><![CDATA[Nit:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="36" y="60" width="114" height="41" uuid="89dc8475-bb6e-4b39-89cb-b931543de02d"/>
+					<reportElement x="36" y="81" width="114" height="41" uuid="89dc8475-bb6e-4b39-89cb-b931543de02d"/>
 					<box topPadding="3" leftPadding="0" bottomPadding="0" rightPadding="5">
 						<leftPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -229,7 +229,7 @@ order by fa.id]]>
 					<text><![CDATA[Dirección:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="416" y="60" width="100" height="41" uuid="be47870d-1d8a-4d4d-a35e-d8c2bf88cd2e"/>
+					<reportElement x="416" y="81" width="100" height="41" uuid="be47870d-1d8a-4d4d-a35e-d8c2bf88cd2e"/>
 					<box>
 						<bottomPen lineWidth="1.0"/>
 						<rightPen lineWidth="1.0"/>
@@ -237,7 +237,7 @@ order by fa.id]]>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="416" y="40" width="100" height="20" uuid="00f6b4ca-1597-4a5a-88c8-48eee1d4df62"/>
+					<reportElement x="416" y="61" width="100" height="20" uuid="00f6b4ca-1597-4a5a-88c8-48eee1d4df62"/>
 					<box>
 						<rightPen lineWidth="1.0"/>
 					</box>
@@ -246,6 +246,13 @@ order by fa.id]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{numero_factura}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement x="36" y="1" width="480" height="20" uuid="89d7f260-bbb3-480b-8a08-62205b487360"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[OPERADORA DE EFECTIVOS, S.A.]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>

@@ -1,10 +1,14 @@
 eclipse.preferences.version=1
 encoding/Contrato_1.jrxml=UTF-8
+encoding/Control\ Logistico.jrxml=UTF-8
 encoding/Inventario.jrxml=UTF-8
 encoding/Libro_Diario_Xelapan.jrxml=UTF-8
 encoding/Pagare\ Libro\ Protesto.jrxml=UTF-8
 encoding/cheque_autoefectivo_pago.jrxml=UTF-8
+encoding/cobros_autoefectivo.jrxml=UTF-8
 encoding/comprobante_autoefectivo.jrxml=UTF-8
+encoding/comprobante_autoefectivo_marzo.jrxml=UTF-8
+encoding/inventario_fiscal_wms.jrxml=UTF-8
 encoding/reporte_factura_ipisa.jrxml=UTF-8
 encoding/reporte_facturas.jrxml=UTF-8
 encoding/reporte_pedidos.jrxml=UTF-8

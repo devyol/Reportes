@@ -160,7 +160,7 @@ cli.vat nit,
 coalesce(cast(infdoc.super as double precision),0) super,
 coalesce(cast(infdoc.regular as double precision),0) regular,
 coalesce(cast(infdoc.diesel as double precision),0) diesel,
-fact.amount_total total
+coalesce(cast(infdoc.super as double precision),0)+coalesce(cast(infdoc.regular as double precision),0)+coalesce(cast(infdoc.diesel as double precision),0) as total
 from account_invoice as fact
 inner join sale_order as ped
 on fact.origin = ped."name"
@@ -184,7 +184,7 @@ from product_template
 where id in (8,9,10)) as cat
 left join
 (
-select invoice_id fact_id, pro.id, sum(price_subtotal) total
+select invoice_id fact_id, pro.id, sum(quantity) total
 from account_invoice_line as li
 inner join product_template as pro
 on li.product_id = pro.id

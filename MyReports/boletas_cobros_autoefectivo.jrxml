@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="boletas_cobros_autoefectivo" pageWidth="2082" pageHeight="612" orientation="Landscape" columnWidth="2042" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="c43b7120-5c65-4c15-a5b8-e0a01971204b">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_odoo_reporte"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select bcb.id as cobro_id, bcb.fecha_cobro, bcb.fecha_factura, bcb.numero_boleta, lo.loan_nombre_cliente, bcb.valor_depositado
+from cobro_prestamo as bcb
+inner join partner_loan_details as lo
+on bcb.loan_id = lo.id
+where bcb.state = 'cobrado' 
+and cast(bcb.fecha_factura::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date) 
+order by bcb.fecha_cobro]]>
+	</queryString>
+	<field name="cobro_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="cobro_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobro_prestamo"/>
+	</field>
+	<field name="fecha_cobro" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="fecha_cobro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobro_prestamo"/>
+	</field>
+	<field name="fecha_factura" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="fecha_factura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobro_prestamo"/>
+	</field>
+	<field name="numero_boleta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="numero_boleta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobro_prestamo"/>
+	</field>
+	<field name="loan_nombre_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="loan_nombre_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="partner_loan_details"/>
+	</field>
+	<field name="valor_depositado" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="valor_depositado"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cobro_prestamo"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="48" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="880" height="30" uuid="6a24a2e1-7ffa-4ce2-9de1-37f7cbb3c098"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Boletas de Deposito del: "+new SimpleDateFormat("dd-MM-yyyy").format($P{p_fecha_inicial}) + " al " + new SimpleDateFormat("dd-MM-yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="111" height="15" uuid="573c3b9d-786f-4dad-a03c-073b24f06091">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="beb73b3c-d479-410f-9a8b-e04954fb8d76"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Cobro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="0" width="111" height="15" uuid="ab09ec9f-5fc6-45f0-83fa-2c21cef6d953">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5265db2-67bc-4cf3-adaf-dc4f56ba59d7"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Factura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="0" width="168" height="15" uuid="862bebdf-dc79-4155-9695-881c058d9057">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b2dbd1e6-4d71-406e-9bad-98b92f097583"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Numero Boleta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="0" width="279" height="15" uuid="81703d6a-3b3e-47ad-aae8-cd188c7be23c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ea0d9424-3d82-4fa6-8e44-1a3e937bac76"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="669" y="0" width="111" height="15" uuid="616de60b-24bf-4ccb-81c1-699cbdad14a0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3804d345-d729-4a33-b805-9034e9583983"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Depositado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="780" y="0" width="151" height="15" uuid="af14af4a-967d-4041-8128-40f1c1643dc6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="931" y="0" width="148" height="15" uuid="6fa261c4-a66f-485e-98de-8f3ab4242cd7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1079" y="0" width="148" height="15" uuid="fb8ae951-2e9b-40c0-9e1e-2dbadaa35eba">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Numero Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1227" y="0" width="148" height="15" uuid="5d78b7ca-1024-4221-80b1-abe60217f6dd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Documento]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="111" height="15" uuid="950cc4f4-f4ac-46e1-bbc9-30d150da687b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="beb73b3c-d479-410f-9a8b-e04954fb8d76"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fecha_cobro}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="111" y="0" width="111" height="15" uuid="5640481b-65ef-4656-8ee6-4fe1599784b0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5265db2-67bc-4cf3-adaf-dc4f56ba59d7"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fecha_factura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="0" width="168" height="15" uuid="77f8cb75-b645-4df2-a1d4-9ee4ed8cfcfe">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b2dbd1e6-4d71-406e-9bad-98b92f097583"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{numero_boleta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="0" width="279" height="15" uuid="3c871476-fb1a-47bc-84ca-3e596e18d5a4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ea0d9424-3d82-4fa6-8e44-1a3e937bac76"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{loan_nombre_cliente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="669" y="0" width="111" height="15" uuid="2238aed4-caf5-4572-a4af-e79a8af2c142">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3804d345-d729-4a33-b805-9034e9583983"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box rightPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{valor_depositado}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="780" y="0" width="595" height="15" uuid="8fd1a697-ca1d-471d-b5d2-ba46fa8e95ce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="p_cobro_id">
+					<subreportParameterExpression><![CDATA[$F{cobro_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["detalle_boletas_cobro_autoefectivo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

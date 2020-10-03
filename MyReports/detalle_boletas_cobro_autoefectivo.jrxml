@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="detalle_boletas_cobro_autoefectivo" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="497c9329-4ddb-4e97-97c7-fa98443c8b55">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_odoo_reporte"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_cobro_id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[select t.* from (
+select
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+case
+	when lpr.descripcion in ('Gasto Administrativo','Gasto Adicional') and lpr.documento is not null then lpr.documento
+	when lpr.descripcion in ('Gasto Administrativo','Gasto Adicional') and lpr.documento is null     then lpr.descripcion
+	else
+		lpr.descripcion
+end  as descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'Recibo'
+	else
+		'Factura'
+end as tipo_doc
+from loan_installment_invoice as fpc
+inner join partner_loan_installment_details as lpr
+on fpc.loan_installment_id = lpr.id
+inner join partner_loan_details as pr
+on lpr.loan_id = pr.id
+inner join account_payment as pg
+on fpc.payment_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on lpr.descripcion_cobro_id = ct.id
+union all
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+lpr.descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'Recibo'
+	else
+		'Factura'
+end as tipo_doc
+from loan_gasto_inicial_payment as fpc
+inner join gastos_iniciales as lpr
+on fpc.cargo_inicial_id = lpr.id
+inner join partner_loan_details as pr
+on lpr.loan_id = pr.id
+inner join account_payment as pg
+on fpc.payment_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on lpr.descripcion_cobro_id = ct.id
+union all
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+fpc.descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'Recibo'
+	else
+		'Factura'
+end as tipo_doc
+from abonos_capital as fpc
+inner join partner_loan_details as pr
+on fpc.loan_id = pr.id
+inner join account_payment as pg
+on fpc.pay_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on fpc.descripcion_cobro_id = ct.id
+) as t
+where t.cobro_id = $P{p_cobro_id}]]>
+	</queryString>
+	<field name="descripcion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+	</field>
+	<field name="monto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="monto"/>
+	</field>
+	<field name="no_factura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="no_factura"/>
+	</field>
+	<field name="tipo_doc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipo_doc"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="151" height="15" uuid="6a2cb56a-a5b2-45aa-9a5e-a770fef5cae1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b87cbc44-0111-4ebf-aee7-aae8b28d82a3"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="151" y="0" width="148" height="15" uuid="6c0b3c85-0ade-4e53-9fe4-196559b7ddf5">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="82abbf9c-1abc-47dd-a925-823684427658"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="0" rightPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="299" y="0" width="148" height="15" uuid="1e78adee-b166-43b4-9dd0-682a26ea26b1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5abee12-4433-4a0b-bb5f-1eea5559db05"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{no_factura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="447" y="0" width="148" height="15" uuid="3e9713c2-87f3-450a-a52a-1060150886f6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6b1017b4-58c3-493f-876f-1005fc5632af"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="5">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo_doc}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

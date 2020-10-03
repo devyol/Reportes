@@ -33,7 +33,6 @@
 	<subDataset name="dtsinvfis" uuid="8af8b819-1509-418d-bf3c-9e135e47bd22">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS13"/>
-		<parameter name="p_duca_id_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[select
 infcd.estatus,
@@ -135,8 +134,7 @@ and cdd.lot_name = infsq.lot_name
 and spt.default_location_dest_id = infsq.location_id
 where sw.tipo_almacen in ('fiscal','pais')
 ) as infcd
-on infc.contenedor_id = infcd.contenedor_id
-where $X{IN,infc.duca_id,p_duca_id_t}]]>
+on infc.contenedor_id = infcd.contenedor_id]]>
 		</queryString>
 		<field name="estatus" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="estatus"/>
@@ -196,7 +194,6 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 			<property name="com.jaspersoft.studio.field.tree.path" value="wms_duca_despacho"/>
 		</field>
 	</subDataset>
-	<parameter name="p_duca_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>
@@ -227,10 +224,7 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dtsinvfis" uuid="635cc469-0b5e-4505-8f7e-9cd4332f96d0">
-						<datasetParameter name="p_duca_id_t">
-							<datasetParameterExpression><![CDATA[$P{p_duca_id}]]></datasetParameterExpression>
-						</datasetParameter>
+					<datasetRun subDataset="dtsinvfis" uuid="3b3e10b6-0d05-4f0e-8b67-cce3a9ed61c4">
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="140" uuid="fdf91935-7d1a-46bc-b6f0-3371ac40e873">

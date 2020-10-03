@@ -1,0 +1,660 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_boleta_autoefectivo" pageWidth="3500" pageHeight="595" orientation="Landscape" columnWidth="3460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="80563086-d7ff-4779-8534-a2118482af8a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_odoo_reporte"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#87CEFA">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE7FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#006CAF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dtsboleta" uuid="3d859b6c-0950-4e39-8657-4279782562a8">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_odoo_reporte"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="310"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="690"/>
+		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
+		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
+		<queryString language="SQL">
+			<![CDATA[select
+tmp.fecha_cobro, tmp.fecha_factura, tmp.numero_boleta, tmp.loan_nombre_cliente, tmp.valor_depositado, 
+case 
+	when tmp.valor_depositado != val.total_cobrado then 'requiere revision'
+	else 'cuadrado'
+end as validacion,
+tmp.descripcion, tmp.monto, tmp.no_factura, tmp.tipo_doc
+from(
+select t.* from (
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+case
+	when lpr.descripcion in ('Gasto Administrativo','Gasto Adicional') then lpr.documento
+	else
+		lpr.descripcion
+end  as descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'recibo'
+	else 'factura'
+end as tipo_doc
+from loan_installment_invoice as fpc
+inner join partner_loan_installment_details as lpr
+on fpc.loan_installment_id = lpr.id
+inner join partner_loan_details as pr
+on lpr.loan_id = pr.id
+inner join account_payment as pg
+on fpc.payment_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on lpr.descripcion_cobro_id = ct.id
+union all
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+lpr.descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'recibo'
+	else 'factura'
+end as tipo_doc
+from loan_gasto_inicial_payment as fpc
+inner join gastos_iniciales as lpr
+on fpc.cargo_inicial_id = lpr.id
+inner join partner_loan_details as pr
+on lpr.loan_id = pr.id
+inner join account_payment as pg
+on fpc.payment_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on lpr.descripcion_cobro_id = ct.id
+union all
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+fpc.descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'recibo'
+	else 'factura'
+end as tipo_doc
+from abonos_capital as fpc
+inner join partner_loan_details as pr
+on fpc.loan_id = pr.id
+inner join account_payment as pg
+on fpc.pay_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on fpc.descripcion_cobro_id = ct.id
+) as t
+) as tmp
+inner join
+(
+select v.cobro_id, sum(v.monto) as total_cobrado from (
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+case
+	when lpr.descripcion in ('Gasto Administrativo','Gasto Adicional') then lpr.documento
+	else
+		lpr.descripcion
+end  as descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'recibo'
+	else 'factura'
+end as tipo_doc
+from loan_installment_invoice as fpc
+inner join partner_loan_installment_details as lpr
+on fpc.loan_installment_id = lpr.id
+inner join partner_loan_details as pr
+on lpr.loan_id = pr.id
+inner join account_payment as pg
+on fpc.payment_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on lpr.descripcion_cobro_id = ct.id
+union all
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+lpr.descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'recibo'
+	else 'factura'
+end as tipo_doc
+from loan_gasto_inicial_payment as fpc
+inner join gastos_iniciales as lpr
+on fpc.cargo_inicial_id = lpr.id
+inner join partner_loan_details as pr
+on lpr.loan_id = pr.id
+inner join account_payment as pg
+on fpc.payment_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on lpr.descripcion_cobro_id = ct.id
+union all
+select 
+cb.id as cobro_id,
+cb.fecha_cobro,
+cb.fecha_factura,
+cb.numero_boleta,
+pr.loan_nombre_cliente,
+cb.valor_depositado,
+fpc.descripcion,
+pg.amount as monto,
+case 
+when fc."number" is null then fc.reference||' '||fc.state 
+else fc."number"
+end as no_factura,
+case 
+	when ct.usa_factura=false then 'recibo'
+	else 'factura'
+end as tipo_doc
+from abonos_capital as fpc
+inner join partner_loan_details as pr
+on fpc.loan_id = pr.id
+inner join account_payment as pg
+on fpc.pay_id = pg.id
+inner join account_invoice as fc
+on pg.communication = fc.reference
+inner join cobro_prestamo as cb
+on fpc.cobro_id = cb.id
+inner join catalogo_descripcion_cobro as ct
+on fpc.descripcion_cobro_id = ct.id
+) as v
+group by v.cobro_id
+) as val
+on tmp.cobro_id = val.cobro_id
+where cast(tmp.fecha_factura::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
+order by tmp.fecha_cobro]]>
+		</queryString>
+		<field name="fecha_cobro" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.label" value="fecha_cobro"/>
+		</field>
+		<field name="fecha_factura" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.label" value="fecha_factura"/>
+		</field>
+		<field name="numero_boleta" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="numero_boleta"/>
+		</field>
+		<field name="loan_nombre_cliente" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="loan_nombre_cliente"/>
+		</field>
+		<field name="valor_depositado" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="valor_depositado"/>
+		</field>
+		<field name="validacion" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="validacion"/>
+		</field>
+		<field name="descripcion" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+		</field>
+		<field name="monto" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="monto"/>
+		</field>
+		<field name="no_factura" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="no_factura"/>
+		</field>
+		<field name="tipo_doc" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="tipo_doc"/>
+		</field>
+	</subDataset>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="?column?" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="?column?"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="45" splitType="Stretch"/>
+	</title>
+	<summary>
+		<band height="76">
+			<crosstab>
+				<reportElement x="0" y="3" width="3460" height="60" uuid="819beb43-8929-4271-945e-17057724e4b5">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+					<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+					<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+					<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<crosstabDataset>
+					<dataset resetType="Report">
+						<datasetRun subDataset="dtsboleta" uuid="de3788b2-f6af-4753-89c4-9bdd36ec3335">
+							<datasetParameter name="p_fecha_final_t">
+								<datasetParameterExpression><![CDATA[$P{p_fecha_final}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="p_fecha_inicial_t">
+								<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<rowGroup name="fecha_cobro" width="90">
+					<bucket class="java.sql.Date">
+						<bucketExpression><![CDATA[$F{fecha_cobro}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="90" height="20" uuid="3405e27a-a237-46ed-9643-610652a7d3a1"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{fecha_cobro}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="8c87e4cf-239f-45b8-bb81-650359628a6e"/>
+								<text><![CDATA[Total fecha_cobro]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="numero_boleta" width="160">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{numero_boleta}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="160" height="20" uuid="dc201aa1-1b99-43eb-9ff2-34a06925fe15"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{numero_boleta}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="58aecdf0-163f-4ffb-9003-5100daac4386"/>
+								<text><![CDATA[Total numero_boleta]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="loan_nombre_cliente" width="290">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{loan_nombre_cliente}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="290" height="20" uuid="e5abbda8-1781-41c3-8d27-76bb93fccbb0"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{loan_nombre_cliente}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="84a23b0f-4dc9-4653-aeb5-7125ccb667ac"/>
+								<text><![CDATA[Total loan_nombre_cliente]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="valor_depositado" width="100">
+					<bucket class="java.math.BigDecimal">
+						<bucketExpression><![CDATA[$F{valor_depositado}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField pattern="#,##0.00#" isBlankWhenNull="false">
+								<reportElement x="0" y="0" width="100" height="20" uuid="0a7dd639-d0ba-43ea-89c2-08afbc67c9a7"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{valor_depositado}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="f9bfbae2-c20a-4b06-a86b-859ac512477c"/>
+								<text><![CDATA[Total valor_depositado]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="validacion" width="90">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{validacion}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="90" height="20" uuid="25febb60-13f3-445a-a1ef-5f7d9abb090a"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{validacion}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="fc6b33a7-68fd-4fa2-9643-248ab8adde87"/>
+								<text><![CDATA[Total validacion]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="tipo_doc" height="20">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{tipo_doc}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="170" height="20" uuid="3145ba3c-9dca-4bb1-9de1-de9d60ec9090"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{tipo_doc}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="867f035f-1839-4eb6-aeed-8bfb66824a4e"/>
+								<text><![CDATA[Total tipo_doc]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="descripcion" height="20">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{descripcion}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque" style="Crosstab_CH">
+							<textField>
+								<reportElement x="0" y="0" width="170" height="20" uuid="c67bbfae-b7e2-42a4-bd01-9db0e4de9250"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="10"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{descripcion}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents>
+							<staticText>
+								<reportElement x="0" y="0" width="-2147483648" height="-2147483648" uuid="e810b559-d685-4495-a2fe-354ecc45601d"/>
+								<text><![CDATA[Total descripcion]]></text>
+							</staticText>
+						</cellContents>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="monto_MEASURE" class="java.math.BigDecimal" calculation="Sum">
+					<measureExpression><![CDATA[$F{monto}]]></measureExpression>
+				</measure>
+				<crosstabCell width="170" height="20">
+					<cellContents mode="Opaque" style="Crosstab_CD">
+						<textField pattern="#,##0.00#" isBlankWhenNull="true">
+							<reportElement x="0" y="0" width="170" height="20" uuid="433a27a6-2b92-4064-9491-1fd90c607956"/>
+							<box rightPadding="5"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<font fontName="DejaVu Sans" size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" columnTotalGroup="tipo_doc">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="4737a0a7-5660-4e6f-adea-0034d7333e3c"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" columnTotalGroup="descripcion">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="20a5a696-3006-4544-8ac4-2b76a731d8ae"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="fecha_cobro">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="647c894c-b23d-48da-9157-97197e581376"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="fecha_cobro" columnTotalGroup="tipo_doc">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="f15b4b12-cc34-4d03-a788-223e0767399a"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="fecha_cobro" columnTotalGroup="descripcion">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="2fc593d4-6189-4739-861c-1fdbef481db1"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="numero_boleta">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="0824d97a-05e5-4eb4-9127-49701e6cedcb"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="numero_boleta" columnTotalGroup="tipo_doc">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="9c350d8c-54e8-411d-b63e-dcc33be67973"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="numero_boleta" columnTotalGroup="descripcion">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="98c5ec23-0f5c-444d-a74b-a1ce0ac161e4"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="loan_nombre_cliente">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="145fc9a6-19de-471d-ae3c-4b38934c48f9"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="loan_nombre_cliente" columnTotalGroup="tipo_doc">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="eefc3e73-a010-49b4-bdd1-4865791f7fad"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="loan_nombre_cliente" columnTotalGroup="descripcion">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="22563dfe-63b0-4b1d-8adb-5406507282a0"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="valor_depositado">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="0c57e136-833b-4708-bae4-8090c9306f15"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="valor_depositado" columnTotalGroup="tipo_doc">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="a1c947d7-f00d-4468-8fd0-ae37a4bf0db3"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="valor_depositado" columnTotalGroup="descripcion">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="fa06ad1a-3cd3-42b9-b3d6-3fc6eafd27d9"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="validacion">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="e742819f-a4df-4193-92aa-32a9e985ef35"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="validacion" columnTotalGroup="tipo_doc">
+					<cellContents mode="Opaque" style="Crosstab_CT">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF" uuid="3d2ed207-d860-4cfd-ae7f-ce90a67aa3cf"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="60" height="20" rowTotalGroup="validacion" columnTotalGroup="descripcion">
+					<cellContents mode="Opaque" style="Crosstab_CG">
+						<textField>
+							<reportElement x="0" y="0" width="60" height="20" uuid="7cb3c6a8-5e9b-41af-afa7-565b0e620b4a"/>
+							<textFieldExpression><![CDATA[$V{monto_MEASURE}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

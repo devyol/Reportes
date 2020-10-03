@@ -68,37 +68,16 @@
 	</style>
 	<subDataset name="DTSFactura" uuid="c214b5bf-f574-4891-9012-1de9a1ee56c2">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_ipisa"/>
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<parameter name="p_id_cliente_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
-		<parameter name="p_id_compania_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[select 
 fact.id,
 fact."number",
-case 
-	when fact.journal_id = 1 then
-		case 
-			when position('-' in fact."number")-1 > 0 then
-				 substr(fact."number",1,position('-' in fact."number")-1)
-			 else	 	
-			 	substr(fact."number",1,position('/' in fact."number")+position('/' in substr(fact."number",position('/' in fact."number")+1))-1)
-		 end
-	 else
-	 	fact.mpfel_serial
- end serie,
-case 
-	when fact.journal_id = 1 then
-		case 
-			when position('-' in fact."number")-1 > 0 then
-				cast(substr(fact."number",(position('-' in fact."number")+1)) as integer)
-			else
-				cast(substr(substr(fact."number",position('/' in fact."number")+1),position('/' in substr(fact."number",position('/' in fact."number")+1))+1) as integer)
-		end
-	else
-		cast(fact.mpfel_number as numeric)
-end numero,
+fact.mpfel_serial as serie,
+fact.mpfel_number as numero,
 fact.date_invoice as fecha,
 cli.vat as nit,
 cli."name" as nombre,
@@ -106,11 +85,11 @@ cli.street as direccion,
 coalesce(cast(cant.super as double precision),0) super,
 coalesce(cast(cant.regular as double precision),0) regular,
 coalesce(cast(cant.diesel as double precision),0) diesel,
-coalesce(cast(cant.flete as double precision),0) flete,
+coalesce(cast(cant.otros as double precision),0) flete,
 coalesce(cast(total.totsuper as double precision),0) totsuper,
 coalesce(cast(total.totregular as double precision),0) totregular,
 coalesce(cast(total.totdiesel as double precision),0) totdiesel,
-coalesce(cast(total.totflete as double precision),0) totflete,
+coalesce(cast(total.tototros as double precision),0) totflete,
 coalesce(cast(imp.idpsuper as double precision),0) idpsuper,
 coalesce(cast(imp.idpregular as double precision),0) idpregular,
 coalesce(cast(imp.idpdiesel as double precision),0) idpdiesel,
@@ -128,16 +107,27 @@ on fact.partner_id = cli.id
 inner join account_journal as di
 on fact.journal_id = di.id
 left join (
-select cant.invoice_id, cant.super, cant.regular, cant.diesel, cant.flete
+select cant.invoice_id, cant.super, cant.regular, cant.diesel, cant.otros
 from crosstab(
-'select 
+'
+select
+t.invoice_id,
+t.descripcion,
+t.cantidad
+from
+(
+--------------------------
+select 
 info.invoice_id,
 pla.descripcion,
 info.cantidad
 from (
-select id produc_id, "name" descripcion
-from product_template
-where id in (8,9,10,12)) as pla
+select pp.id produc_id, pt."name" descripcion
+from product_template as pt
+inner join product_product as pp
+on pp.product_tmpl_id = pt.id
+where pp.id in (81,82)
+) as pla
 left join
 (	
 select 
@@ -147,30 +137,99 @@ sum(ail.quantity) cantidad
 from account_invoice as ai
 left join account_invoice_line as ail
 on ai.id = ail.invoice_id
-where ail.product_id in (8,9,10,12)
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where ail.product_id in (81,82)
+and aj.mpfel_type = ''FACT''
 group by ai.id, ail.product_id
 ) as info
 on pla.produc_id = info.product_id
-order by invoice_id desc',
-'select "name" descripcion
-from product_template
-where id in (8,9,10,12)
-order by id'
+----------------------------------
+union all
+select 
+invoice_id,
+descripcion,
+sum(cantidad) as cantidad
+from
+(
+select 
+ai.id invoice_id,
+''Diesel'' as descripcion,
+ail.quantity as cantidad
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where ail.product_id = 83
+and aj.mpfel_type = ''FACT''
+union all
+select 
+ai.id invoice_id,
+''Diesel'' as descripcion,
+ail.quantity as cantidad
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where ail.product_id = 84
+and aj.mpfel_type = ''FACT''
+) as tdi
+group by invoice_id,descripcion
+--------------------------------------
+union all
+select 
+ai.id invoice_id,
+''Otros'' as descripcion,
+ail.quantity as cantidad
+from account_invoice as ai
+inner join account_invoice_line as ail
+on ai.id = ail.invoice_id
+join x_producto_reporte as xpr
+on ail.product_id = xpr.x_producto_id
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where aj.mpfel_type = ''FACT''
+) as t
+order by t.invoice_id desc
+',
+'select descripcion
+from(
+select 1 as idt, ''Gasolina Superior'' as descripcion
+union all
+select 2 as idt, ''Gasolina Regular'' as descripcion
+union all
+select 3 as idt, ''Diesel'' as descripcion
+union all
+select 4 as idt, ''Otros'' as descripcion
+) as dt
+order by dt.idt'
 )as cant
-("invoice_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)
+("invoice_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "otros" varchar)
 ) as cant
 on fact.id = cant.invoice_id
 left join (
-select prec.invoice_id, prec.totsuper, prec.totregular, prec.totdiesel, prec.totflete
+select prec.invoice_id, prec.totsuper, prec.totregular, prec.totdiesel, prec.tototros
 from crosstab(
-'select 
+'
+select
+t.invoice_id,
+t.descripcion,
+t.total
+from
+(
+select 
 info.invoice_id,
 pla.descripcion,
 info.total
 from (
-select id produc_id, "name" descripcion
-from product_template
-where id in (8,9,10,12)) as pla
+select pp.id produc_id, pt."name" descripcion
+from product_template as pt
+inner join product_product as pp
+on pp.product_tmpl_id = pt.id
+where pp.id in (81,82)
+) as pla
 left join
 (	
 select 
@@ -180,17 +239,77 @@ sum(ail.price_subtotal) total
 from account_invoice as ai
 left join account_invoice_line as ail
 on ai.id = ail.invoice_id
-where ail.product_id in (8,9,10,12)
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where ail.product_id in (81,82)
+and aj.mpfel_type = ''FACT''
 group by ai.id, ail.product_id
 ) as info
 on pla.produc_id = info.product_id
-order by invoice_id desc',
-'select "name" descripcion
-from product_template
-where id in (8,9,10,12)
-order by id'
+--------------------------
+union all 
+select 
+invoice_id,
+descripcion,
+sum(total) as total
+from
+(
+select 
+ai.id invoice_id,
+''Diesel'' as descripcion,
+ail.price_subtotal as total
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where ail.product_id = 83
+and aj.mpfel_type = ''FACT''
+--------------------------
+union all
+select 
+ai.id invoice_id,
+''Diesel'' as descripcion,
+ail.price_subtotal
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where ail.product_id = 84
+and aj.mpfel_type = ''FACT''
+---------------------------------
+union all
+select 
+ai.id invoice_id,
+''Otros'' as descripcion,
+ail.price_subtotal
+from account_invoice as ai
+inner join account_invoice_line as ail
+on ai.id = ail.invoice_id
+join x_producto_reporte as xpr
+on ail.product_id = xpr.x_producto_id
+inner join account_journal as aj
+on ai.journal_id = aj.id
+where aj.mpfel_type = ''FACT''
+) as tdi
+group by invoice_id,descripcion
+) as t
+order by t.invoice_id desc
+',
+'select descripcion
+from(
+select 1 as idt, ''Gasolina Superior'' as descripcion
+union all
+select 2 as idt, ''Gasolina Regular'' as descripcion
+union all
+select 3 as idt, ''Diesel'' as descripcion
+union all
+select 4 as idt, ''Otros'' as descripcion
+) as dt
+order by dt.idt'
 )as prec
-("invoice_id" numeric, "totsuper" varchar, "totregular" varchar, "totdiesel" varchar, "totflete" varchar)
+("invoice_id" numeric, "totsuper" varchar, "totregular" varchar, "totdiesel" varchar, "tototros" varchar)
 ) as total
 on fact.id = total.invoice_id
 left join (
@@ -213,7 +332,10 @@ sum(ait.amount) imp
 from account_invoice as ai
 left join account_invoice_tax as ait
 on ai.id = ait.invoice_id
+inner join account_journal as aj
+on ai.journal_id = aj.id
 where ait.tax_id in (2,4,6,8)
+and aj.mpfel_type = ''FACT''
 group by ai.id, ait.tax_id
 ) as info
 on tax.id = info.tax_id
@@ -236,8 +358,8 @@ order by ide) as d'
 ) as imp
 on fact.id = imp.invoice_id
 where fact."type" = 'out_invoice'
+and di.mpfel_type = 'FACT'
 and cast(fact.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
-and $X{IN,fact.company_id,p_id_compania_t}
 and $X{IN,fact.partner_id,p_id_cliente_t}
 order by fact.date_invoice]]>
 		</queryString>
@@ -251,9 +373,11 @@ order by fact.date_invoice]]>
 		</field>
 		<field name="serie" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="serie"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
-		<field name="numero" class="java.math.BigDecimal">
+		<field name="numero" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="numero"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
 		<field name="fecha" class="java.sql.Date">
 			<property name="com.jaspersoft.studio.field.label" value="fecha"/>
@@ -318,7 +442,6 @@ order by fact.date_invoice]]>
 	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
 	<parameter name="p_fecha_final" class="java.sql.Date"/>
 	<parameter name="p_id_cliente" class="java.util.Collection" nestedType="java.lang.Integer"/>
-	<parameter name="p_id_compania" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[select 1]]>
 	</queryString>
@@ -343,7 +466,7 @@ order by fact.date_invoice]]>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="DTSFactura" uuid="50dbe94a-be70-45d2-90fb-1ec5a49f12c1">
+					<datasetRun subDataset="DTSFactura" uuid="e704a694-1787-4d87-9e2c-2cde0254fede">
 						<datasetParameter name="p_fecha_inicial_t">
 							<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -352,9 +475,6 @@ order by fact.date_invoice]]>
 						</datasetParameter>
 						<datasetParameter name="p_id_cliente_t">
 							<datasetParameterExpression><![CDATA[$P{p_id_cliente}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="p_id_compania_t">
-							<datasetParameterExpression><![CDATA[$P{p_id_compania}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -563,7 +683,7 @@ order by fact.date_invoice]]>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12" isBold="false"/>
 								</textElement>
-								<text><![CDATA[flete]]></text>
+								<text><![CDATA[otros]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:columnFooter style="Table 2_CH" height="30"/>
@@ -651,7 +771,7 @@ order by fact.date_invoice]]>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="12" isBold="false"/>
 								</textElement>
-								<text><![CDATA[totflete]]></text>
+								<text><![CDATA[tototros]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:columnFooter style="Table 2_CH" height="30"/>

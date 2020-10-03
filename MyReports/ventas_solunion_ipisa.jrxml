@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ventas_solunion_ipisa" pageWidth="1100" pageHeight="595" orientation="Landscape" columnWidth="1100" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="b5f54e92-d68c-4894-905d-2c3c58b349ae">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#FFDABF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#D2691E">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#FFDABF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dtsSolunion" uuid="feca1e16-0680-46b6-9223-d39a2713f419">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
+		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
+		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
+		<parameter name="p_id_user_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
+		<parameter name="p_credito_t" class="java.util.Collection" nestedType="java.lang.String"/>
+		<queryString language="SQL">
+			<![CDATA[select
+ai.date_invoice as fecha,
+ai."number" as numero,
+ai.amount_total as monto,
+rpc.x_codigo_solunion as codigo_solunion,
+rpc.vat as nit,
+rpc.x_razon_social as razon_social,
+rpc."ref" as codigo_externo,
+rpc."name" as cliente,
+sum(ail.quantity) as cantidad,
+rpc.credit_control as credito,
+rpu."name" as vendedor
+from account_invoice as ai
+inner join res_partner as rpc
+on ai.partner_id = rpc.id
+inner join account_invoice_line as ail
+on ail.invoice_id = ai.id
+inner join res_users as ru
+on ai.user_id = ru.id
+inner join res_partner as rpu
+on ru.partner_id = rpu.id
+where cast(ai.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
+and $X{IN,ai.user_id,p_id_user_t}
+and $X{IN,rpc.credit_control,p_credito_t}
+group by
+ai.date_invoice,ai."number", ai.amount_total,
+rpc.x_codigo_solunion, rpc.vat, rpc.x_razon_social,
+rpc."ref", rpc."name",rpc.credit_control,rpu."name"
+order by ai.date_invoice]]>
+		</queryString>
+		<field name="fecha" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+		</field>
+		<field name="numero" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="numero"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+		</field>
+		<field name="monto" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="monto"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+		</field>
+		<field name="codigo_solunion" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="codigo_solunion"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+		</field>
+		<field name="nit" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="nit"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+		</field>
+		<field name="razon_social" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="razon_social"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+		</field>
+		<field name="codigo_externo" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="codigo_externo"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+		</field>
+		<field name="cliente" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="cliente"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+		</field>
+		<field name="cantidad" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="cantidad"/>
+		</field>
+		<field name="credito" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="credito"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+		</field>
+		<field name="vendedor" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="vendedor"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+		</field>
+	</subDataset>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<parameter name="p_id_user" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_credito" class="java.util.Collection" nestedType="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 1]]>
+	</queryString>
+	<title>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="700" height="30" uuid="21aadc74-5031-40aa-8434-8bd89bd5bb31"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Reporte de Ventas "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final}) ]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="60" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="1100" height="60" uuid="51ede804-b078-4ce1-bf59-e4bc7aad9998">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dtsSolunion" uuid="32ac88e7-05fb-45f2-8c30-01ad8df28adb">
+						<datasetParameter name="p_fecha_inicial_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_fecha_final_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_id_user_t">
+							<datasetParameterExpression><![CDATA[$P{p_id_user}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_credito_t">
+							<datasetParameterExpression><![CDATA[$P{p_credito}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="100" uuid="ea2ee703-2bda-439e-acda-469c68618d5b">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="fedc0813-7c2d-470c-a813-a4a1a9ef129f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[fecha]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField pattern="dd-MM-yyyy">
+								<reportElement x="0" y="0" width="100" height="30" uuid="c06df764-26bf-46ec-ad6d-984ba1118c90"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="7c4801f4-fa57-4fba-b559-85997a0978fc">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="a1b7757a-dab4-4d83-b261-ad7f8a53bc8d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[numero]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="a5b67baf-1ace-4244-9a28-bdf535d78b66"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="09bb6d72-9414-4561-8e25-c2ad22b839e4">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="8fc7b4cc-488b-4046-b3a9-4575c8316164"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[monto]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField pattern="Q#,###.00;Q-#,###.00">
+								<reportElement x="0" y="0" width="100" height="30" uuid="dd557c17-a8f5-41ee-ae73-b31e9c2429a5"/>
+								<box leftPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="68a37bd3-a72b-4a6f-b9bd-bdf3ce4e6793">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="6fc8516e-adea-41f7-9f6b-3553a07319d6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[codigo_solunion]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="100" height="30" uuid="5c8e57e9-4945-45ff-a39e-9fb2bbf7ba63"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{codigo_solunion}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="cc029b7d-5acb-45f8-a8a3-6b7a5e72e8c5">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="6056637e-44cc-4133-b786-6a5727c033f2"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[nit]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="6fe198d1-9045-42a4-8f12-9b563835bd69"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{nit}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="98f15089-26bd-40e4-b8e8-7da5b8d9daf1">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="4ab6e8cd-e8af-487e-b57e-24f2906bce08"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[razon_social]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="231328aa-056a-4378-a0ba-0d8a7d6cdaff"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{razon_social}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="1ff8d70d-dba3-4a19-8f4f-7a9b2f02525d">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="ccb09a96-694d-465e-badb-674838c98f19"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[codigo_externo]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="5fd34db1-0a59-4876-b98b-20e54314da88"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{codigo_externo}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="94be0192-0865-464f-836b-c8ee0fb830fd">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="fda8d64a-d169-45db-b3ce-e2842950b9d4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[cliente]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="9e18e52a-eec7-474d-a8ff-865afbdf1e63"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="b2776485-220c-48ae-bbb2-0e7085a3fa01">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="7f2c0f71-6dc1-415b-8164-50f36daa3e73"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[cantidad]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField pattern="#,###.###">
+								<reportElement x="0" y="0" width="100" height="30" uuid="ba200ea8-897e-40d1-9474-9c02f267e8c8"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="1c05e611-89ec-4b68-b097-da96e0916f81">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="5ff597cf-0679-4ee0-9690-6ebb9d330c26"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[credito]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="38effcf8-4558-46c4-8d1b-82aad3881ac4"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{credito}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="fd111674-6333-4449-9143-e479cbaf7fe2">
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="faeab2e1-a3fa-4e58-9b32-952468bde67b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[vendedor]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="30" uuid="58ede50e-ee6e-4d90-9d08-7b0aba9200e1"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{vendedor}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

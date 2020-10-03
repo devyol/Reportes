@@ -1,3 +1,6 @@
+
+--INVENTARIO FISCAL
+
 select
 infcd.estatus,
 infc.file,
@@ -12,9 +15,11 @@ infcd.cbm,
 infcd.fecha_vencimiento,
 infc.ingreso_cealsa,
 infc.dias_estadia,
-infcd.destino
+infcd.destino,
+infc.duca_id
 from (
 select
+da.duca_id,
 ct.id as contenedor_id,
 fl."name" as file,
 ct.tipo_transporte,
@@ -97,10 +102,11 @@ and spt.default_location_dest_id = infsq.location_id
 where sw.tipo_almacen in ('fiscal','pais')
 ) as infcd
 on infc.contenedor_id = infcd.contenedor_id
+where $X{IN,infc.duca_id,p_duca_id_t}
 
 
 
-
+--CONTROL LOGISTICO
 
 
 select
@@ -210,3 +216,14 @@ order by id'
 )as tgas ("contenedor_id" numeric, "tdl" varchar, "tqt" varchar)
 ) as inftotgas
 on ct.id = inftotgas.contenedor_id
+where $X{IN,da.duca_id,p_duca_id_t}
+
+
+
+select t.id, t.name
+from(
+select distinct nombre_duca as name, id
+from wms_duca) as t
+
+
+

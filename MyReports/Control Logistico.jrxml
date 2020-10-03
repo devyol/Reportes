@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Control Logistico" pageWidth="4720" pageHeight="612" orientation="Landscape" columnWidth="4720" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0cf1fc93-ca99-43cd-ab49-4330a8bf4fee">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_wms"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS13"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -32,7 +32,8 @@
 	</style>
 	<subDataset name="dtsctrlog" uuid="2dcbd93e-26d7-4be9-bf30-f1e9da270ba4">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_wms"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS13"/>
+		<parameter name="p_duca_id_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[select
 ct."name" contenedor,
@@ -140,7 +141,8 @@ where id in (2,84)
 order by id'
 )as tgas ("contenedor_id" numeric, "tdl" varchar, "tqt" varchar)
 ) as inftotgas
-on ct.id = inftotgas.contenedor_id]]>
+on ct.id = inftotgas.contenedor_id
+where $X{IN,da.duca_id,p_duca_id_t}]]>
 		</queryString>
 		<field name="contenedor" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="contenedor"/>
@@ -276,6 +278,7 @@ on ct.id = inftotgas.contenedor_id]]>
 			<property name="com.jaspersoft.studio.field.label" value="pendiente_nombre"/>
 		</field>
 	</subDataset>
+	<parameter name="p_duca_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>
@@ -296,7 +299,7 @@ on ct.id = inftotgas.contenedor_id]]>
 	<summary>
 		<band height="104" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="0" width="4720" height="90" uuid="81eb37e5-cecc-43f6-8c8c-4bcf265111d2">
+				<reportElement x="0" y="0" width="4580" height="90" uuid="81eb37e5-cecc-43f6-8c8c-4bcf265111d2">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -304,7 +307,10 @@ on ct.id = inftotgas.contenedor_id]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dtsctrlog" uuid="80b9d2be-712f-4a01-a3ec-7385be000c55">
+					<datasetRun subDataset="dtsctrlog" uuid="7a250e79-9a85-433b-a255-e769af0ff6f6">
+						<datasetParameter name="p_duca_id_t">
+							<datasetParameterExpression><![CDATA[$P{p_duca_id}]]></datasetParameterExpression>
+						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="145" uuid="e9e11139-683d-44c0-9509-4435e7292dec">

@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_factura_ipisa" pageWidth="2940" pageHeight="200" columnWidth="2940" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="92d103f1-ff95-484f-b75a-23c46afc6151">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_factura_ipisa" pageWidth="3080" pageHeight="200" columnWidth="3080" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="92d103f1-ff95-484f-b75a-23c46afc6151">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
@@ -100,7 +91,8 @@ case
 	when fact.state = 'paid' then 'Pagada'
 	when fact.state = 'draft' then 'Borrador'
 	when fact.state = 'cancel' then 'Cancelado'
-end estado
+end estado,
+di."name" as diario_factura
 from account_invoice as fact
 inner join res_partner as cli
 on fact.partner_id = cli.id
@@ -126,7 +118,7 @@ select pp.id produc_id, pt."name" descripcion
 from product_template as pt
 inner join product_product as pp
 on pp.product_tmpl_id = pt.id
-where pp.id in (81,82)
+where pp.id in (78,79)
 ) as pla
 left join
 (	
@@ -139,7 +131,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id in (81,82)
+where ail.product_id in (78,79)
 and aj.mpfel_type = ''FACT''
 group by ai.id, ail.product_id
 ) as info
@@ -161,7 +153,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 83
+where ail.product_id = 80
 and aj.mpfel_type = ''FACT''
 union all
 select 
@@ -173,7 +165,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 84
+where ail.product_id = 81
 and aj.mpfel_type = ''FACT''
 ) as tdi
 group by invoice_id,descripcion
@@ -228,7 +220,7 @@ select pp.id produc_id, pt."name" descripcion
 from product_template as pt
 inner join product_product as pp
 on pp.product_tmpl_id = pt.id
-where pp.id in (81,82)
+where pp.id in (78,79)
 ) as pla
 left join
 (	
@@ -241,7 +233,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id in (81,82)
+where ail.product_id in (78,79)
 and aj.mpfel_type = ''FACT''
 group by ai.id, ail.product_id
 ) as info
@@ -263,7 +255,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 83
+where ail.product_id = 80
 and aj.mpfel_type = ''FACT''
 --------------------------
 union all
@@ -276,7 +268,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 84
+where ail.product_id = 81
 and aj.mpfel_type = ''FACT''
 ---------------------------------
 union all
@@ -322,7 +314,7 @@ info.imp
 from (
 select id, "name" descripcion
 from account_tax
-where id in (2,4,6,8)) as tax
+where id in (76,79,81,89)) as tax
 left join
 (	
 select 
@@ -334,8 +326,8 @@ left join account_invoice_tax as ait
 on ai.id = ait.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ait.tax_id in (2,4,6,8)
-and aj.mpfel_type = ''FACT''
+where ait.tax_id in (76,79,81,89)
+--and aj.mpfel_type = ''FACT''
 group by ai.id, ait.tax_id
 ) as info
 on tax.id = info.tax_id
@@ -344,14 +336,14 @@ order by invoice_id desc',
 from(
 select
 case 
-	when id = 6 then 1
-	when id = 4 then 2
-	when id = 8 then 3
-	when id = 2 then 4
+	when id = 79 then 1
+	when id = 76 then 2
+	when id = 81 then 3
+	when id = 89 then 4
 end ide,
 "name" descripcion
 from account_tax
-where id in (2,4,6,8)
+where id in (76,79,81,89)
 order by ide) as d'
 )as tax
 ("invoice_id" numeric, "idpsuper" varchar, "idpregular" varchar, "idpdiesel" varchar, "iva" varchar)
@@ -438,6 +430,10 @@ order by fact.date_invoice]]>
 		<field name="estado" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="estado"/>
 		</field>
+		<field name="diario_factura" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="diario_factura"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_journal"/>
+		</field>
 	</subDataset>
 	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
 	<parameter name="p_fecha_final" class="java.sql.Date"/>
@@ -459,7 +455,7 @@ order by fact.date_invoice]]>
 	<detail>
 		<band height="90" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="0" width="2940" height="90" uuid="1c3cad3b-89f3-457b-bc1e-43337016aa55">
+				<reportElement x="0" y="0" width="3080" height="90" uuid="1c3cad3b-89f3-457b-bc1e-43337016aa55">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
@@ -479,7 +475,8 @@ order by fact.date_invoice]]>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="110" uuid="758272d4-d0a6-4490-aee1-b6c893597197">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="56b37ba1-2004-4a9e-8d60-b464a83ddcc4"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -488,7 +485,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[serie]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="2f14e88a-9592-494d-b8c4-660d5507ea80"/>
@@ -501,7 +498,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="7721dd36-4e6f-4b28-b277-ab783668499f">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="9f408ced-790d-4af9-b496-1b2ff58f5a40"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -510,7 +508,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[numero]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="c74cfcff-11a1-40f0-b427-5543f12d8efd"/>
@@ -523,7 +521,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="c6ccc682-92ef-40e7-bea2-b37b4b16212d">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="fb49547d-3494-457d-97e8-d889deff1e3e"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -532,7 +531,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[fecha]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="697096e9-7b11-4098-8b25-e1314e8bb4ce"/>
@@ -545,7 +544,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="8f4dc551-efa0-4918-8d81-5724a406e7cf">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="e27fbaaf-aa90-4cdd-8138-c076f44811a0"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -554,7 +554,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[nit]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="e2b60ced-6ad0-4545-9bc7-6e7f41b7ac03"/>
@@ -567,7 +567,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="560" uuid="38eb1c5b-c522-4842-8713-743b0f1cfbeb">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="560" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="3a8c6d40-e3db-4e5a-98f8-c5eba69878c3"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -576,7 +577,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[nombre]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="560" height="30" uuid="7b748b36-dffb-46ae-970c-a269789c94e3"/>
@@ -589,7 +590,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="400" uuid="5c22cad0-1be8-421a-8d74-69ef7884e939">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="400" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="cd63aa3c-2ee2-4eca-a53f-bea50c2ac81c"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -598,7 +600,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[direccion]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="400" height="30" uuid="dda9e73e-0ace-4ae7-979e-fe6b914b59fc"/>
@@ -611,7 +613,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="25d3f0f6-2e0f-4410-b937-6f4d580647e5">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="fef78c8b-b8d6-4d4f-96a4-879092331e9a"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -620,7 +623,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[super]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="#,##0.###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="61425ac2-5945-4fe5-a72d-6e705861dc01"/>
@@ -633,7 +636,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="4941ba5c-02b1-4bbe-9218-cc968206cd7a">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="7ea1b34f-9c5b-45e2-bc2a-362a0d605f50"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -642,7 +646,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[regular]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="#,##0.###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="4f8ea8ae-1b77-4a51-b67f-a5f3d77aaba6"/>
@@ -655,7 +659,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="c4625d36-87d6-4701-9235-8badabeb33be">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="2d239089-ff38-44ce-b7a9-3c2f8b3720af"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -664,7 +669,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[diesel]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="#,##0.###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="502f4065-c377-47f1-b35b-d3b850a71198"/>
@@ -677,7 +682,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="b6735490-c840-48b0-b5af-341471ec9543">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="46dfd613-8f14-4125-953c-2612f8b3eb87"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -686,7 +692,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[otros]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="#,##0.###" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="703bd6d6-c1ef-4fe6-ba7e-51cdbf5157f4"/>
@@ -699,7 +705,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="6c51ecc7-78a5-4144-a778-28bc61eddb86">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="c596f3be-fd2a-4f9b-a8fa-6ad4d8e2ade7"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -708,7 +715,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[totsuper]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="4a1f5e8e-df97-4f9e-bbd4-d20e08e8cbda"/>
@@ -721,7 +728,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="cebe649c-13a8-434d-8f17-477f2634568e">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="176d7c10-691d-49df-8c01-24e396d0266a"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -730,7 +738,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[totregular]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="b8b2c4b2-e231-4e2c-8013-eed9f8ced478"/>
@@ -743,7 +751,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="49067600-e2b1-47d0-a66a-dc4d0dc1b749">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="37b1654e-6a9a-42a6-94ba-3a36446af0ef"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -752,7 +761,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[totdiesel]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="20abbd30-7538-4cb3-99ad-479c41d39091"/>
@@ -765,7 +774,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="03d86c86-c013-4ee4-b6ca-43ccc3cdc5a2">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="b7a3d91d-6d2f-495e-8735-04a76dd9c4cf"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -774,7 +784,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[tototros]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="85371b79-9cab-4a73-905d-b667cc5481d4"/>
@@ -787,7 +797,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="6603c721-7a75-444e-9988-b4d43f22ffb3">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="ad3bad91-3dd2-44da-8fe7-a578f4b4ad38"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -796,7 +807,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[idpsuper]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="7d88145c-fc8e-436a-9c2d-dbbaf3ec8626"/>
@@ -809,7 +820,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="1dd69f28-e3c9-4f5d-b4dc-ae0cccef520a">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="1ac37c9b-ed47-44ce-b658-898f933f8259"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -818,7 +830,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[idpregular]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="70449a07-d745-4bf3-b28c-7bac2af6f790"/>
@@ -831,7 +843,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="2b129e37-7014-4528-838a-26582091f505">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="8bd9d30f-2e20-4671-81c0-9aae4356132b"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -840,7 +853,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[idpdiesel]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="c98d90fe-8660-466e-8f26-5e55c552ea9f"/>
@@ -853,7 +866,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="7e041704-9509-411d-b578-78ec820bf0b1">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="a3e51cf0-334e-4b81-a3b3-3955215e0f9b"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -862,7 +876,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[iva]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="d117ce77-cbe6-49c0-b37e-1c7f4d82e21c"/>
@@ -875,7 +889,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="6c70bfee-500f-40b4-a7b8-04c30c9965ad">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="8a7819ad-9759-4ba9-9d75-6a659c366737"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -884,7 +899,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[total]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField pattern="Q#,##0.00;Q-#,##0.00" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="19ca5746-3fb1-44ae-85ed-8205f75f19ee"/>
@@ -897,7 +912,8 @@ order by fact.date_invoice]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="110" uuid="23e3e5ad-7b21-4619-9d13-65ad583d7909">
-						<jr:columnHeader style="Table 2_CH" height="30">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Transparent" x="0" y="0" width="110" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="f79f6c10-c2c9-4b8f-a928-2710b625177a"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -906,7 +922,7 @@ order by fact.date_invoice]]>
 								<text><![CDATA[estado]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="Table 2_CH" height="30"/>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
 						<jr:detailCell style="Table 2_TD" height="30">
 							<textField isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="110" height="30" uuid="b7c26917-4257-4ee8-83c8-4b6bbeb88adf"/>
@@ -915,6 +931,29 @@ order by fact.date_invoice]]>
 									<font fontName="DejaVu Sans" size="12"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="8955e571-b346-4af0-902c-6210bedbe292">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column21"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement mode="Transparent" x="0" y="0" width="140" height="30" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="9a79638c-9364-40ad-8ab9-5a1d86e48fbe"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12" isBold="false"/>
+								</textElement>
+								<text><![CDATA[diario factura]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="Table 2_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="140" height="30" uuid="bbcb9f57-fd62-4cca-9a9f-67c73103bce7"/>
+								<box leftPadding="1"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{diario_factura}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

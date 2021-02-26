@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cierre_estaciones_ipisa" pageWidth="1430" pageHeight="400" orientation="Landscape" columnWidth="1430" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="cde96cff-14a6-4e6f-b949-232ad7073a5a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_ipisa"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -32,13 +32,15 @@
 	</style>
 	<subDataset name="dtsCierre" uuid="3bc50421-8998-4cd7-947e-4a6b4503afa5">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_ipisa"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
 		<parameter name="p_id_user_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<parameter name="p_id_sesion_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
 		<queryString language="SQL">
 			<![CDATA[select 
+ps.id,
+ps.user_id,
 ps."name" as sesion,
 rpu."name" as usuario,
 po.date_order as fecha,
@@ -54,7 +56,7 @@ when po.state = 'done' then 'Publicado'
 when po.state = 'invoiced' then 'Facturado'
 end as estado,
 pp.default_code as producto,
-pol.qty as cantidad,
+ail.quantity as cantidad,
 ai.amount_total as total
 from pos_order as po
 inner join pos_session as ps
@@ -67,6 +69,8 @@ inner join res_partner as prc
 on po.partner_id = prc.id
 inner join account_invoice as ai
 on po."name" = ai.origin
+inner join account_invoice_line as ail
+on ai.id = ail.invoice_id
 inner join pos_order_line as pol
 on pol.order_id = po.id
 inner join product_product as pp
@@ -75,6 +79,14 @@ where cast(po.date_order::text as date) between cast($P{p_fecha_inicial_t}::text
 and $X{IN,ps.user_id,p_id_user_t}
 and $X{IN,ps.id,p_id_sesion_t}]]>
 		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="pos_session"/>
+		</field>
+		<field name="user_id" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.label" value="user_id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="pos_session"/>
+		</field>
 		<field name="sesion" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="sesion"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="pos_session"/>
@@ -112,7 +124,7 @@ and $X{IN,ps.id,p_id_sesion_t}]]>
 		</field>
 		<field name="cantidad" class="java.math.BigDecimal">
 			<property name="com.jaspersoft.studio.field.label" value="cantidad"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="pos_order_line"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice_line"/>
 		</field>
 		<field name="total" class="java.math.BigDecimal">
 			<property name="com.jaspersoft.studio.field.label" value="total"/>
@@ -134,7 +146,7 @@ and $X{IN,ps.id,p_id_sesion_t}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Cierre de Estación(es) Del "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final}) ]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Cierre de Estación(es) Del "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final})]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -148,15 +160,15 @@ and $X{IN,ps.id,p_id_sesion_t}]]>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dtsCierre" uuid="fdd25119-b4d7-4b82-9476-ab3c097e329a">
-						<datasetParameter name="p_id_user_t">
-							<datasetParameterExpression><![CDATA[$P{p_id_user}]]></datasetParameterExpression>
-						</datasetParameter>
+					<datasetRun subDataset="dtsCierre" uuid="52508785-04a7-489d-b0ea-96df9b36760c">
 						<datasetParameter name="p_fecha_inicial_t">
 							<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="p_fecha_final_t">
 							<datasetParameterExpression><![CDATA[$P{p_fecha_final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_id_user_t">
+							<datasetParameterExpression><![CDATA[$P{p_id_user}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="p_id_sesion_t">
 							<datasetParameterExpression><![CDATA[$P{p_id_sesion_t}]]></datasetParameterExpression>

@@ -1,7 +1,7 @@
 --*****************************CIERRE DE ESTACIONES*******************
 select 
---ps.id,
---ps.user_id,
+ps.id,
+ps.user_id,
 ps."name" as sesion,
 rpu."name" as usuario,
 po.date_order as fecha,
@@ -17,7 +17,7 @@ when po.state = 'done' then 'Publicado'
 when po.state = 'invoiced' then 'Facturado'
 end as estado,
 pp.default_code as producto,
-pol.qty as cantidad,
+ail.quantity as cantidad,
 ai.amount_total as total
 from pos_order as po
 inner join pos_session as ps
@@ -30,6 +30,8 @@ inner join res_partner as prc
 on po.partner_id = prc.id
 inner join account_invoice as ai
 on po."name" = ai.origin
+inner join account_invoice_line as ail
+on ai.id = ail.invoice_id
 inner join pos_order_line as pol
 on pol.order_id = po.id
 inner join product_product as pp
@@ -186,7 +188,8 @@ case
 	when fact.state = 'paid' then 'Pagada'
 	when fact.state = 'draft' then 'Borrador'
 	when fact.state = 'cancel' then 'Cancelado'
-end estado
+end estado,
+di."name" as diario_factura
 from account_invoice as fact
 inner join res_partner as cli
 on fact.partner_id = cli.id
@@ -212,7 +215,7 @@ select pp.id produc_id, pt."name" descripcion
 from product_template as pt
 inner join product_product as pp
 on pp.product_tmpl_id = pt.id
-where pp.id in (81,82)
+where pp.id in (78,79)
 ) as pla
 left join
 (	
@@ -225,7 +228,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id in (81,82)
+where ail.product_id in (78,79)
 and aj.mpfel_type = ''FACT''
 group by ai.id, ail.product_id
 ) as info
@@ -247,7 +250,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 83
+where ail.product_id = 80
 and aj.mpfel_type = ''FACT''
 union all
 select 
@@ -259,7 +262,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 84
+where ail.product_id = 81
 and aj.mpfel_type = ''FACT''
 ) as tdi
 group by invoice_id,descripcion
@@ -314,7 +317,7 @@ select pp.id produc_id, pt."name" descripcion
 from product_template as pt
 inner join product_product as pp
 on pp.product_tmpl_id = pt.id
-where pp.id in (81,82)
+where pp.id in (78,79)
 ) as pla
 left join
 (	
@@ -327,7 +330,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id in (81,82)
+where ail.product_id in (78,79)
 and aj.mpfel_type = ''FACT''
 group by ai.id, ail.product_id
 ) as info
@@ -349,7 +352,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 83
+where ail.product_id = 80
 and aj.mpfel_type = ''FACT''
 --------------------------
 union all
@@ -362,7 +365,7 @@ left join account_invoice_line as ail
 on ai.id = ail.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ail.product_id = 84
+where ail.product_id = 81
 and aj.mpfel_type = ''FACT''
 ---------------------------------
 union all
@@ -408,7 +411,7 @@ info.imp
 from (
 select id, "name" descripcion
 from account_tax
-where id in (2,4,6,8)) as tax
+where id in (76,79,81,89)) as tax
 left join
 (	
 select 
@@ -420,8 +423,8 @@ left join account_invoice_tax as ait
 on ai.id = ait.invoice_id
 inner join account_journal as aj
 on ai.journal_id = aj.id
-where ait.tax_id in (2,4,6,8)
-and aj.mpfel_type = ''FACT''
+where ait.tax_id in (76,79,81,89)
+--and aj.mpfel_type = ''FACT''
 group by ai.id, ait.tax_id
 ) as info
 on tax.id = info.tax_id
@@ -430,14 +433,14 @@ order by invoice_id desc',
 from(
 select
 case 
-	when id = 6 then 1
-	when id = 4 then 2
-	when id = 8 then 3
-	when id = 2 then 4
+	when id = 79 then 1
+	when id = 76 then 2
+	when id = 81 then 3
+	when id = 89 then 4
 end ide,
 "name" descripcion
 from account_tax
-where id in (2,4,6,8)
+where id in (76,79,81,89)
 order by ide) as d'
 )as tax
 ("invoice_id" numeric, "idpsuper" varchar, "idpregular" varchar, "idpdiesel" varchar, "iva" varchar)

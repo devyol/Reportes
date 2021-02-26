@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inventario_fiscal_wms" pageWidth="2060" pageHeight="612" orientation="Landscape" columnWidth="2060" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="8c623b47-0a4c-44dd-8efa-853465a2e77a">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inventario_fiscal_wms" pageWidth="2390" pageHeight="612" orientation="Landscape" columnWidth="2390" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="8c623b47-0a4c-44dd-8efa-853465a2e77a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS13"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -33,110 +33,124 @@
 	<subDataset name="dtsinvfis" uuid="8af8b819-1509-418d-bf3c-9e135e47bd22">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="WMS13"/>
-		<parameter name="p_duca_id_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
 		<queryString language="SQL">
-			<![CDATA[select
-infcd.estatus,
-infc.file,
-infc.tipo_transporte,
-infc.tipo_contenedor,
-infc.no_contenedor,
-infc.da,
-infcd.producto,
-infcd.unidades,
-infcd.bultos,
-infcd.cbm,
-infcd.fecha_vencimiento,
-infc.ingreso_cealsa,
-infc.dias_estadia,
-infcd.destino,
-infc.duca_id
-from (
+			<![CDATA[select *
+from(
 select
-da.duca_id,
-ct.id as contenedor_id,
-fl."name" as file,
-ct.tipo_transporte,
-tc."name" as tipo_contenedor,
-ct."name" no_contenedor,
-da.duca_numero as da,
-ct.fecha_llegada_recinto as ingreso_cealsa,
-current_date - ct.fecha_llegada_recinto as dias_estadia
-from wms_contenedor as ct
-inner join documents_folder as fl
-on ct.parent_folder_id = fl.id
-left join wms_contenedor_tipo as tc
-on ct.contenedor_tipo_id = tc.id
-left join wms_duca_despacho as da
-on ct.duca = da.id) as infc
-inner join
-(
-select cd.contenedor_id,
-case 
-	when cd.estatus in ('exportacion','confirmar_pago') then 
-		(case 
-			when cd.estatus = 'exportacion' then 'Exportacion'
-			when cd.estatus = 'confirmar_pago' then 'Confirmar Pago'
-		 end)
-	when cd.estatus not in ('exportacion','confirmar_pago') then
-		(case 
-			when ct.state != 'sol_aprobado' then
+ic.estatus,
+ic.file, 
+ic.tipo_transporte, 
+ic.tipo_contenedor, 
+ic.contenedor as no_contenedor,
+ic.duca_numero as da,
+ic.producto,
+isq.lot_name as lote, 
+sum(isq.unidades) as unidades,
+sum(ibp.bultos) as bultos,
+null as cbm,
+sum(ibp.peso_neto) as peso_neto,
+sum(ibp.peso_bruto) as peso_bruto,
+isq.fecha_vencimiento,
+ic.fecha_llegada_recinto as ingreso_cealsa,
+ic.dias_estadia, 
+ic.pais as destino
+from(
+select df."name" as file, wc.tipo_transporte, wct."name" as tipo_contenedor,
+wc."name" as contenedor, wdd.duca_numero, wc.fecha_llegada_recinto, 
+current_date - wc.fecha_llegada_recinto as dias_estadia,
+sw."name" as destino, rc."name" as pais,
+pt.name as producto, wpld.lot_name, wpld.lot_id,
+wcd.picking_type_id, wcdd.product_id, wcdd.linea_duca,
+	case
+		when wcd.estatus in ('exportacion',
+		'confirmar_pago') then
+		(case
+			when wcd.estatus = 'exportacion' then 'Exportación'
+			when wcd.estatus = 'confirmar_pago' then 'Confirmar Pago'
+		end)
+		when wcd.estatus not in ('exportacion',
+		'confirmar_pago') then
+		(case
+			when wc2.state != 'sol_aprobado' then
 			(case
-				when ct.state = 'reg_pendiente' then 'Pendiente Registro'
-				when ct.state = 'sol_ingresado' then 'Solicitud Registro Ingresada'
-			 end)
-			when ct.state = 'sol_aprobado' and fr.state is null then 'Certificado Aprobada'
-			when ct.state = 'sol_aprobado' and fr.state is not null then
-			(case 
-				when fr.state = 'cert_pendiente' then 'Pendiente Franquisia'
-				when fr.state = 'sol_ingresado' then 'Solicitud Franquisia Ingresada'
-				when fr.state = 'sol_aprobado' then 'Franquisia Aprobada'
-			 end)
-		 end)
-end estatus,
-pt."name" as producto,
-infsq.quantity as unidades,
-cdd.cantidad_bulto as bultos,
-cdd.cbm,
-cast(cdd.fecha_vencimiento as date) as fecha_vencimiento,
-co."name" as destino,
-sw.tipo_almacen,
-cdd.product_id,
-cdd.lot_name,
-spt.default_location_dest_id location_id
-from wms_contenedor_destino as cd
-left join wms_contenedor_destino_detalle as cdd
-on cd.id = cdd.contenedor_destino_id
-left join product_product as pr
-on cdd.product_id = pr.id
-left join product_template as pt
-on pr.product_tmpl_id = pt.id
-left join res_partner as co
-on cd.empresa_id = co.id
-left join wms_franquicia as fr
-on cdd.franquicia_id = fr.id
-left join wms_certificado as ct
-on cdd.certificado_id = ct.id
-inner join stock_picking_type as spt
-on cd.picking_type_id = spt.id
-inner join stock_warehouse as sw
+				when wc2.state = 'reg_pendiente' then 'Pendiente Registro'
+				when wc2.state = 'sol_ingresado' then 'Solicitud Registro Ingresada'
+			end)
+			when wc2.state = 'sol_aprobado'
+			and wf.state is null then 'Certificado Aprobada'
+			when wc2.state = 'sol_aprobado'
+			and wf.state is not null then
+			(case
+				when wf.state = 'cert_pendiente' then 'Pendiente Franquisia'
+				when wf.state = 'sol_ingresado' then 'Solicitud Franquisia Ingresada'
+				when wf.state = 'sol_aprobado' then 'Franquisia Aprobada'
+			end)
+		end)
+	end estatus
+from wms_contenedor wc 
+inner join wms_contenedor_destino wcd
+on wc.id = wcd.contenedor_id
+inner join wms_contenedor_destino_detalle wcdd
+on wcd.id = wcdd.contenedor_destino_id
+inner join wms_producto_lote_detalle wpld
+on wcdd.id = wpld.destino_detalle_id
+inner join stock_picking_type spt 
+on spt.id = wcd.picking_type_id
+inner join stock_warehouse sw
 on spt.warehouse_id = sw.id
-inner join stock_location as sl
-on spt.default_location_dest_id = sl.id
+inner join res_country rc
+on rc.id = wcd.pais
+inner join product_product pp
+on pp.id = wcdd.product_id
+inner join product_template pt
+on pp.product_tmpl_id = pt.id
+inner join documents_folder df
+on df.id = wc.parent_folder_id
+inner join wms_contenedor_tipo wct
+on wc.contenedor_tipo_id = wct.id
+inner join wms_duca_despacho wdd
+on wc.duca = wdd.id
+left join wms_certificado wc2
+on wc2.id = wcdd.certificado_id
+left join wms_franquicia wf
+on wf.id = wcdd.franquicia_id
+) ic
 inner join (
-select sq.product_id, lt."name" lot_name, sq.location_id, quantity
-from stock_quant as sq
-inner join stock_production_lot as lt
-on sq.lot_id = lt.id
-where quantity >= 0
-) as infsq
-on cdd.product_id = infsq.product_id
-and cdd.lot_name = infsq.lot_name
-and spt.default_location_dest_id = infsq.location_id
-where sw.tipo_almacen in ('fiscal','pais')
-) as infcd
-on infc.contenedor_id = infcd.contenedor_id
-where $X{IN,infc.duca_id,p_duca_id_t}]]>
+select spl."name" as lot_name, spl.id as lot_id, spl.product_id,
+spl.picking_type_id,spl.linea_duca, spl.life_date as fecha_vencimiento,
+sq.quantity as unidades
+from stock_quant sq
+inner join stock_production_lot spl
+on sq.lot_id = spl.id
+where sq.quantity >= 0) isq
+on ic.lot_name = isq.lot_name
+and ic.lot_id = isq.lot_id
+and ic.product_id = isq.product_id
+and ic.picking_type_id = isq.picking_type_id
+and ic.linea_duca = isq.linea_duca
+inner join (
+select wdpl.producto_id as product_id, spl."name" as lot_name, spl.id as lot_id,
+spl.picking_type_id, spl.linea_duca, 
+wdpl.bultos_pendientes as bultos, 
+wdpl.peso_neto_pendiente as peso_neto,
+wdpl.peso_bruto_pendiente as peso_bruto
+from wms_da_producto wdp
+inner join wms_da_producto_lote wdpl
+on wdp.id = wdpl.da_producto_id
+inner join stock_production_lot spl
+on wdpl."name" = spl.id
+) as ibp
+on ic.lot_name = isq.lot_name
+and ic.lot_id = ibp.lot_id
+and ic.product_id = ibp.product_id
+and ic.picking_type_id = ibp.picking_type_id
+and ic.linea_duca = ibp.linea_duca
+group by ic.estatus, ic.file, ic.tipo_transporte, ic.tipo_contenedor, ic.contenedor,
+ic.duca_numero, ic.pais, ic.producto, ic.fecha_llegada_recinto, isq.lot_name,
+isq.fecha_vencimiento, ic.dias_estadia
+order by ic.pais, ic.fecha_llegada_recinto, isq.lot_name
+) as t
+where t.bultos > 0]]>
 		</queryString>
 		<field name="estatus" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="estatus"/>
@@ -165,20 +179,30 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 			<property name="com.jaspersoft.studio.field.label" value="producto"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="product_template"/>
 		</field>
+		<field name="lote" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="lote"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="stock_production_lot"/>
+		</field>
 		<field name="unidades" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="unidades"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="stock_quant"/>
 		</field>
-		<field name="bultos" class="java.lang.Integer">
+		<field name="bultos" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="bultos"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="wms_contenedor_destino_detalle"/>
 		</field>
-		<field name="cbm" class="java.lang.Double">
+		<field name="cbm" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="cbm"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="wms_contenedor_destino_detalle"/>
 		</field>
-		<field name="fecha_vencimiento" class="java.sql.Date">
+		<field name="peso_neto" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="peso_neto"/>
+		</field>
+		<field name="peso_bruto" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="peso_bruto"/>
+		</field>
+		<field name="fecha_vencimiento" class="java.sql.Timestamp">
 			<property name="com.jaspersoft.studio.field.label" value="fecha_vencimiento"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="stock_production_lot"/>
 		</field>
 		<field name="ingreso_cealsa" class="java.sql.Date">
 			<property name="com.jaspersoft.studio.field.label" value="ingreso_cealsa"/>
@@ -189,14 +213,9 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 		</field>
 		<field name="destino" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="destino"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
-		</field>
-		<field name="duca_id" class="java.lang.Integer">
-			<property name="com.jaspersoft.studio.field.label" value="duca_id"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="wms_duca_despacho"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_country"/>
 		</field>
 	</subDataset>
-	<parameter name="p_duca_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select 1]]>
 	</queryString>
@@ -220,17 +239,14 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 	<summary>
 		<band height="90" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="0" width="2060" height="60" uuid="039193e8-eb90-4b0e-8889-7544a55c310e">
+				<reportElement x="0" y="0" width="2390" height="60" uuid="039193e8-eb90-4b0e-8889-7544a55c310e">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dtsinvfis" uuid="635cc469-0b5e-4505-8f7e-9cd4332f96d0">
-						<datasetParameter name="p_duca_id_t">
-							<datasetParameterExpression><![CDATA[$P{p_duca_id}]]></datasetParameterExpression>
-						</datasetParameter>
+					<datasetRun subDataset="dtsinvfis" uuid="1c32c21c-12aa-499b-8f5e-e99c74f4f6e5">
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="140" uuid="fdf91935-7d1a-46bc-b6f0-3371ac40e873">
@@ -394,8 +410,28 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="140" uuid="cdca7b08-65a2-4ca7-835f-98cc5e99eb60">
+					<jr:column width="90" uuid="2b01db4c-2f9f-47b6-b326-8d0b42ef83cb">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="83a0b595-d4be-40d9-b225-d0bca9078e9b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Lote]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement positionType="Float" x="0" y="0" width="90" height="30" uuid="96add184-2b22-4812-931b-4f39bad0df46"/>
+								<box leftPadding="5"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{lote}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="cdca7b08-65a2-4ca7-835f-98cc5e99eb60">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" uuid="fa247cf3-e710-4439-baee-195fc850b479"/>
@@ -407,10 +443,10 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField pattern="#,##0.00#" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="140" height="30" uuid="e3abd6b8-f6d8-41e4-95d0-d8c560786f46"/>
-								<box leftPadding="5"/>
-								<textElement verticalAlignment="Middle">
+								<box leftPadding="0" rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font size="12"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{unidades}]]></textFieldExpression>
@@ -418,7 +454,7 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="140" uuid="c22c709e-a3dd-42c2-bcae-dc6cd4dc456a">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" uuid="87f6181c-3f53-4cb4-b2cf-b984323fa2ee"/>
@@ -430,39 +466,64 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField isBlankWhenNull="true">
+							<textField pattern="#,##0.00#" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="140" height="30" uuid="54dbb7e4-e934-4f2b-aec2-0cee1f919bf3"/>
-								<box leftPadding="5"/>
-								<textElement verticalAlignment="Middle">
+								<box leftPadding="0" rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font size="12"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{bultos}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="90" uuid="a64826a9-f28d-4020-bd01-f8f72dc7c3c8">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+					<jr:column width="120" uuid="bcefb2c5-2160-4b66-bfa3-0e5d678a391a">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="90" height="30" uuid="79d75a37-b94a-43ea-b888-82dff03922a4"/>
+								<reportElement x="0" y="0" width="120" height="30" uuid="04082da8-8516-4e1a-a453-024f418092ed"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font size="12"/>
 								</textElement>
-								<text><![CDATA[CBM]]></text>
+								<text><![CDATA[Peso Neto]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="30">
-							<textField isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="90" height="30" uuid="cc74290b-dc99-464e-93af-a0b058cd6276"/>
-								<textElement verticalAlignment="Middle">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="120" height="30" uuid="3ff34e4a-5b7c-4a9c-8b16-d751676a8323"/>
+								<box leftPadding="0" rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font size="12"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{cbm}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{peso_neto}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="120" uuid="7654ae9a-3eaf-45d2-8302-5c9112aee5c9">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="120" height="30" uuid="24367f47-f13f-48cb-ba7c-7030d1563128">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<text><![CDATA[Peso Bruto]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="#,##0.00#">
+								<reportElement x="0" y="0" width="120" height="30" uuid="8113cc9c-ebec-4559-b603-23cc2591db96"/>
+								<box leftPadding="0" rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{peso_bruto}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="140" uuid="7f139e08-826c-427b-874d-b549e79a141f">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" uuid="626f3d45-3287-464d-92b1-ada5b4b6837e"/>
@@ -485,7 +546,7 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="140" uuid="40efbd50-985b-4cc1-bb3c-0a1b5255503b">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" uuid="82988314-917a-46fb-bdbb-f37147ff3f99"/>
@@ -508,7 +569,7 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="140" uuid="9ea8a653-09c0-47b5-88df-48d419f857d8">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" uuid="55d9c643-24db-4b3b-a5b3-616fbe16308b"/>
@@ -531,7 +592,7 @@ where $X{IN,infc.duca_id,p_duca_id_t}]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="140" uuid="ed2c0b6d-130e-47f4-99b7-147a54d5381b">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
 						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="140" height="30" uuid="96003d55-e6e1-4aa0-9396-4e24ac617a95"/>

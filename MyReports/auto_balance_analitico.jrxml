@@ -1,0 +1,1039 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_balance_reporte" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="4ef263f0-fdc0-405c-ad96-8faa7d0114c8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<parameter name="p_no_hoja" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select 
+ge."name",
+ge.code,
+ge.grp1,
+ge.cod1,
+ge.x_studio_orden_de_reporte,
+ge.grp2,
+ge.cod2,
+ge.x_studio_grupo_2,
+ge.grp3,
+ge.cod3,
+ge.x_studio_grupo_3,
+ge.grp4,
+ge.cod4,
+ge.x_studio_grupo_4,
+ge.debit as debe,
+ge.credit as haber,
+coalesce(ge.saldo,0) as saldo,
+coalesce(sa.saldo,0) as saldo_anterior,
+(coalesce(ge.saldo,0)+coalesce(sa.saldo,0)) as saldo_acumulado
+from(--*********************
+select 
+c.id,
+c."name",
+c.code,
+c.grp1,
+c.cod1,
+c.x_studio_orden_de_reporte,
+c.grp2,
+c.cod2,
+c.x_studio_grupo_2,
+c.grp3,
+c.cod3,
+c.x_studio_grupo_3,
+c.grp4,
+c.cod4,
+c.x_studio_grupo_4,
+coalesce(s.debit,0) as debit,
+coalesce(s.credit,0) as credit,
+coalesce(s.saldo,0) as saldo,
+coalesce(date_part('month',c.fecha_final_anterior),0) as mes,
+coalesce(date_part('year',c.fecha_final_anterior),0) as anio
+from (
+select
+aa.id,
+aa."name",
+aa.code,
+cast((date_trunc('month',cast(($P{p_fecha_inicial})::text as date)) -'1sec' ::interval)::text as date) fecha_final_anterior,
+case
+when aa.x_studio_orden_de_reporte = 10 then 'CAJA'
+when aa.x_studio_orden_de_reporte = 20 then 'BANCOS'
+when aa.x_studio_orden_de_reporte = 30 then 'CLIENTES'
+when aa.x_studio_orden_de_reporte = 40 then 'DERECHOS LEGALES Y FISCALES'
+when aa.x_studio_orden_de_reporte = 50 then 'OTRAS CUENTAS POR COBRAR'
+when aa.x_studio_orden_de_reporte = 60 then 'PROPIEDAD, PLANTA Y EQUIPO'
+when aa.x_studio_orden_de_reporte = 70 then 'DEP. ACUM. PROPIEDAD, PLANTA Y'
+when aa.x_studio_orden_de_reporte = 80 then 'SEGUROS'
+when aa.x_studio_orden_de_reporte = 90 then 'OBLIGACIONES LEGALES Y FISCALES'
+when aa.x_studio_orden_de_reporte = 100 then 'OTRAS CUENTAS POR PAGAR'
+when aa.x_studio_orden_de_reporte = 110 then 'OBLIGACIONES LABORALES'
+when aa.x_studio_orden_de_reporte = 120 then 'CAPITAL SOCIAL'
+when aa.x_studio_orden_de_reporte = 130 then 'RESERVAS'
+when aa.x_studio_orden_de_reporte = 140 then 'RESULTADOS'
+when aa.x_studio_orden_de_reporte = 150 then 'INGRESOS POR SERVICIOS'
+when aa.x_studio_orden_de_reporte = 160 then 'GASTOS DE VENTA Y ADMINISTRACIÓN'
+when aa.x_studio_orden_de_reporte = 170 then 'OTROS GASTOS FINANCIEROS'
+when aa.x_studio_orden_de_reporte = 180 then 'OTROS PRODUCTOS FINANCIEROS'
+end as grp1,
+case 
+when aa.x_studio_orden_de_reporte = 10 and aa.x_studio_grupo_2 = 1010 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-1-1-01'
+when aa.x_studio_orden_de_reporte = 20 and aa.x_studio_grupo_2 = 1010 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-1-1-02'
+when aa.x_studio_orden_de_reporte = 30 and aa.x_studio_grupo_2 = 1030 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-1-2-01'
+when aa.x_studio_orden_de_reporte = 40 and aa.x_studio_grupo_2 = 1030 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-1-2-02'
+when aa.x_studio_orden_de_reporte = 50 and aa.x_studio_grupo_2 = 1030 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-1-2-03'
+when aa.x_studio_orden_de_reporte = 60 and aa.x_studio_grupo_2 = 1040 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-2-1-01'
+when aa.x_studio_orden_de_reporte = 70 and aa.x_studio_grupo_2 = 1050 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-2-2-01'
+when aa.x_studio_orden_de_reporte = 90 and aa.x_studio_grupo_2 = 1070 and aa.x_studio_grupo_3 = 2020 and aa.x_studio_grupo_4 = 3020 then '2-1-1-02'
+when aa.x_studio_orden_de_reporte = 100 and aa.x_studio_grupo_2 = 1070 and aa.x_studio_grupo_3 = 2020 and aa.x_studio_grupo_4 = 3020 then '2-1-1-03'
+when aa.x_studio_orden_de_reporte = 110 and aa.x_studio_grupo_2 = 1070 and aa.x_studio_grupo_3 = 2020 and aa.x_studio_grupo_4 = 3020 then '2-1-1-04'
+when aa.x_studio_orden_de_reporte = 120 and aa.x_studio_grupo_2 = 1080 and aa.x_studio_grupo_3 = 2030 and aa.x_studio_grupo_4 = 3040 then '3-1-1-01'
+when aa.x_studio_orden_de_reporte = 130 and aa.x_studio_grupo_2 = 1080 and aa.x_studio_grupo_3 = 2030 and aa.x_studio_grupo_4 = 3040 then '3-1-1-02'
+when aa.x_studio_orden_de_reporte = 140 and aa.x_studio_grupo_2 = 1080 and aa.x_studio_grupo_3 = 2030 and aa.x_studio_grupo_4 = 3040 then '3-1-1-03'
+when aa.x_studio_orden_de_reporte = 150 and aa.x_studio_grupo_2 = 1090 and aa.x_studio_grupo_3 = 2040 and aa.x_studio_grupo_4 = 3050 then '4-1-1-01'
+when aa.x_studio_orden_de_reporte = 160 and aa.x_studio_grupo_2 = 10100 and aa.x_studio_grupo_3 = 2050 and aa.x_studio_grupo_4 = 3060 then '6-1-1-01'
+when aa.x_studio_orden_de_reporte = 170 and aa.x_studio_grupo_2 = 10110 and aa.x_studio_grupo_3 = 2060 and aa.x_studio_grupo_4 = 3070 then '7-1-1-01'
+when aa.x_studio_orden_de_reporte = 180 and aa.x_studio_grupo_2 = 10110 and aa.x_studio_grupo_3 = 2060 and aa.x_studio_grupo_4 = 3070 then '7-1-1-02'
+end as cod1,
+aa.x_studio_orden_de_reporte,
+case
+when aa.x_studio_grupo_2 = 1010 then 'CAJA Y BANCOS'
+when aa.x_studio_grupo_2 = 1030 then 'CUENTAS POR COBRAR'
+when aa.x_studio_grupo_2 = 1040 then 'PROPIEDAD, PLANTA Y EQUIPO'
+when aa.x_studio_grupo_2 = 1050 then 'DEP. PROPIEDAD PLANTA EQUIPO'
+when aa.x_studio_grupo_2 = 1060 then 'SEGURO'
+when aa.x_studio_grupo_2 = 1070 then 'CUENTAS POR PAGAR'
+when aa.x_studio_grupo_2 = 1080 then 'CAPITAL, RESERVA Y RESULTADOS'
+when aa.x_studio_grupo_2 = 1090 then 'INGRESOS Y COSTOS POR'
+when aa.x_studio_grupo_2 = 10100 then 'GASTOS DE OPERACION'
+when aa.x_studio_grupo_2 = 10110 then 'OTROS GASTOS Y PRODUCTOS'
+end as grp2,
+case 
+when aa.x_studio_grupo_2 = 1010 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-1-1'
+when aa.x_studio_grupo_2 = 1030 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 =3010 then '1-1-2'
+when aa.x_studio_grupo_2 = 1040 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 = 3010 then '1-2-1'
+when aa.x_studio_grupo_2 = 1050 and aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 = 3010 then '1-2-2'
+when aa.x_studio_grupo_2 = 1070 and aa.x_studio_grupo_3 = 2020 and aa.x_studio_grupo_4 = 3020 then '2-1-1'
+when aa.x_studio_grupo_2 = 1080 and aa.x_studio_grupo_3 = 2030 and aa.x_studio_grupo_4 = 3040 then '3-1-1'
+when aa.x_studio_grupo_2 = 1090 and aa.x_studio_grupo_3 = 2040 and aa.x_studio_grupo_4 = 3050 then '4-1-1'
+when aa.x_studio_grupo_2 = 10100 and aa.x_studio_grupo_3 = 2050 and aa.x_studio_grupo_4 = 3060 then '6-1-1'
+when aa.x_studio_grupo_2 = 10110 and aa.x_studio_grupo_3 = 2060 and aa.x_studio_grupo_4 = 3070 then '7-1-1'
+end as cod2,
+aa.x_studio_grupo_2,
+case
+when aa.x_studio_grupo_3= 2010 then 'CORRIENTE'
+when aa.x_studio_grupo_3= 2020 then 'NO CORRIENTE'
+when aa.x_studio_grupo_3= 2030 then 'CAPITAL, RESERVA Y RESULTADOS'
+when aa.x_studio_grupo_3= 2040 then 'INGRESOS Y COSTOS'
+when aa.x_studio_grupo_3= 2050 then 'GASTOS DE OPERACION'
+when aa.x_studio_grupo_3= 2060 then 'OTROS GASTOS Y PRODUCTOS'
+end as grp3,
+case 
+when aa.x_studio_grupo_3 = 2010 and aa.x_studio_grupo_4 = 3010 then '1-1'
+when aa.x_studio_grupo_3 = 2020 and aa.x_studio_grupo_4 = 3020 then '2-2'
+when aa.x_studio_grupo_3 = 2030 and aa.x_studio_grupo_4 = 3040 then '3-1'
+when aa.x_studio_grupo_3 = 2040 and aa.x_studio_grupo_4 = 3050 then '4-1'
+when aa.x_studio_grupo_3 = 2050 and aa.x_studio_grupo_4 = 3060 then '6-1'
+when aa.x_studio_grupo_3 = 2060 and aa.x_studio_grupo_4 = 3070 then '7-1'
+end as cod3,
+aa.x_studio_grupo_3,
+case
+when aa.x_studio_grupo_4=3010 then 'ACTIVO'
+when aa.x_studio_grupo_4=3020 then 'PASIVO'
+when aa.x_studio_grupo_4=3040 then 'CAPITAL'
+when aa.x_studio_grupo_4=3050 then 'INGRESOS Y COSTOS'
+when aa.x_studio_grupo_4=3060 then 'GASTOS'
+when aa.x_studio_grupo_4=3070 then 'OTROS GASTOS Y PRODUCTOS'
+end as grp4,
+case
+when aa.x_studio_grupo_4 =3010 then '1'
+when aa.x_studio_grupo_4 =3020 then '2'
+when aa.x_studio_grupo_4 =3040 then '3'
+when aa.x_studio_grupo_4 =3050 then '4'
+when aa.x_studio_grupo_4 =3060 then '6'
+when aa.x_studio_grupo_4 =3070 then '7'
+end as cod4,
+aa.x_studio_grupo_4
+from account_account aa
+where aa.x_studio_orden_de_reporte > 0
+and aa.x_studio_grupo_2 > 0
+and aa.x_studio_grupo_3 > 0
+and aa.x_studio_grupo_4 > 0
+order by
+aa.x_studio_grupo_4,
+aa.x_studio_grupo_3,
+aa.x_studio_grupo_2,
+aa.x_studio_orden_de_reporte
+--cast(aa.code::text as numeric) 
+) as c
+left join
+(
+select
+aa.id,
+sum(aml.debit) as debit,
+sum(aml.credit) as credit,
+round((sum(aml.debit)-sum(aml.credit)),2) as saldo
+from account_move am
+inner join account_move_line aml
+on am.id = aml.move_id
+inner join account_account aa
+on aml.account_id = aa.id
+where am.state = 'posted'
+and aa.x_studio_orden_de_reporte > 0
+and aa.x_studio_grupo_2 > 0
+and aa.x_studio_grupo_3 > 0
+and aa.x_studio_grupo_4 > 0
+and cast(aml."date"::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date)
+group by
+aa.id
+ ) as s
+on c.id = s.id 
+) as ge --*********************
+left join
+(--*********************
+select
+t.anio,
+t.mes,
+t.code, 
+t.nombre_cuenta, 
+t.saldo_mes, sum(t.saldo_mes)over(partition by t.code order by t.anio,t.mes,t.code) as saldo from
+(
+select
+piv.anio,
+piv.mes,
+piv.code,
+piv.nombre_cuenta,
+coalesce(s.saldo_mes,0) as saldo_mes
+from (--------------------------
+select
+p.anio, p.mes, p.code, p.nombre_cuenta
+from ( -------
+select aa.code, aa."name" as nombre_cuenta
+,date_part('month',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as mes
+,date_part('year',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as anio
+from account_account aa
+where aa.x_studio_orden_de_reporte > 0
+and aa.x_studio_grupo_2 > 0
+and aa.x_studio_grupo_3 > 0
+and aa.x_studio_grupo_4 > 0 ) as p ) as piv
+left join(-------------------
+select
+inf.anio, inf.mes,
+inf.code, inf.cuenta, inf.saldo_mes
+from(
+select 
+date_part('month',cast(aml."date"::text as date)) as mes,
+date_part('year',cast(aml."date"::text as date)) as anio,
+aa.code, aa."name" as cuenta,
+sum(aml.debit)-sum(aml.credit) as saldo_mes
+from account_move_line aml
+inner join account_account aa 
+on aml.account_id = aa.id
+inner join account_move am 
+on aml.move_id = am.id
+where am.state = 'posted'
+group by
+date_part('year',cast(aml."date"::text as date)),
+date_part('month',cast(aml."date"::text as date)),
+aa.code, aa."name") as inf
+) as s
+on piv.anio = s.anio
+and piv.mes = s.mes
+and piv.code = s.code
+order by cast(piv.code::text as numeric),piv.anio, piv.mes) as t ) as sa -------------
+on ge.anio = sa.anio
+and ge.mes = sa.mes
+and ge.code = sa.code
+order by 
+ge.x_studio_grupo_4,
+ge.x_studio_grupo_3,
+ge.x_studio_grupo_2,
+ge.x_studio_orden_de_reporte,
+cast(ge.code::text as numeric)]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp1"/>
+	</field>
+	<field name="cod1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cod1"/>
+	</field>
+	<field name="x_studio_orden_de_reporte" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_orden_de_reporte"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp2"/>
+	</field>
+	<field name="cod2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cod2"/>
+	</field>
+	<field name="x_studio_grupo_2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_grupo_2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp3"/>
+	</field>
+	<field name="cod3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cod3"/>
+	</field>
+	<field name="x_studio_grupo_3" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_grupo_3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp4"/>
+	</field>
+	<field name="cod4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cod4"/>
+	</field>
+	<field name="x_studio_grupo_4" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_grupo_4"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="debe" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="debe"/>
+	</field>
+	<field name="haber" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="haber"/>
+	</field>
+	<field name="saldo" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo"/>
+	</field>
+	<field name="saldo_anterior" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo_anterior"/>
+	</field>
+	<field name="saldo_acumulado" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo_acumulado"/>
+	</field>
+	<variable name="sumatoriagrp2" class="java.math.BigDecimal" resetType="Group" resetGroup="grp2" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="sumatoriagrp3" class="java.math.BigDecimal" resetType="Group" resetGroup="grp3" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="sumatoriagrp4" class="java.math.BigDecimal" resetType="Group" resetGroup="grp4" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="sumacapitalpasivo" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[IF(OR(EQUALS($F{grp4},"CAPITAL"),EQUALS($F{grp4},"PASIVO")),$F{saldo}.doubleValue(),0)]]></variableExpression>
+	</variable>
+	<variable name="mesanteriorgpr4" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_anterior}]]></variableExpression>
+	</variable>
+	<variable name="debegpr4" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="habergpr4" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<variable name="acumuladogpr4" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_acumulado}]]></variableExpression>
+	</variable>
+	<variable name="mesanteriorgpr3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_anterior}]]></variableExpression>
+	</variable>
+	<variable name="debegpr3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="habergpr3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<variable name="acumuladogpr3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_acumulado}]]></variableExpression>
+	</variable>
+	<variable name="mesanteriorgpr2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_anterior}]]></variableExpression>
+	</variable>
+	<variable name="debegpr2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="habergpr2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<variable name="acumuladogpr2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_acumulado}]]></variableExpression>
+	</variable>
+	<variable name="sumasaldoanterior" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_anterior}]]></variableExpression>
+	</variable>
+	<variable name="sumadebe" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="sumahaber" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<variable name="sumasaldomes" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[ABS($F{saldo})]]></variableExpression>
+	</variable>
+	<variable name="sumasaldoacumulado" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[ABS($F{saldo_acumulado})]]></variableExpression>
+	</variable>
+	<variable name="mesanteriorgpr1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_anterior}]]></variableExpression>
+	</variable>
+	<variable name="debegpr1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="habergpr1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<variable name="acumuladogpr1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_acumulado}]]></variableExpression>
+	</variable>
+	<variable name="sumatoriagrp1" class="java.math.BigDecimal" resetType="Group" resetGroup="grp1" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<group name="grp4">
+		<groupExpression><![CDATA[$F{grp4}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="70" y="0" width="130" height="15" uuid="4a714a9e-a8a3-40e6-93c3-5936409cb182">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="6" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp4}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp4" pattern="#,##0.00#">
+					<reportElement x="410" y="0" width="70" height="15" uuid="121557c7-cf4c-42ea-abd6-dab5094f7755">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumatoriagrp4}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp4" pattern="#,##0.00#">
+					<reportElement x="200" y="0" width="70" height="15" uuid="c496af40-f2d6-4b0e-a02d-3d05d9965a30">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{mesanteriorgpr4}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp3" pattern="#,##0.00#">
+					<reportElement x="270" y="0" width="70" height="15" uuid="9cce29d6-4348-4e8b-beac-7e04b946164a">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{debegpr4}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp4" pattern="#,##0.00#">
+					<reportElement x="340" y="0" width="70" height="15" uuid="7f1fb4fc-b09b-4851-aac5-5544f01547ca">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{habergpr4}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp4" pattern="#,##0.00#">
+					<reportElement x="480" y="0" width="70" height="15" uuid="38e3002f-f264-49ed-abda-5d967c78c545">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladogpr4}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="70" height="15" uuid="2191abfa-18e4-4da0-93a0-56874dcf20d8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod4}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grp3">
+		<groupExpression><![CDATA[$F{grp3}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="70" y="0" width="130" height="15" uuid="f5c49365-e629-440e-88c5-8faea33ea1df">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="6" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp3}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp3" pattern="#,##0.00#">
+					<reportElement x="200" y="0" width="70" height="15" uuid="8efe8469-6258-4aee-8ff9-42153dc73adb">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{mesanteriorgpr3}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp3" pattern="#,##0.00#">
+					<reportElement x="270" y="0" width="70" height="15" uuid="6baa4556-d84f-49b5-bed8-ca71752cfdc8">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{debegpr3}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp3" pattern="#,##0.00#">
+					<reportElement x="340" y="0" width="70" height="15" uuid="1e055d19-f919-4f41-b66c-d895c61d2981">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{habergpr3}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp3" pattern="#,##0.00#">
+					<reportElement x="410" y="0" width="70" height="15" uuid="c8de6bae-17d9-4888-9c31-578a8a4de76a">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumatoriagrp3}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp3" pattern="#,##0.00#">
+					<reportElement x="480" y="0" width="70" height="15" uuid="7bf90b4a-d051-4efa-ae6d-a21c35e444a6">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladogpr3}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="70" height="15" uuid="4d0280d3-f31c-4638-969d-d9f7cd6bb04b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod3}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grp2">
+		<groupExpression><![CDATA[$F{grp2}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="70" y="0" width="130" height="15" uuid="b0237065-fa6f-41fc-bd6a-4267de8da722">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="6" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp2}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp2" pattern="#,##0.00#">
+					<reportElement x="200" y="0" width="70" height="15" uuid="762422ef-c047-419b-903f-017a191cde01">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{mesanteriorgpr2}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp2" pattern="#,##0.00#">
+					<reportElement x="270" y="0" width="70" height="15" uuid="229d8df5-a177-4ddd-8e5f-acab5bae1584">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{debegpr2}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp2" pattern="#,##0.00#">
+					<reportElement x="340" y="0" width="70" height="15" uuid="cbe56d53-c96b-4ea6-8f12-9b48a4538b0e">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{habergpr2}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp2" pattern="#,##0.00#">
+					<reportElement x="410" y="0" width="70" height="15" uuid="98aba433-8fe6-4477-8570-ff1ac905cb0d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumatoriagrp2}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp2" pattern="#,##0.00#">
+					<reportElement x="480" y="0" width="70" height="15" uuid="5df5186e-081a-4c0e-9398-41eadc91ae98">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladogpr2}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="70" height="15" uuid="0151c485-2ebd-49f9-be60-0406012d190c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grp1">
+		<groupExpression><![CDATA[$F{grp1}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="70" height="15" uuid="e320427e-7d03-41b0-8dcf-a4309e7a065a">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod1}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="70" y="0" width="130" height="15" uuid="ac9a037b-5e0b-43f9-8394-f082d8a869eb">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="6"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp1}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp1" pattern="#,##0.00#">
+					<reportElement x="200" y="0" width="70" height="15" uuid="bc979c9c-7b67-46cb-9f89-f92b6bd96891"/>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{mesanteriorgpr1}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp1" pattern="#,##0.00#">
+					<reportElement x="270" y="0" width="70" height="15" uuid="4daca8ed-0be6-4fe2-bd24-565da67b9bf6"/>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{debegpr1}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp1" pattern="#,##0.00#">
+					<reportElement x="340" y="0" width="70" height="15" uuid="0425f812-37e5-48c3-a93d-366a5c58e8a5"/>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{habergpr1}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp1" pattern="#,##0.00#">
+					<reportElement x="410" y="0" width="70" height="15" uuid="1536b540-6586-414a-a6cd-0a2aa8862d9a"/>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sumatoriagrp1}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp1" pattern="#,##0.00#">
+					<reportElement x="480" y="0" width="70" height="15" uuid="8335c66d-897f-4d4c-b28a-bd08da17f9cb"/>
+					<box rightPadding="5"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{acumuladogpr1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<pageHeader>
+		<band height="140">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="dd/MM/yyyy h:mm:ss a">
+				<reportElement x="354" y="0" width="200" height="15" uuid="2328b47a-6354-42b5-ab47-a793c82b5c64">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Courier 10 Pitch" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="15" width="200" height="15" uuid="20e8c934-984a-4b92-9a2f-f29f5525e21c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CASH CASH"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="30" width="400" height="15" uuid="7e03f537-927d-4949-8d43-e4c3bdb2e3b0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Operadora de Efectivos, Sociedad Anonima"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="45" width="200" height="15" uuid="dc92114b-5b23-416b-9d4c-399d80e05b8b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N.I.T.: 97398659"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="60" width="200" height="15" uuid="7f440095-c954-4d3e-8f27-f5b3560f6e9b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["BALANCE ANALITICO DE SALDOS"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="75" width="200" height="15" uuid="360a27fb-629d-4364-b1e9-b3ebd27c878b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["al " + new SimpleDateFormat("dd").format($P{p_fecha_final}) + " de " + new SimpleDateFormat("MMMM").format($P{p_fecha_final}) + " del "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="90" width="400" height="15" uuid="e7feeb44-959f-45e7-9d38-dfa4c347de33">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(CANTIDADES EXPRESADAS EN QUETZALES)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="105" width="80" height="15" uuid="2476f62d-81d0-4d67-9970-e1f1238b7263">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Codigo:"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="123" width="553" height="1" uuid="9a36d007-329d-48f4-a98b-1774140a2801">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="124" width="70" height="15" uuid="68580d5c-89f4-4a0a-aaae-7579673979fd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cuenta"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="124" width="130" height="15" uuid="85cb9982-7fa2-4ab6-8a9c-bdeadcf1fd13">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nombre de la Cuenta"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="124" width="70" height="15" uuid="70d63d16-9728-4360-a6e2-7990c5e0fc52">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Mes Anterior"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="124" width="70" height="15" uuid="dead8df8-275a-4276-a950-a4773990b4cf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Debe"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="124" width="70" height="15" uuid="7279767d-f969-46a5-9538-9211e975fef9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Haber"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="124" width="70" height="15" uuid="033715e9-a830-4c8c-a94f-76485cf31c01">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Saldo Mes"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="124" width="70" height="15" uuid="f4b03b78-27f1-4ee6-a9bc-f45ae0b7daa4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Acumulado"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="139" width="553" height="1" uuid="5cfaecdf-5e8e-4666-8307-9dab0f20554f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="453" y="75" width="100" height="15" uuid="f2484f73-f1f1-4402-9fe2-678eeed34efd"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja: "+ ($V{PAGE_NUMBER}+(($P{p_no_hoja}==0?1:$P{p_no_hoja})-1))]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="70" y="0" width="130" height="15" uuid="c6ae31f3-8d2e-48fd-9533-4b478972f95c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="410" y="0" width="70" height="15" uuid="4132f156-0d80-420b-a7a1-f8124fc75471">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="200" y="0" width="70" height="15" uuid="68688219-c8ac-4cd2-a12d-8c66c9c541b3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_anterior}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="270" y="0" width="70" height="15" uuid="22e7059c-3e45-41f5-b662-474896f9e1cf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="340" y="0" width="70" height="15" uuid="d69fb15b-0a18-48d9-a59f-13674d302ec3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{haber}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="480" y="0" width="70" height="15" uuid="7b59097a-f7dc-43a8-a52c-cce68531f566">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_acumulado}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="70" height="15" uuid="f2d69957-964a-4a81-ae59-81b1f57331ba">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="19">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="200" y="0" width="349" height="1" uuid="f9a34d3b-ac6e-4ac0-87dc-72e571402181">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<textField pattern="#,##0.00#">
+				<reportElement x="200" y="1" width="70" height="15" uuid="99931e2a-7f6e-4487-8b07-18ccf0be78ac">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumasaldoanterior}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="270" y="1" width="70" height="15" uuid="3e980dc8-0586-44a4-8d81-f0a394dd6eed">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumadebe}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="340" y="1" width="70" height="15" uuid="fc13010c-b492-487f-b8f7-52600a8bc5c2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumahaber}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="410" y="1" width="70" height="15" uuid="ef56c55d-a644-45b1-a3fa-6dd7390a253f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumasaldomes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="480" y="1" width="70" height="15" uuid="0794e5b5-0433-4617-a111-26fb5c994f9f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumasaldoacumulado}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="200" y="16" width="349" height="1" uuid="53c13b8c-6098-4f85-a5e7-e9be8977e5ed">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="200" y="18" width="349" height="1" uuid="3db91e0c-df75-465d-903a-2072dd9a40df">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

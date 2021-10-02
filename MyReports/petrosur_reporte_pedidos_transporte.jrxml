@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_pedidos" pageWidth="2450" pageHeight="200" orientation="Landscape" columnWidth="2450" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="01cacefd-5aa5-4ecf-83c9-65b9bf21e10c">
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_pedidos" pageWidth="2560" pageHeight="200" orientation="Landscape" columnWidth="2560" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="01cacefd-5aa5-4ecf-83c9-65b9bf21e10c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -99,8 +90,8 @@
 	</style>
 	<subDataset name="DTSPedidos" uuid="7d382f20-c212-403c-b842-4e858efdc34b">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ipisa"/>
-		<parameter name="p_id_cliente_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
+		<parameter name="p_id_unidad_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<queryString language="SQL">
@@ -232,23 +223,28 @@ order by id' --este es el sql de las columnas
 ("order_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar, "flete" varchar)) as prec
 on ov.id = prec.order_id
 where cast(ov.validity_date::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
-and $X{IN,ov.partner_id,p_id_cliente_t}
+and $X{IN,fact.x_transporte_id,p_id_unidad_t}
+and ov.company_id = 1
 order by ov.validity_date]]>
 		</queryString>
 		<field name="pedido" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="pedido"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
 		</field>
 		<field name="factura" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="factura"/>
 		</field>
 		<field name="fecha_pedido" class="java.sql.Date">
 			<property name="com.jaspersoft.studio.field.label" value="fecha_pedido"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
 		</field>
 		<field name="cliente" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="cliente"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
 		</field>
 		<field name="vendedor" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="vendedor"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
 		</field>
 		<field name="destino" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="destino"/>
@@ -311,7 +307,7 @@ order by ov.validity_date]]>
 			<variableExpression><![CDATA[$F{total}]]></variableExpression>
 		</variable>
 	</subDataset>
-	<parameter name="p_id_cliente" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_id_unidad" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
 	<parameter name="p_fecha_final" class="java.sql.Date"/>
 	<queryString language="SQL">
@@ -334,7 +330,7 @@ order by ov.validity_date]]>
 	<detail>
 		<band height="90" splitType="Stretch">
 			<componentElement>
-				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="2450" height="90" uuid="869b82ac-44ea-407a-8041-3f5fc5682c8a">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="2560" height="90" uuid="869b82ac-44ea-407a-8041-3f5fc5682c8a">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
@@ -342,9 +338,9 @@ order by ov.validity_date]]>
 					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="DTSPedidos" uuid="6196ac86-218e-4cf8-b766-8cd7b851ef93">
-						<datasetParameter name="p_id_cliente_t">
-							<datasetParameterExpression><![CDATA[$P{p_id_cliente}]]></datasetParameterExpression>
+					<datasetRun subDataset="DTSPedidos" uuid="ec1a8d35-37a9-4e6c-b81b-943717a7725c">
+						<datasetParameter name="p_id_unidad_t">
+							<datasetParameterExpression><![CDATA[$P{p_id_unidad}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="p_fecha_inicial_t">
 							<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
@@ -667,8 +663,33 @@ order by ov.validity_date]]>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="80" uuid="16b09b2b-0e31-41be-8254-33166e1c3b58">
+					<jr:column width="110" uuid="bbbbca46-15c9-4631-925e-7870a7ba207c">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="110" height="30" forecolor="#F7F7F7" uuid="02322a48-dd5d-4c75-993d-ce4a7f928bf4"/>
+								<box>
+									<pen lineColor="#FFFFFF"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12" isBold="false"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 2_CH" height="30" rowSpan="1"/>
+						<jr:detailCell style="Table 2_TD" height="30">
+							<textField pattern="#,##0.###;(#,##0.###-)" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="110" height="30" uuid="bc3b1389-3b59-4389-bbd5-6d8694b0b6ce"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[SUM($F{super},$F{regular},$F{diesel})]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="16b09b2b-0e31-41be-8254-33166e1c3b58">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
@@ -694,7 +715,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="33a015a9-75a9-454d-afea-da93aeed1e84">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
@@ -720,7 +741,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="08719348-2252-424d-8c0f-afa083c3add9">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
@@ -746,7 +767,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="d4a10753-94d3-4da3-b5c9-c1919344c86e">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
@@ -772,7 +793,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="15ae852e-7f6c-4778-ba01-33a95c5e8769">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
@@ -798,7 +819,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="22f682d4-bbb2-4fd5-8509-cb52cf28ffe8">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
@@ -832,7 +853,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="100" uuid="69e9a5ae-8db2-450a-b391-40efaaca8133">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>
@@ -866,7 +887,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="90" uuid="2316da3f-552e-41fd-be28-ef59195e3c74">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="611b20d7-da3a-483e-81ea-f2a4159fc307"/>
@@ -890,7 +911,7 @@ order by ov.validity_date]]>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="90" uuid="77e29ec5-980b-4773-80bc-5c26a654f6b6">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column21"/>
 						<jr:columnHeader style="Table 2_CH" height="30" rowSpan="1">
 							<box leftPadding="0"/>
 							<staticText>

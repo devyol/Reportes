@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="grafica" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="e6e74df2-e234-4e23-970b-810cce8e3060">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="false"/>
+	<queryString>
+		<![CDATA[select
+ai.date_invoice as date_actual,
+cast(to_char(ai.date_invoice,'dd') as integer) as dia,
+cast(to_char(ai.date_invoice,'MM') as integer) as mes,
+cast(to_char(ai.date_invoice,'yyyy') as integer) as anio,
+case
+    when ai.state_loan = 'draft' then 'Iniciado'
+    when ai.state_loan = 'actual' then 'Actual'
+    when ai.state_loan = 'congelado' then 'Congelado'
+    when ai.state_loan = 'finiquitado' then 'Finiquitado'
+    when ai.state_loan = 'historico' then 'Historico'
+    when ai.state_loan = 'iniciado_convenio' then 'Convenio Iniciado'
+    when ai.state_loan = 'inicio_cancel' then 'Cancelacion Iniciada'
+    when ai.state_loan = 'recuperacion' then 'Recuperación'
+    when ai.state_loan = 'subrogado' then 'Subrogado'
+    when ai.state_loan = 'vehiculo' then 'Vehiculo'
+    when ai.state_loan = 'cancel' then 'Cancelado'
+    when ai.state_loan = 'inicio_subrogacion' then 'Subrogacion Iniciada'
+    when ai.state_loan = 'deposito' then 'Deposito'
+    when ai.state_loan = 'disburse' then 'Desembolsado'
+    when ai.state_loan = 'applied' then 'Aplicado'
+end state_loan,
+sum(ai.amount_total)
+from account_invoice ai 
+inner join partner_loan_details pld 
+on ai.loan_id = pld.id 
+inner join account_journal aj 
+on ai.journal_id = aj.id 
+where state_loan is not null
+and ai.state = 'paid'
+and aj.tipo_venta = 'FEL'
+and cast(to_char(ai.date_invoice,'dd') as integer) between 1 and 31
+and cast(to_char(ai.date_invoice,'MM') as integer) between 1 and 12
+and cast(to_char(ai.date_invoice,'yyyy') as integer) between 2020 and 2021
+group by ai.state_loan,
+ai.date_invoice,
+cast(to_char(ai.date_invoice,'MM') as integer),
+cast(to_char(ai.date_invoice,'yyyy') as integer),
+cast(to_char(ai.date_invoice,'dd') as integer)
+order by 
+cast(to_char(ai.date_invoice,'MM') as integer),
+cast(to_char(ai.date_invoice,'yyyy') as integer),
+cast(to_char(ai.date_invoice,'dd') as integer)]]>
+	</queryString>
+	<field name="date_actual" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date_actual"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
+	</field>
+	<field name="dia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="dia"/>
+	</field>
+	<field name="mes" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="mes"/>
+	</field>
+	<field name="anio" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="anio"/>
+	</field>
+	<field name="state_loan" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="state_loan"/>
+	</field>
+	<field name="sum" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="sum"/>
+	</field>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<summary>
+		<band height="415" splitType="Stretch">
+			<timeSeriesChart>
+				<chart evaluationTime="Report">
+					<reportElement x="10" y="20" width="910" height="360" uuid="c5482aaf-976f-4670-be46-46445c9f72a0"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<timeSeriesDataset>
+					<dataset resetType="Report"/>
+					<timeSeries>
+						<seriesExpression><![CDATA[$F{state_loan}]]></seriesExpression>
+						<timePeriodExpression><![CDATA[$F{date_actual}]]></timePeriodExpression>
+						<valueExpression><![CDATA[$F{sum}]]></valueExpression>
+					</timeSeries>
+				</timeSeriesDataset>
+				<timeSeriesPlot>
+					<plot/>
+					<timeAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</timeAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</timeSeriesPlot>
+			</timeSeriesChart>
+		</band>
+	</summary>
+</jasperReport>

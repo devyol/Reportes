@@ -32,14 +32,99 @@
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/Libro_Mayor_Xelapan.jasper</location>
 		</link>
 		<link>
+			<name>auto_balance_analitico.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_balance_analitico.jasper</location>
+		</link>
+		<link>
+			<name>auto_balance_analitico.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_balance_analitico.jrxml</location>
+		</link>
+		<link>
+			<name>auto_balance_bk.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_balance_bk.jrxml</location>
+		</link>
+		<link>
+			<name>auto_balance_saldo_reporte.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_balance_saldo_reporte.jasper</location>
+		</link>
+		<link>
+			<name>auto_datos_saldo_capital.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_datos_saldo_capital.jasper</location>
+		</link>
+		<link>
+			<name>auto_datos_saldo_capital.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_datos_saldo_capital.jrxml</location>
+		</link>
+		<link>
+			<name>auto_datos_ventas.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_datos_ventas.jasper</location>
+		</link>
+		<link>
+			<name>auto_datos_ventas.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_datos_ventas.jrxml</location>
+		</link>
+		<link>
+			<name>auto_estado_resultados.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_estado_resultados.jasper</location>
+		</link>
+		<link>
+			<name>auto_estado_resultados.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_estado_resultados.jrxml</location>
+		</link>
+		<link>
+			<name>auto_grafica_colocacion.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_grafica_colocacion.jasper</location>
+		</link>
+		<link>
+			<name>auto_grafica_colocacion.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_grafica_colocacion.jrxml</location>
+		</link>
+		<link>
+			<name>auto_grafica_saldo_capital.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_grafica_saldo_capital.jasper</location>
+		</link>
+		<link>
+			<name>auto_grafica_saldo_capital.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_grafica_saldo_capital.jrxml</location>
+		</link>
+		<link>
+			<name>auto_grafica_ventas.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_grafica_ventas.jasper</location>
+		</link>
+		<link>
+			<name>auto_grafica_ventas.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_grafica_ventas.jrxml</location>
+		</link>
+		<link>
+			<name>auto_libro_diario.jasper</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_libro_diario.jasper</location>
+		</link>
+		<link>
+			<name>auto_libro_diario.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/auto_libro_diario.jrxml</location>
+		</link>
+		<link>
 			<name>cheque_autoefectivo_pago.jasper</name>
 			<type>1</type>
 			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/cheque_autoefectivo_pago.jasper</location>
-		</link>
-		<link>
-			<name>cheque_autoefectivo_pago.jrxml</name>
-			<type>1</type>
-			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/cheque_autoefectivo_pago.jrxml</location>
 		</link>
 		<link>
 			<name>cheque_autofin.jasper</name>
@@ -57,14 +142,14 @@
 			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/comprobante_autoefectivo_marzo.jasper</location>
 		</link>
 		<link>
-			<name>comprobante_autoefectivo_marzo.jrxml</name>
-			<type>1</type>
-			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/comprobante_autoefectivo_marzo.jrxml</location>
-		</link>
-		<link>
 			<name>debe_mayor.jasper</name>
 			<type>1</type>
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/debe_mayor.jasper</location>
+		</link>
+		<link>
+			<name>ejemplo.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Escritorio/ejemplo.jrxml</location>
 		</link>
 		<link>
 			<name>factura_estacion_ipisa.jasper</name>
@@ -72,9 +157,14 @@
 			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/factura_estacion_ipisa.jasper</location>
 		</link>
 		<link>
-			<name>factura_estacion_ipisa.jrxml</name>
+			<name>guatecom_reporte_pedidos.jrxml</name>
 			<type>1</type>
-			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/factura_estacion_ipisa.jrxml</location>
+			<location>/home/erik/Reportes/MyReports/guatecom_reporte_pedidos.jrxml</location>
+		</link>
+		<link>
+			<name>guatecom_reporte_saldos.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/guatecom_reporte_saldos.jrxml</location>
 		</link>
 		<link>
 			<name>haber_mayor.jasper</name>
@@ -82,19 +172,44 @@
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/haber_mayor.jasper</location>
 		</link>
 		<link>
-			<name>inventario_fiscal_wms (copia).jrxml</name>
+			<name>libreria_revelacion_ganancias_duenio_1.jrxml</name>
 			<type>1</type>
-			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/inventario_fiscal_wms (copia).jrxml</location>
+			<location>/home/erik/Documentos/Devyol/Libreria Revelacion/InformesLibreriaRevelacion/libreria_revelacion_ganancias_duenio.jrxml</location>
+		</link>
+		<link>
+			<name>libreria_revelacion_ventas.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Documentos/Devyol/Libreria Revelacion/InformesLibreriaRevelacion/libreria_revelacion_ventas.jrxml</location>
+		</link>
+		<link>
+			<name>mc_libro_compras(1).jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Descargas/mc_libro_compras(1).jrxml</location>
+		</link>
+		<link>
+			<name>mc_libro_compras.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Descargas/mc_libro_compras.jrxml</location>
+		</link>
+		<link>
+			<name>petrosur_reporte_pagos.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/petrosur_reporte_pagos.jrxml</location>
+		</link>
+		<link>
+			<name>petrosur_reporte_pedidos_transporte.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/petrosur_reporte_pedidos_transporte.jrxml</location>
+		</link>
+		<link>
+			<name>petrosur_reporte_seguro.jrxml</name>
+			<type>1</type>
+			<location>/home/erik/Reportes/MyReports/petrosur_reporte_seguro.jrxml</location>
 		</link>
 		<link>
 			<name>reporte_saldos_petrosur.jasper</name>
 			<type>1</type>
 			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/reporte_saldos_petrosur.jasper</location>
-		</link>
-		<link>
-			<name>reporte_saldos_petrosur.jrxml</name>
-			<type>1</type>
-			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/reporte_saldos_petrosur.jrxml</location>
 		</link>
 	</linkedResources>
 </projectDescription>

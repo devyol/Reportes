@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="historial_pagos_ipisa" pageWidth="1200" pageHeight="595" orientation="Landscape" columnWidth="1200" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="ca2231c3-7d14-477b-8299-32e8009d3f9b">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -32,7 +32,7 @@
 	</style>
 	<subDataset name="dtsPagos" uuid="34b9173c-6fa8-413e-b5ca-4b4fea7e88eb">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<parameter name="p_id_cliente_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
@@ -44,7 +44,7 @@ ai."number" as numero_factura,
 ai.date_invoice as fecha_factura,
 ai.amount_total as total,
 ap.payment_date as fecha_deposito,
-ap.amount as abonado,
+pil.amount as abonado,
 ap.x_recibo_caja as recibo,
 ap.x_deposito as boleta,
 aj."name" as banco
@@ -60,8 +60,11 @@ on pil.payment_id = ap.id
 inner join account_journal as aj
 on ap.journal_id = aj.id
 where ai.state = 'paid'
+and $X{IN,ai.partner_id,p_id_cliente_t}
 and cast(ai.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
-and $X{IN,ai.partner_id,p_id_cliente_t}]]>
+and ai.company_id = 4
+and aj.company_id = 4
+and ap.company_id = 4]]>
 		</queryString>
 		<field name="pedido" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="pedido"/>
@@ -87,9 +90,9 @@ and $X{IN,ai.partner_id,p_id_cliente_t}]]>
 			<property name="com.jaspersoft.studio.field.label" value="fecha_deposito"/>
 			<property name="com.jaspersoft.studio.field.tree.path" value="account_payment"/>
 		</field>
-		<field name="abonado" class="java.math.BigDecimal">
+		<field name="abonado" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="abonado"/>
-			<property name="com.jaspersoft.studio.field.tree.path" value="account_payment"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="payment_invoice_line"/>
 		</field>
 		<field name="recibo" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="recibo"/>
@@ -117,7 +120,7 @@ and $X{IN,ai.partner_id,p_id_cliente_t}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Reporte de Pagos Del "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final}) ]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Reporte de Pagos Del "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final})]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_balance_reporte" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4ef263f0-fdc0-405c-ad96-8faa7d0114c8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="217"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="778"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<parameter name="p_no_hoja" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select *
+from(
+select *
+from (
+select
+ge."name",
+ge.code,
+ge.grp1,
+ge.x_studio_orden_de_reporte,
+ge.grp2,
+ge.x_studio_grupo_2,
+ge.grp3,
+ge.x_studio_grupo_3,
+ge.grp4,
+ge.x_studio_grupo_4,
+ge.saldo as saldo_mes,
+coalesce(sa.saldo,0) as saldo_anterior,
+ge.saldo+coalesce(sa.saldo,0) as saldo
+from(--*********************
+select 
+c.id,
+c."name",
+c.code,
+c.grp1,
+c.x_studio_orden_de_reporte,
+c.grp2,
+c.x_studio_grupo_2,
+c.grp3,
+c.x_studio_grupo_3,
+c.grp4,
+c.x_studio_grupo_4,
+coalesce(s.saldo,0) as saldo,
+coalesce(date_part('month',c.fecha_final_anterior),0) as mes,
+coalesce(date_part('year',c.fecha_final_anterior),0) as anio
+from (
+select
+aa.id,
+aa."name",
+aa.code,
+cast((date_trunc('month',cast(($P{p_fecha_inicial})::text as date)) -'1sec' ::interval)::text as date) fecha_final_anterior,
+case
+when aa.x_studio_orden_de_reporte = 10 then 'CAJA'
+when aa.x_studio_orden_de_reporte = 20 then 'BANCOS'
+when aa.x_studio_orden_de_reporte = 30 then 'CLIENTES'
+when aa.x_studio_orden_de_reporte = 40 then 'DERECHOS LEGALES Y FISCALES'
+when aa.x_studio_orden_de_reporte = 50 then 'OTRAS CUENTAS POR COBRAR'
+when aa.x_studio_orden_de_reporte = 60 then 'PROPIEDAD, PLANTA Y EQUIPO'
+when aa.x_studio_orden_de_reporte = 70 then 'DEP. ACUM. PROPIEDAD, PLANTA Y'
+when aa.x_studio_orden_de_reporte = 80 then 'SEGUROS'
+when aa.x_studio_orden_de_reporte = 90 then 'OBLIGACIONES LEGALES Y FISCALES'
+when aa.x_studio_orden_de_reporte = 100 then 'OTRAS CUENTAS POR PAGAR'
+when aa.x_studio_orden_de_reporte = 110 then 'OBLIGACIONES LABORALES'
+when aa.x_studio_orden_de_reporte = 120 then 'CAPITAL SOCIAL'
+when aa.x_studio_orden_de_reporte = 130 then 'RESERVAS'
+when aa.x_studio_orden_de_reporte = 140 then 'RESULTADOS'
+end as grp1,
+aa.x_studio_orden_de_reporte,
+case
+when aa.x_studio_grupo_2 = 1010 then 'CAJA Y BANCOS'
+when aa.x_studio_grupo_2 = 1030 then 'CUENTAS POR COBRAR'
+when aa.x_studio_grupo_2 = 1040 then 'PROPIEDAD, PLANTA Y EQUIPO'
+when aa.x_studio_grupo_2 = 1050 then 'DEP. PROPIEDAD PLANTA EQUIPO'
+when aa.x_studio_grupo_2 = 1060 then 'SEGURO'
+when aa.x_studio_grupo_2 = 1070 then 'CUENTAS POR PAGAR'
+when aa.x_studio_grupo_2 = 1080 then 'CAPITAL, RESERVA Y RESULTADOS'
+end as grp2,
+aa.x_studio_grupo_2,
+case
+when aa.x_studio_grupo_3= 2010 then 'CORRIENTE'
+when aa.x_studio_grupo_3= 2020 then 'NO CORRIENTE'
+when aa.x_studio_grupo_3= 2030 then 'CAPITAL, RESERVA Y RESULTADOS'
+end as grp3,
+aa.x_studio_grupo_3,
+case
+when aa.x_studio_grupo_4=3010 then 'ACTIVO'
+when aa.x_studio_grupo_4=3020 then 'PASIVO'
+when aa.x_studio_grupo_4=3040 then 'CAPITAL'
+end as grp4,
+aa.x_studio_grupo_4
+from account_account aa
+where aa.x_studio_orden_de_reporte > 0
+and aa.x_studio_grupo_2 > 0
+and aa.x_studio_grupo_3 > 0
+and aa.x_studio_grupo_4 > 0
+order by
+aa.x_studio_grupo_4,
+aa.x_studio_grupo_3,
+aa.x_studio_grupo_2,
+aa.x_studio_orden_de_reporte
+--cast(aa.code::text as numeric) 
+) as c
+left join
+(
+select
+aa.id,
+round((sum(aml.debit)-sum(aml.credit)),2) as saldo
+from account_move am
+inner join account_move_line aml
+on am.id = aml.move_id
+inner join account_account aa
+on aml.account_id = aa.id
+where am.state = 'posted'
+and aa.x_studio_orden_de_reporte > 0
+and aa.x_studio_grupo_2 > 0
+and aa.x_studio_grupo_3 > 0
+and aa.x_studio_grupo_4 > 0
+and cast(aml."date"::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date)
+group by
+aa.id
+ ) as s
+on c.id = s.id 
+) as ge --*********************
+left join
+(--*********************
+select
+t.anio,
+t.mes,
+t.code, 
+t.nombre_cuenta, 
+t.saldo_mes, sum(t.saldo_mes)over(partition by t.code order by t.anio,t.mes,t.code) as saldo from
+(
+select
+piv.anio,
+piv.mes,
+piv.code,
+piv.nombre_cuenta,
+coalesce(s.saldo_mes,0) as saldo_mes
+from (--------------------------
+select
+p.anio, p.mes, p.code, p.nombre_cuenta
+from ( -------
+select aa.code, aa."name" as nombre_cuenta
+,date_part('month',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as mes
+,date_part('year',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as anio
+from account_account aa
+where aa.x_studio_orden_de_reporte > 0
+and aa.x_studio_grupo_2 > 0
+and aa.x_studio_grupo_3 > 0
+and aa.x_studio_grupo_4 > 0 ) as p ) as piv
+left join(-------------------
+select
+inf.anio, inf.mes,
+inf.code, inf.cuenta, inf.saldo_mes
+from(
+select 
+date_part('month',cast(aml."date"::text as date)) as mes,
+date_part('year',cast(aml."date"::text as date)) as anio,
+aa.code, aa."name" as cuenta,
+sum(aml.debit)-sum(aml.credit) as saldo_mes
+from account_move_line aml
+inner join account_account aa 
+on aml.account_id = aa.id
+inner join account_move am 
+on aml.move_id = am.id
+where am.state = 'posted'
+group by
+date_part('year',cast(aml."date"::text as date)),
+date_part('month',cast(aml."date"::text as date)),
+aa.code, aa."name") as inf
+) as s
+on piv.anio = s.anio
+and piv.mes = s.mes
+and piv.code = s.code
+order by cast(piv.code::text as numeric),piv.anio, piv.mes) as t ) as sa -------------
+on ge.anio = sa.anio
+and ge.mes = sa.mes
+and ge.code = sa.code
+order by 
+ge.x_studio_grupo_4,
+ge.x_studio_grupo_3,
+ge.x_studio_grupo_2,
+ge.x_studio_orden_de_reporte,
+cast(ge.code::text as numeric)) as t1,
+(
+--******RESULTADO ANTES DE IMPUESTOS*****
+select
+(utilidad_bruta - gasto_operacion) + producto_financiero - gastos_financieros as utilidad
+from(
+select 
+coalesce(utilidad_bruta,0) as utilidad_bruta,
+coalesce(gasto_operacion,0) as gasto_operacion,
+coalesce(producto_financiero,0) as producto_financiero,
+coalesce(gastos_financieros,0) as gastos_financieros
+from (
+--UTILIDAD BRUTA
+select
+abs(sum(aml.debit - aml.credit)) utilidad_bruta
+from account_move am 
+inner join account_move_line aml 
+on am.id = aml.move_id 
+inner join account_account aa 
+on aa.id = aml.account_id 
+where am.state = 'posted'
+and aa.id in (
+select aa.id 
+from account_account aa 
+inner join account_account_account_tag aaat 
+on aa.id = aaat.account_account_id
+where user_type_id = 14
+and aaat.account_account_tag_id = 12)
+and cast(aml."date"::text as date) between cast(date_part('year',cast($P{p_fecha_final}::text as date))||'-01-01'::text as date) and cast($P{p_fecha_final}::text as date) ) as ub,
+--GASTOS DE OPERACION
+(
+select
+abs(sum(aml.debit - aml.credit)) gasto_operacion
+from account_move am 
+inner join account_move_line aml 
+on am.id = aml.move_id 
+inner join account_account aa 
+on aa.id = aml.account_id 
+where am.state = 'posted'
+and aa.id in (
+select aa.id
+from account_account aa 
+inner join account_account_account_tag aaat 
+on aa.id = aaat.account_account_id
+where user_type_id = 16
+and aaat.account_account_tag_id = 23)
+and cast(aml."date"::text as date) between cast(date_part('year',cast($P{p_fecha_final}::text as date))||'-01-01'::text as date) and cast($P{p_fecha_final}::text as date) ) as gdo,
+--PRODUCTOS FINANCIEROS
+(
+select
+abs(sum(aml.debit - aml.credit)) producto_financiero
+from account_move am 
+inner join account_move_line aml 
+on am.id = aml.move_id 
+inner join account_account aa 
+on aa.id = aml.account_id 
+where am.state = 'posted'
+and aa.id in (
+select aa.id
+from account_account aa 
+inner join account_account_account_tag aaat 
+on aa.id = aaat.account_account_id
+where user_type_id = 14
+and aaat.account_account_tag_id = 22
+)
+and cast(aml."date"::text as date) between cast(date_part('year',cast($P{p_fecha_final}::text as date))||'-01-01'::text as date) and cast($P{p_fecha_final}::text as date) ) as pf,
+--GASTOS FINANCIEROS
+(
+select
+abs(sum(aml.debit - aml.credit)) gastos_financieros
+from account_move am 
+inner join account_move_line aml 
+on am.id = aml.move_id 
+inner join account_account aa 
+on aa.id = aml.account_id 
+where am.state = 'posted'
+and aa.id in (
+select aa.id
+from account_account aa 
+inner join account_account_account_tag aaat 
+on aa.id = aaat.account_account_id
+where user_type_id = 16
+and aaat.account_account_tag_id = 27
+)
+and cast(aml."date"::text as date) between cast(date_part('year',cast($P{p_fecha_final}::text as date))||'-01-01'::text as date) and cast($P{p_fecha_final}::text as date) ) as gf ) as tm) as t2 ) as g
+where g.grp1 is not null]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp1"/>
+	</field>
+	<field name="x_studio_orden_de_reporte" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_orden_de_reporte"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp2"/>
+	</field>
+	<field name="x_studio_grupo_2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_grupo_2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp3" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp3"/>
+	</field>
+	<field name="x_studio_grupo_3" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_grupo_3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="grp4" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="grp4"/>
+	</field>
+	<field name="x_studio_grupo_4" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_grupo_4"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="saldo_mes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo_mes"/>
+	</field>
+	<field name="saldo_anterior" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo_anterior"/>
+	</field>
+	<field name="saldo" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo"/>
+	</field>
+	<field name="utilidad" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="utilidad"/>
+	</field>
+	<variable name="sumatoriagrp2" class="java.math.BigDecimal" resetType="Group" resetGroup="grp2" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="sumatoriagrp3" class="java.math.BigDecimal" resetType="Group" resetGroup="grp3" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="sumatoriagrp4" class="java.math.BigDecimal" resetType="Group" resetGroup="grp4" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="sumacapitalpasivo" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF(OR(EQUALS($F{grp4},"CAPITAL"),EQUALS($F{grp4},"PASIVO")),$F{saldo}.doubleValue(),0)]]></variableExpression>
+	</variable>
+	<variable name="sumaactivo" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[IF(EQUALS($F{grp4},"ACTIVO"),$F{saldo}.doubleValue(),0)]]></variableExpression>
+	</variable>
+	<variable name="sumatoriagpr1" class="java.math.BigDecimal" resetType="Group" resetGroup="grp1" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<group name="grp4">
+		<groupExpression><![CDATA[$F{grp4}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="67" y="0" width="200" height="15" uuid="4a714a9e-a8a3-40e6-93c3-5936409cb182">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp4}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp4" pattern="#,##0.00#">
+					<reportElement x="495" y="0" width="60" height="15" uuid="121557c7-cf4c-42ea-abd6-dab5094f7755">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ABS($V{sumatoriagrp4})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<textField pattern="#,##0.00#">
+					<reportElement x="451" y="5" width="100" height="15" uuid="1c5f64b5-9ba3-4c12-affa-955e40d3edd1">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ABS($V{sumatoriagrp4})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="171" y="5" width="180" height="15" uuid="fca8e8e3-867c-4786-88f0-b97d673fadb5">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Total de "+$F{grp4}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="grp3">
+		<groupExpression><![CDATA[$F{grp3}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="67" y="0" width="200" height="15" uuid="f5c49365-e629-440e-88c5-8faea33ea1df">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp3}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp3" pattern="#,##0.00#">
+					<reportElement x="435" y="0" width="60" height="15" uuid="c8de6bae-17d9-4888-9c31-578a8a4de76a">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ABS($V{sumatoriagrp3})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grp2">
+		<groupExpression><![CDATA[$F{grp2}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField>
+					<reportElement x="67" y="0" width="200" height="15" uuid="b0237065-fa6f-41fc-bd6a-4267de8da722">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp2}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp2" pattern="#,##0.00#">
+					<reportElement x="375" y="0" width="60" height="15" uuid="98aba433-8fe6-4477-8570-ff1ac905cb0d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ABS($V{sumatoriagrp2})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grp1">
+		<groupExpression><![CDATA[$F{grp1}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField evaluationTime="Group" evaluationGroup="grp1" pattern="#,##0.00#">
+					<reportElement x="315" y="0" width="60" height="15" uuid="cd781c11-796c-4456-826c-58eec4247002">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[ABS($V{sumatoriagpr1})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="67" y="0" width="200" height="15" uuid="306ac9eb-ab64-427e-a270-c1e7fa17012c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{grp1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<pageHeader>
+		<band height="129">
+			<textField pattern="dd/MM/yyyy h:mm:ss a">
+				<reportElement x="359" y="5" width="200" height="15" uuid="e0eebde2-45ae-47b8-87d4-1245b1ab15ea">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Courier 10 Pitch" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="20" width="200" height="15" uuid="d12b254b-b9a8-460d-b9d7-37d2ca001bec">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CASH CASH"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="35" width="400" height="15" uuid="de859969-be7a-48f7-b595-6b552fdc2273">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Operadora de Efectivos, Sociedad Anonima"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="50" width="200" height="15" uuid="66955863-1df4-46d4-9c26-a2f404e98d03">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N.I.T.: 97398659"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="65" width="200" height="15" uuid="f58ba609-5569-45cd-ab29-7849ef63ec4c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["BALANCE GENERAL"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="80" width="200" height="15" uuid="ffa3125a-7f38-4f17-9a90-e88a8d125c4e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["al " + new SimpleDateFormat("dd").format($P{p_fecha_inicial}) + " de " + new SimpleDateFormat("MMMM").format($P{p_fecha_inicial}) + " del "+ new SimpleDateFormat("yyyy").format($P{p_fecha_inicial})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="95" width="400" height="15" uuid="5f2cc393-e2e2-4804-adea-690153583676">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(CANTIDADES EXPRESADAS EN QUETZALES)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="110" width="80" height="15" uuid="1528d4d7-edd9-417d-a27c-737973c0aead">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Codigo:"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="125" width="553" height="1" uuid="731b0adc-2928-467d-8c89-3b67e36dcd91">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="5" y="128" width="553" height="1" uuid="bac71c27-6341-4cc1-a0d2-08ce9f24e5e9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="457" y="80" width="100" height="15" uuid="de43f083-68ac-4e9f-bda9-6204c90cc6ea"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja: "+ ($V{PAGE_NUMBER}+(($P{p_no_hoja}==0?1:$P{p_no_hoja})-1))]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="67" y="0" width="188" height="15" uuid="c6ae31f3-8d2e-48fd-9533-4b478972f95c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="255" y="0" width="60" height="15" uuid="4132f156-0d80-420b-a7a1-f8124fc75471">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ABS( $F{saldo})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="67" height="15" uuid="6cc4a317-efd9-4fe4-b2bc-fadb54c06a87">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="201">
+			<textField>
+				<reportElement x="161" y="3" width="190" height="15" uuid="4a36542f-2152-4b86-a4e8-77504b0ac566">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Utilidad (Perdida) del Ejercicio"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="161" y="22" width="190" height="15" uuid="eee3e55f-eafd-4ee3-b309-ed03327e7987">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Suma del Pasivo y Capital"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" pattern="#,##0.00#">
+				<reportElement x="451" y="22" width="100" height="15" uuid="87cc713b-3deb-4db3-a920-11f34e948e2b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[ABS($V{sumacapitalpasivo} ).doubleValue() + $F{utilidad}.doubleValue()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="451" y="38" width="100" height="1" uuid="69202f7b-3b8f-4fd7-89aa-b86e82421fc3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="451" y="40" width="100" height="1" uuid="4f3d867d-0d67-4987-aacc-8cb76f8fb669">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<textField pattern="#,##0.00#">
+				<reportElement x="451" y="2" width="100" height="15" uuid="e4fa43a9-1971-4b32-afd2-a906193e1a45">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{utilidad}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="451" y="19" width="100" height="1" uuid="f9a34d3b-ac6e-4ac0-87dc-72e571402181">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="70" width="200" height="1" uuid="47275aa5-1e40-47d4-ab49-a281bf838ead">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="75" width="200" height="15" uuid="94db5f35-f08c-4efd-a7e8-276fd4f4689b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Axel Vinicio Barahona Estevez]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="200" height="15" uuid="42f8239c-5da9-4fcb-8942-48c0a4b0f5c0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<text><![CDATA[Representante Legal]]></text>
+			</staticText>
+			<textField pattern="d MMMM, yyyy">
+				<reportElement x="150" y="160" width="200" height="15" uuid="dbc8335a-c233-459c-99cb-06e1bfd2bc8e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd").format(new java.util.Date()) + " DE "+UPPER( new SimpleDateFormat("MMMM").format(new java.util.Date()))+" De "+new SimpleDateFormat("yyyy").format(new java.util.Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="120" width="532" height="40" uuid="3f3df55e-bbe6-4b78-89cc-1911ba499941"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EL INFRASCRITO PERITO CONTADOR REGISTRADO EN LA SUPERINTENDENCIA DE ADMINISTRACION TRIBUTARIA -S.A.T- BAJO EL NUMERO: 76076466 CERTIFICA: QUE EL BALANCE GENERAL DE CASH CASH PRACTICADO AL " +new SimpleDateFormat("dd").format(new java.util.Date())+" DE " + UPPER( new SimpleDateFormat("MMMM").format(new java.util.Date())) +" DE "+ new SimpleDateFormat("yyyy").format(new java.util.Date()) +" DEMUESTRA RAZONABLEMENTE SU SITUACION FINANCIERA."]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

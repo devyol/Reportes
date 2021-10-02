@@ -1,0 +1,707 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_balance_reporte" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" uuid="4ef263f0-fdc0-405c-ad96-8faa7d0114c8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="416"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="578"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<parameter name="p_no_hoja" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select *
+from (
+select g.code, g.account, g.date, g.partida, g.documento, g.concepto, g.debit, g.credit, 
+sum(g.debit-g.credit) over(partition by g.code order by g.code,g.documento) as acumulado_mes_cuenta,
+sum(g.debit-g.credit) over(partition by g.code ) as subtotal_acumulado_mes,
+g.saldo_mes_anterior,
+sum(case when g.cont=1 then g.saldo_mes_anterior+(g.debit-g.credit) else g.debit-g.credit end) over(partition by g.code order by g.code,g.documento) as acumulado_anio_cuenta,
+sum(case when g.cont=1 then g.saldo_mes_anterior+(g.debit-g.credit) else g.debit-g.credit end) over(partition by g.code ) as subtotal_acumulado_anio
+from(
+select t1.code, t1.cont, t1.account, t1.date, t1.partida, t1.documento, t1.concepto, t1.debit, t1.credit, 
+coalesce(t2.saldo,0) as saldo_mes_anterior
+from (----t1
+select
+aa.code,
+aa."name" as account,
+aml."date",
+date_part('month',cast((date_trunc('month',cast($P{p_fecha_inicial}::text as date)) -'1sec' ::interval)::text as date)) as mes,
+date_part('year',cast((date_trunc('month',cast($P{p_fecha_inicial}::text as date)) -'1sec' ::interval)::text as date)) as anio,
+aj.x_studio_poliza as partida,
+am."name" as documento,
+am."ref" as concepto,
+aml.debit,
+aml.credit,
+rank()over(partition by aa.code order by am."name") as cont
+from account_move am 
+inner join account_move_line aml 
+on am.id = aml.move_id 
+inner join account_journal aj 
+on aml.journal_id = aj.id 
+inner join account_account aa 
+on aml.account_id = aa.id 
+where am.state = 'posted'
+and aa.code not like '8%'
+--and aj.x_studio_poliza is not null
+and cast(aml."date"::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date)
+order by cast(aa.code::text as numeric), aml."date"
+) as t1 ---------------t1
+left join
+( --------t2
+select t.anio, t.mes, t.code, t.nombre_cuenta, t.saldo_mes, 
+sum(t.saldo_mes)over(partition by t.code order by t.anio,t.mes,t.code) as saldo 
+from (--//////////////
+select piv.anio,piv.mes,piv.code,piv.nombre_cuenta, coalesce(s.saldo_mes,0) as saldo_mes
+from (--**************
+select p.anio, p.mes, p.code, p.nombre_cuenta
+from ( -------
+select aa.code, aa."name" as nombre_cuenta
+,date_part('month',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as mes
+,date_part('year',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as anio
+from account_account aa
+) as p 
+) as piv --**************
+left join
+( --##############
+select inf.anio, inf.mes, inf.code, inf.cuenta, inf.saldo_mes
+from(
+select 
+date_part('month',cast(aml."date"::text as date)) as mes,
+date_part('year',cast(aml."date"::text as date)) as anio,
+aa.code, aa."name" as cuenta,
+sum(aml.debit)-sum(aml.credit) as saldo_mes
+from account_move_line aml
+inner join account_account aa 
+on aml.account_id = aa.id 
+inner join account_move am 
+on aml.move_id = am.id
+where am.state = 'posted'
+group by
+date_part('year',cast(aml."date"::text as date)),
+date_part('month',cast(aml."date"::text as date)),
+aa.code, aa."name"
+) as inf
+order by  inf.anio, inf.mes,cast(inf.code::text as numeric)
+) as s --##############
+on piv.anio = s.anio
+and piv.mes = s.mes
+and piv.code = s.code
+order by cast(piv.code::text as numeric),piv.anio, piv.mes
+) as t --//////////////
+) as t2 ---------------t2
+on t1.anio = t2.anio
+and t1.mes = t2.mes
+and t1.code = t2.code
+) as g 
+) as c1, 
+(
+select sum (tam.subtotal_acumulado_mes) as total_acumulado_mes
+from(
+select
+distinct abs(sum(g.debit-g.credit) over(partition by g.code )) as subtotal_acumulado_mes
+from(
+select t1.code, t1.cont, t1.account, t1.date, t1.partida, t1.documento, t1.concepto, t1.debit, t1.credit, 
+coalesce(t2.saldo,0) as saldo_mes_anterior
+from (----t1
+select
+aa.code,
+aa."name" as account,
+aml."date",
+date_part('month',cast((date_trunc('month',cast($P{p_fecha_inicial}::text as date)) -'1sec' ::interval)::text as date)) as mes,
+date_part('year',cast((date_trunc('month',cast($P{p_fecha_inicial}::text as date)) -'1sec' ::interval)::text as date)) as anio,
+aj.x_studio_poliza as partida,
+am."name" as documento,
+am."ref" as concepto,
+aml.debit,
+aml.credit,
+rank()over(partition by aa.code order by am."name") as cont
+from account_move am 
+inner join account_move_line aml 
+on am.id = aml.move_id 
+inner join account_journal aj 
+on aml.journal_id = aj.id 
+inner join account_account aa 
+on aml.account_id = aa.id 
+where am.state = 'posted'
+--and aj.x_studio_poliza is not null
+and cast(aml."date"::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date)
+order by cast(aa.code::text as numeric), aml."date"
+) as t1 ---------------t1
+left join
+( --------t2
+select t.anio, t.mes, t.code, t.nombre_cuenta, t.saldo_mes, 
+sum(t.saldo_mes)over(partition by t.code order by t.anio,t.mes,t.code) as saldo 
+from (--//////////////
+select piv.anio,piv.mes,piv.code,piv.nombre_cuenta, coalesce(s.saldo_mes,0) as saldo_mes
+from (--**************
+select p.anio, p.mes, p.code, p.nombre_cuenta
+from ( -------
+select aa.code, aa."name" as nombre_cuenta
+,date_part('month',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as mes
+,date_part('year',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as anio
+from account_account aa
+) as p 
+) as piv --**************
+left join
+( --##############
+select inf.anio, inf.mes, inf.code, inf.cuenta, inf.saldo_mes
+from(
+select 
+date_part('month',cast(aml."date"::text as date)) as mes,
+date_part('year',cast(aml."date"::text as date)) as anio,
+aa.code, aa."name" as cuenta,
+sum(aml.debit)-sum(aml.credit) as saldo_mes
+from account_move_line aml
+inner join account_account aa 
+on aml.account_id = aa.id 
+inner join account_move am 
+on aml.move_id = am.id
+where am.state = 'posted'
+group by
+date_part('year',cast(aml."date"::text as date)),
+date_part('month',cast(aml."date"::text as date)),
+aa.code, aa."name"
+) as inf
+order by  inf.anio, inf.mes,cast(inf.code::text as numeric)
+) as s --##############
+on piv.anio = s.anio
+and piv.mes = s.mes
+and piv.code = s.code
+order by cast(piv.code::text as numeric),piv.anio, piv.mes
+) as t --//////////////
+) as t2 ---------------t2
+on t1.anio = t2.anio
+and t1.mes = t2.mes
+and t1.code = t2.code
+) as g ) as tam 
+) as c2,
+(
+select sum (taa.subtotal_acumulado_anio) as total_acumulado_anio
+from(
+select
+distinct abs(sum(case when g.cont=1 then g.saldo_mes_anterior+(g.debit-g.credit) else g.debit-g.credit end) over(partition by g.code )) as subtotal_acumulado_anio
+from(
+select t1.code, t1.cont, t1.account, t1.date, t1.partida, t1.documento, t1.concepto, t1.debit, t1.credit, 
+coalesce(t2.saldo,0) as saldo_mes_anterior
+from (----t1
+select
+aa.code,
+aa."name" as account,
+aml."date",
+date_part('month',cast((date_trunc('month',cast($P{p_fecha_inicial}::text as date)) -'1sec' ::interval)::text as date)) as mes,
+date_part('year',cast((date_trunc('month',cast($P{p_fecha_inicial}::text as date)) -'1sec' ::interval)::text as date)) as anio,
+aj.x_studio_poliza as partida,
+am."name" as documento,
+am."ref" as concepto,
+aml.debit,
+aml.credit,
+rank()over(partition by aa.code order by am."name") as cont
+from account_move am 
+inner join account_move_line aml 
+on am.id = aml.move_id 
+inner join account_journal aj 
+on aml.journal_id = aj.id 
+inner join account_account aa 
+on aml.account_id = aa.id 
+where am.state = 'posted'
+--and aj.x_studio_poliza is not null
+and cast(aml."date"::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date)
+order by cast(aa.code::text as numeric), aml."date"
+) as t1 ---------------t1
+left join
+( --------t2
+select t.anio, t.mes, t.code, t.nombre_cuenta, t.saldo_mes, 
+sum(t.saldo_mes)over(partition by t.code order by t.anio,t.mes,t.code) as saldo 
+from (--//////////////
+select piv.anio,piv.mes,piv.code,piv.nombre_cuenta, coalesce(s.saldo_mes,0) as saldo_mes
+from (--**************
+select p.anio, p.mes, p.code, p.nombre_cuenta
+from ( -------
+select aa.code, aa."name" as nombre_cuenta
+,date_part('month',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as mes
+,date_part('year',generate_series('2021-01-01',current_date,'1 month'::interval)::date) as anio
+from account_account aa
+) as p 
+) as piv --**************
+left join
+( --##############
+select inf.anio, inf.mes, inf.code, inf.cuenta, inf.saldo_mes
+from(
+select 
+date_part('month',cast(aml."date"::text as date)) as mes,
+date_part('year',cast(aml."date"::text as date)) as anio,
+aa.code, aa."name" as cuenta,
+sum(aml.debit)-sum(aml.credit) as saldo_mes
+from account_move_line aml
+inner join account_account aa 
+on aml.account_id = aa.id 
+inner join account_move am 
+on aml.move_id = am.id
+where am.state = 'posted'
+group by
+date_part('year',cast(aml."date"::text as date)),
+date_part('month',cast(aml."date"::text as date)),
+aa.code, aa."name"
+) as inf
+order by  inf.anio, inf.mes,cast(inf.code::text as numeric)
+) as s --##############
+on piv.anio = s.anio
+and piv.mes = s.mes
+and piv.code = s.code
+order by cast(piv.code::text as numeric),piv.anio, piv.mes
+) as t --//////////////
+) as t2 ---------------t2
+on t1.anio = t2.anio
+and t1.mes = t2.mes
+and t1.code = t2.code
+) as g ) as taa
+) as c3]]>
+	</queryString>
+	<field name="code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="account" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="account"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move_line"/>
+	</field>
+	<field name="partida" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="partida"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_journal"/>
+	</field>
+	<field name="documento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="documento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move"/>
+	</field>
+	<field name="concepto" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="concepto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move"/>
+	</field>
+	<field name="debit" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="debit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move_line"/>
+	</field>
+	<field name="credit" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="credit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move_line"/>
+	</field>
+	<field name="acumulado_mes_cuenta" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="acumulado_mes_cuenta"/>
+	</field>
+	<field name="subtotal_acumulado_mes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="subtotal_acumulado_mes"/>
+	</field>
+	<field name="saldo_mes_anterior" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo_mes_anterior"/>
+	</field>
+	<field name="acumulado_anio_cuenta" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="acumulado_anio_cuenta"/>
+	</field>
+	<field name="subtotal_acumulado_anio" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="subtotal_acumulado_anio"/>
+	</field>
+	<field name="total_acumulado_mes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total_acumulado_mes"/>
+	</field>
+	<field name="total_acumulado_anio" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total_acumulado_anio"/>
+	</field>
+	<variable name="totalDebit" class="java.math.BigDecimal" resetType="Group" resetGroup="gprCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{debit}]]></variableExpression>
+	</variable>
+	<variable name="totalGlobalDebit" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{debit}]]></variableExpression>
+	</variable>
+	<variable name="totalCredit" class="java.math.BigDecimal" resetType="Group" resetGroup="gprCode" calculation="Sum">
+		<variableExpression><![CDATA[$F{credit}]]></variableExpression>
+	</variable>
+	<variable name="totalGlobalCredit" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{credit}]]></variableExpression>
+	</variable>
+	<group name="gprCode">
+		<groupExpression><![CDATA[$F{code}]]></groupExpression>
+		<groupHeader>
+			<band height="12">
+				<textField>
+					<reportElement x="0" y="0" width="100" height="12" uuid="f15be09e-0172-447b-8f43-0c03e1594557">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="150" y="0" width="120" height="12" uuid="9202b8a3-3b39-448c-bffb-bd4b0540d6a7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="5" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{account}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="453" y="0" width="100" height="12" uuid="1d08adb9-8adf-4db7-a6b6-2632f370bf38">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{saldo_mes_anterior}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="341" y="0" width="112" height="12" uuid="cb919fcb-e25f-41f5-90e0-ac2f14c427f8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Saldo Inicial .....]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="13">
+				<textField pattern="#,##0.00#">
+					<reportElement x="270" y="1" width="70" height="12" uuid="45f40527-e913-4c89-809c-0c84c549cc9c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalDebit}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="340" y="1" width="70" height="12" uuid="62fef7e8-f7af-44cc-8922-95694c089491"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalCredit}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="410" y="1" width="70" height="12" uuid="3598b32c-9f89-422f-93d6-09796c5e3ea4">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{subtotal_acumulado_mes}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="480" y="1" width="70" height="12" uuid="1abda133-dd01-4abb-a977-3c88ba90c911">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{subtotal_acumulado_anio}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="250" y="0" width="300" height="1" uuid="a8c35fd5-dc06-40a9-95c7-04feda641a60"/>
+				</line>
+				<staticText>
+					<reportElement x="170" y="1" width="100" height="12" uuid="a43e4742-2603-4a88-bbd4-f1a7ab790b67">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Totales]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="gprDate">
+		<groupExpression><![CDATA[$F{date}]]></groupExpression>
+		<groupHeader>
+			<band height="12">
+				<textField pattern="d/M/yyyy">
+					<reportElement x="0" y="0" width="100" height="12" uuid="4d05c4b2-623a-474b-ad4c-a343838afe48">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="gprPartida">
+		<groupExpression><![CDATA[$F{partida}]]></groupExpression>
+	</group>
+	<pageHeader>
+		<band height="122">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="dd/MM/yyyy h:mm:ss a">
+				<reportElement x="354" y="0" width="200" height="15" uuid="2328b47a-6354-42b5-ab47-a793c82b5c64">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Courier 10 Pitch" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="15" width="200" height="15" uuid="20e8c934-984a-4b92-9a2f-f29f5525e21c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CASH CASH"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="30" width="400" height="15" uuid="7e03f537-927d-4949-8d43-e4c3bdb2e3b0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Operadora de Efectivos, Sociedad Anonima"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="45" width="200" height="15" uuid="dc92114b-5b23-416b-9d4c-399d80e05b8b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N.I.T.: 97398659"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="60" width="200" height="15" uuid="7f440095-c954-4d3e-8f27-f5b3560f6e9b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["MAYOR GENERAL"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="75" width="200" height="15" uuid="360a27fb-629d-4364-b1e9-b3ebd27c878b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd").format($P{p_fecha_inicial}) + " " + new SimpleDateFormat("MMMM").format($P{p_fecha_inicial}) + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_inicial}) + " al " + new SimpleDateFormat("dd").format($P{p_fecha_final}) + " " + new SimpleDateFormat("MMMM").format($P{p_fecha_final}) + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="90" width="400" height="15" uuid="e7feeb44-959f-45e7-9d38-dfa4c347de33">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(CANTIDADES EXPRESADAS EN QUETZALES)"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="105" width="553" height="1" uuid="9a36d007-329d-48f4-a98b-1774140a2801">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="106" width="70" height="15" uuid="68580d5c-89f4-4a0a-aaae-7579673979fd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Part"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="106" width="80" height="15" uuid="85cb9982-7fa2-4ab6-8a9c-bdeadcf1fd13">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Doc No."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="106" width="120" height="15" uuid="70d63d16-9728-4360-a6e2-7990c5e0fc52">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Concepto"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="106" width="70" height="15" uuid="dead8df8-275a-4276-a950-a4773990b4cf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cargos"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="106" width="70" height="15" uuid="7279767d-f969-46a5-9538-9211e975fef9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Abonos"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="106" width="70" height="15" uuid="033715e9-a830-4c8c-a94f-76485cf31c01">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Acum.Mes"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="106" width="70" height="15" uuid="f4b03b78-27f1-4ee6-a9bc-f45ae0b7daa4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Acum.Año"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="121" width="553" height="1" uuid="5cfaecdf-5e8e-4666-8307-9dab0f20554f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="450" y="75" width="100" height="15" uuid="e906f8df-4314-4821-9d5a-a90d1d4ac1cb"/>
+				<textElement>
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Hoja: "+ ($V{PAGE_NUMBER}+(($P{p_no_hoja}==0?1:$P{p_no_hoja})-1))]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="12">
+			<textField>
+				<reportElement x="0" y="0" width="70" height="12" uuid="7bd78d58-dc1a-4da1-b36f-5112b793630f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{partida}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="340" y="0" width="70" height="12" uuid="ee04e143-e916-4f85-8362-ae018d634265"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="120" height="12" uuid="3b557399-58cd-48b1-854d-d62b8b68b821"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{concepto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="270" y="0" width="70" height="12" uuid="207ad31d-5674-4acb-b5ba-7981feabeb5a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{debit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="80" height="12" uuid="20001df5-408f-44a3-8c83-9cbd982f91f6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="410" y="0" width="70" height="12" uuid="ac116cd1-1fa3-498e-9001-f1a6c2624e00">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{acumulado_mes_cuenta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="480" y="0" width="70" height="12" uuid="5706cee0-fae3-4d7d-9bd0-9d1b059a3da8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{acumulado_anio_cuenta}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="17">
+			<textField pattern="#,##0.00#">
+				<reportElement x="270" y="1" width="71" height="12" uuid="009ffbdb-02fc-41c1-b2eb-c086bc76ed4c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalGlobalDebit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="170" y="1" width="100" height="12" uuid="9562e18b-a0b4-453e-8683-5c905f32d165">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total General]]></text>
+			</staticText>
+			<line>
+				<reportElement x="250" y="0" width="300" height="1" uuid="482d9594-7ea1-4d95-96c3-a77f6de23389"/>
+			</line>
+			<line>
+				<reportElement x="250" y="14" width="300" height="1" uuid="975f115c-4e65-49b3-aa4f-4ff14fd10d18"/>
+			</line>
+			<line>
+				<reportElement x="250" y="16" width="300" height="1" uuid="a74f0dbc-312b-4f85-9fac-3ab57dcf497b"/>
+			</line>
+			<textField pattern="#,##0.00#">
+				<reportElement x="341" y="1" width="69" height="12" uuid="f36ca72c-5f34-4fba-9995-753787cbe37f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalGlobalCredit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="410" y="1" width="70" height="12" uuid="36d9fa06-d163-4383-8db1-e4781c0395a7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_acumulado_mes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="480" y="1" width="70" height="12" uuid="bf102b88-ab73-4423-a6d9-ec093abb7023">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_acumulado_anio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

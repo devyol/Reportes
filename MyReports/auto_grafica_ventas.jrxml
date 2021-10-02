@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_grafica_capital_inicial" pageWidth="1500" pageHeight="700" orientation="Landscape" columnWidth="1500" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="be3ca569-a8f9-4764-8dc6-b0d805907a22">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select
+case 
+when cast(to_char(ai.x_fecha ,'MM') as integer) = 1 then 'Enero'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 2 then 'Febrero'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 3 then 'Marzo'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 4 then 'Abril'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 5 then 'Mayo'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 6 then 'Junio'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 7 then 'Julio'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 8 then 'Agosto'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 9 then 'Septiembre'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 10 then 'Octubre'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 11 then 'Noviembre'
+when cast(to_char(ai.x_fecha,'MM') as integer) = 12 then 'Diciembre'
+end as mes,
+cast(to_char(ai.x_fecha,'dd') as integer) as dia,
+round(sum(ai.x_saldo)::numeric,2) as monto
+from x_saldo_acumulado_venta ai
+where cast(ai.x_fecha::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date)
+group by
+cast(to_char(ai.x_fecha,'MM') as integer),
+cast(to_char(ai.x_fecha,'dd') as integer)
+order by
+cast(to_char(ai.x_fecha,'dd') as integer)
+]]>
+	</queryString>
+	<field name="mes" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="mes"/>
+	</field>
+	<field name="dia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="dia"/>
+	</field>
+	<field name="monto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="monto"/>
+	</field>
+	<title>
+		<band height="78" splitType="Stretch">
+			<textField>
+				<reportElement x="400" y="20" width="900" height="40" uuid="d152ae0a-dfa2-4fb5-9f31-979dbb4890b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Serif" size="18" isBold="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Facturado del "+new SimpleDateFormat("dd-MM-yyyy").format($P{p_fecha_inicial})+" Al "+new SimpleDateFormat("dd-MM-yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="571" splitType="Stretch">
+			<lineChart>
+				<chart evaluationTime="Report">
+					<reportElement x="100" y="30" width="1300" height="500" uuid="1d5e0711-1c87-4acd-b8f2-ce63e7eeb292"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset resetType="Report"/>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{mes}]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{dia}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{monto}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+		</band>
+	</summary>
+</jasperReport>

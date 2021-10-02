@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_saldo_capital_diario" pageWidth="1000" pageHeight="612" orientation="Landscape" columnWidth="1000" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="4c0ae9cd-bf78-4400-bb5b-ad5bc2c3346a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dtssaldo" uuid="7dc48039-0947-47c5-9e97-ed658278f7d7">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
+		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
+		<queryString language="SQL">
+			<![CDATA[select 
+t.fecha,
+cast(t.actual as double precision) as actual,
+cast(t.cancel_ini as double precision) as cancelacion_iniciada,
+cast(t.congelado as double precision) as congelado,
+cast(t.convenio_ini as double precision) as convenio,
+cast(t.recupera as double precision) as recuperacion,
+cast(t.saldo_global as double precision) as saldo_global,
+cast(t.vehiculo as double precision) as vehiculo
+from(
+select tc.fecha, tc.actual, tc.cancel_ini, tc.congelado, tc.convenio_ini, tc.recupera, tc.saldo_global, tc.vehiculo
+from crosstab(
+'select lae.fecha, lae.estado, lae.total 
+from loan_acumulativo_estado lae 
+order by lae.fecha, lae.estado',
+'select et.estado
+from(
+select ''Actual'' as estado
+union
+select ''Congelado'' as estado
+union
+select ''Cancelacion Iniciada'' as estado
+union
+select ''Vehiculo'' as estado
+union
+select ''Recuperación'' as estado
+union
+select ''Convenio Iniciado'' as estado
+union
+select ''Saldo Global'' as estado) as et
+order by et.estado'
+) as tc (fecha date, "actual" varchar, "cancel_ini" varchar, "congelado" varchar, "convenio_ini" varchar, "recupera" varchar, "saldo_global" varchar, "vehiculo" varchar)
+) as t
+where cast(t.fecha::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)]]>
+		</queryString>
+		<field name="fecha" class="java.sql.Date">
+			<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+		</field>
+		<field name="actual" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="actual"/>
+		</field>
+		<field name="cancelacion_iniciada" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="cancelacion_iniciada"/>
+		</field>
+		<field name="congelado" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="congelado"/>
+		</field>
+		<field name="convenio" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="convenio"/>
+		</field>
+		<field name="recuperacion" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="recuperacion"/>
+		</field>
+		<field name="saldo_global" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="saldo_global"/>
+		</field>
+		<field name="vehiculo" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="vehiculo"/>
+		</field>
+	</subDataset>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select 1]]>
+	</queryString>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<summary>
+		<band height="127" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="10" width="1000" height="60" uuid="e995e4a9-2e42-46dd-be41-e22711ee3c41">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dtssaldo" uuid="1ae8f215-e542-4e22-9c6e-9dce9bebed5a">
+						<datasetParameter name="p_fecha_inicial_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_fecha_final_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="125" uuid="5b508eae-b1f2-4704-97fc-9a056d5515b9">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="ed95d2ca-1c4f-4e94-a3c1-661908e47378"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Fecha]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="dd-MM-yyyy">
+								<reportElement x="0" y="0" width="125" height="30" uuid="d6f3fcc7-85c9-4281-bb20-6d4a24275949"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="125" uuid="71ebb9ec-65c6-4d32-84d9-56644dc81a48">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="5b072446-9bdf-4aa9-b263-4d9e6ddda224"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Actual]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.##;Q-#,##0.##">
+								<reportElement x="0" y="0" width="125" height="30" uuid="f8e77d77-684a-4283-9d3a-547eac9546db"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{actual}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="125" uuid="e4c84478-3967-4cf9-b2ef-09f2eb558355">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="b10e84d2-5045-4e45-adb1-2e118115545a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Cancelacion Iniciada]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.##;Q-#,##0.##">
+								<reportElement x="0" y="0" width="125" height="30" uuid="3b70f0c5-cdd7-4357-91cd-8ac421ae42a7"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{cancelacion_iniciada}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="125" uuid="8f7c9c6d-1cbb-40d8-a05a-1aa0a53dba76">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="618a02b0-2fb8-44b0-ba69-3c1740793910"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Congelado]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.##;Q-#,##0.##">
+								<reportElement x="0" y="0" width="125" height="30" uuid="29ab63bd-c53d-407f-bd7f-586e28d1393c"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{congelado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="125" uuid="9e939902-6264-4b6e-8fbc-453e37193973">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="46eb6851-b2c8-459d-a093-635ee429d97a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Convenio]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.##;Q-#,##0.##">
+								<reportElement x="0" y="0" width="125" height="30" uuid="a6aa264a-63a7-475a-808b-446ab076fa4e"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{convenio}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="125" uuid="7fc88f7b-b81c-47cd-8597-f8fe9ff0c5bc">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="680635f5-a8b0-4bf7-a88b-a2b6449af241"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Recuperacion]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.##;Q-#,##0.##">
+								<reportElement x="0" y="0" width="125" height="30" uuid="8fa89c76-f6b1-47ea-9413-11e44c0dad3d"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{recuperacion}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="125" uuid="c56eda00-7971-4832-b08c-a17c395832e5">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="4ce048ef-cf3e-4bc9-ae47-858bdfca13bd"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Saldo Global]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.##;Q-#,##0.##">
+								<reportElement x="0" y="0" width="125" height="30" uuid="9ebcf430-49d4-401f-8039-c461aca9cf68"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{saldo_global}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="125" uuid="6963cc96-d660-4dfb-8638-d2632dfea416">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="125" height="30" uuid="b4534faf-2d00-494b-8dc5-4995982e5833"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Vehiculo]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.##;Q-#,##0.##">
+								<reportElement x="0" y="0" width="125" height="30" uuid="67b62877-7119-4833-aaba-ca8efeb2929d"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{vehiculo}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

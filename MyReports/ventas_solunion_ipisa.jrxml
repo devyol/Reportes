@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ventas_solunion_ipisa" pageWidth="1100" pageHeight="595" orientation="Landscape" columnWidth="1100" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="b5f54e92-d68c-4894-905d-2c3c58b349ae">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -59,7 +59,7 @@
 	</style>
 	<subDataset name="dtsSolunion" uuid="feca1e16-0680-46b6-9223-d39a2713f419">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="e_petrosur"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<parameter name="p_id_user_t" class="java.util.Collection" nestedType="java.lang.Integer"/>
@@ -89,6 +89,7 @@ on ru.partner_id = rpu.id
 where cast(ai.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
 and $X{IN,ai.user_id,p_id_user_t}
 and $X{IN,rpc.credit_control,p_credito_t}
+and ai.company_id = 1
 group by
 ai.date_invoice,ai."number", ai.amount_total,
 rpc.x_codigo_solunion, rpc.vat, rpc.x_razon_social,
@@ -153,7 +154,7 @@ order by ai.date_invoice]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Reporte de Ventas "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final}) ]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Reporte de Ventas "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final})]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_saldos" pageWidth="1530" pageHeight="612" orientation="Landscape" columnWidth="1530" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="a96117bd-a196-4c5f-95d5-91053728a0df">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#D2691E">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -32,7 +32,7 @@
 	</style>
 	<subDataset name="DTSSaldo" uuid="6e73c46b-ec65-4f5f-8578-d366a9a09e2e">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa Produ"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 		<queryString language="SQL">
 			<![CDATA[select
 nven."name" vendedor,
@@ -92,25 +92,30 @@ order by 1'
 on fact.id = info.id
 where current_date-fact.date_invoice >=0
 and fact.residual > 0
+and fact.company_id = 1
 order by date_invoice]]>
 		</queryString>
 		<field name="vendedor" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="vendedor"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
 		</field>
 		<field name="cliente" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="cliente"/>
 		</field>
 		<field name="factura" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="factura"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
 		<field name="fecha" class="java.sql.Date">
 			<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
 		<field name="dias_transcurridos" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="dias_transcurridos"/>
 		</field>
 		<field name="dias_credito" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="dias_credito"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_payment_term"/>
 		</field>
 		<field name="0-2" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="0-2"/>
@@ -129,6 +134,7 @@ order by date_invoice]]>
 		</field>
 		<field name="saldo" class="java.math.BigDecimal">
 			<property name="com.jaspersoft.studio.field.label" value="saldo"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
 		<variable name="v_02" class="java.lang.Double" calculation="Sum">
 			<variableExpression><![CDATA[$F{0-2}]]></variableExpression>

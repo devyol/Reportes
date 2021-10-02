@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_balance" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="18b4777b-4e39-4abc-94e3-5834fe5b0731">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<queryString language="SQL">
+		<![CDATA[select
+aa.x_studio_grupo_4,
+sum(aml.debit)-sum(aml.credit) as saldo
+from account_move am
+inner join account_move_line aml
+on am.id = aml.move_id
+inner join account_account aa
+on aml.account_id = aa.id
+where am.state = 'posted'
+and aa.x_studio_orden_de_reporte > 0
+and aa.x_studio_grupo_2 > 0
+and aa.x_studio_grupo_3 > 0
+and aa.x_studio_grupo_4 > 0
+group by 
+aa.x_studio_grupo_4
+order by 
+aa.x_studio_grupo_4]]>
+	</queryString>
+	<field name="x_studio_grupo_4" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="x_studio_grupo_4"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_account"/>
+	</field>
+	<field name="saldo" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="saldo"/>
+	</field>
+	<variable name="grupo1" class="java.lang.Double" resetType="None" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{x_studio_grupo_2}]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="124" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy h:mm:ss a">
+				<reportElement x="354" y="0" width="200" height="15" uuid="2bbe106a-325a-4901-8204-3424e23c1e8a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="15" width="200" height="15" uuid="2a1b86e1-4a68-40f1-8edc-e08d0cbd46ac">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CASH CASH"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="30" width="400" height="15" uuid="9da852fd-9841-4862-9ce5-7f88ca46cae7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Operadora de Efectivos, Sociedad Anonima"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="45" width="200" height="15" uuid="5ee29d88-6359-4809-9ef1-14270076bf3b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N.I.T.: 97398659"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="60" width="200" height="15" uuid="8f7eb625-6051-4a7e-a00a-fc6cf2e03c1f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["BALANCE GENERAL"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="75" width="200" height="15" uuid="7d36a00b-6a07-4938-a136-57128ac83380">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["al 31 de Diciembre 2021"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="90" width="400" height="15" uuid="bf608ede-ac3b-407f-b927-938ce04e49c3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(CANTIDADES EXPRESADAS EN QUETZALES)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="105" width="80" height="15" uuid="27b75cd4-7ae1-4c9e-a737-8ed1e3b87558">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Codigo:"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="120" width="553" height="1" uuid="1e9bec4e-f713-4a19-9d18-5306829700fb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="123" width="553" height="1" uuid="4d6a0aa3-0cf5-4a6f-b464-51d36c0126d6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="207" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

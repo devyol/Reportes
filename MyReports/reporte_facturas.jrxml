@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_facturas" pageWidth="2506" pageHeight="600" orientation="Landscape" columnWidth="2506" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="8a0e94ba-00cc-40a9-91e6-eaa5a1c67093">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa_local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -41,7 +41,7 @@
 	</style>
 	<subDataset name="DTSFactura" uuid="29b7de38-d235-4b2c-a1c3-6a99d856e682">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ipisa_local"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Petrosur"/>
 		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
 		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
 		<queryString language="SQL">
@@ -99,38 +99,49 @@ order by id'
 ) as infdoc
 on fact.id = infdoc.fact_id
 where fact.state != 'cancel'
+and fact.company_id = 1
 and cast(fact.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
 order by fact.date_invoice]]>
 		</queryString>
 		<field name="fecha" class="java.sql.Date">
 			<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
 		<field name="serie" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="serie"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_journal"/>
 		</field>
 		<field name="numero" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="numero"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
 		<field name="pedido" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="pedido"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="account_invoice"/>
 		</field>
 		<field name="transportista" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="transportista"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="x_tranportista"/>
 		</field>
 		<field name="nittra" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="nittra"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="x_tranportista"/>
 		</field>
 		<field name="placa" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="placa"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="x_tranporte"/>
 		</field>
 		<field name="unidad" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="unidad"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="x_tranporte"/>
 		</field>
 		<field name="cliente" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="cliente"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
 		</field>
 		<field name="nit" class="java.lang.String">
 			<property name="com.jaspersoft.studio.field.label" value="nit"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
 		</field>
 		<field name="super" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="super"/>
@@ -141,7 +152,7 @@ order by fact.date_invoice]]>
 		<field name="diesel" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="diesel"/>
 		</field>
-		<field name="total" class="java.math.BigDecimal">
+		<field name="total" class="java.lang.Double">
 			<property name="com.jaspersoft.studio.field.label" value="total"/>
 		</field>
 	</subDataset>

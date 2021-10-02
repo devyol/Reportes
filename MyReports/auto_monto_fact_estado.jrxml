@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_monto_fact_estado" pageWidth="492" pageHeight="612" orientation="Landscape" columnWidth="492" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="e5437529-f4cf-4823-9482-6f9e86442c1f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dtsMFE" uuid="f45a85b3-6377-4464-9035-81c5d91c4830">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="odoo_auto_reporte"/>
+		<parameter name="p_fecha_inicial_t" class="java.sql.Date"/>
+		<parameter name="p_fecha_final_t" class="java.sql.Date"/>
+		<queryString language="SQL">
+			<![CDATA[select tem.state_loan, round(tem.total_estado,2) as total_estado, round(100*tem.total_estado/tem.total)||'%' as porcentaje
+from(
+select
+case
+    when ai.state_loan = 'draft' then 'Iniciado'
+    when ai.state_loan = 'actual' then 'Actual'
+    when ai.state_loan = 'congelado' then 'Congelado'
+    when ai.state_loan = 'finiquitado' then 'Finiquitado'
+    when ai.state_loan = 'historico' then 'Historico'
+    when ai.state_loan = 'iniciado_convenio' then 'Convenio Iniciado'
+    when ai.state_loan = 'inicio_cancel' then 'Cancelacion Iniciada'
+    when ai.state_loan = 'recuperacion' then 'Recuperación'
+    when ai.state_loan = 'subrogado' then 'Subrogado'
+    when ai.state_loan = 'vehiculo' then 'Vehiculo'
+    when ai.state_loan = 'cancel' then 'Cancelado'
+    when ai.state_loan = 'inicio_subrogacion' then 'Subrogacion Iniciada'
+    when ai.state_loan = 'deposito' then 'Deposito'
+    when ai.state_loan = 'disburse' then 'Desembolsado'
+    when ai.state_loan = 'applied' then 'Aplicado'
+    when ai.state_loan is null then 'Otros'
+end state_loan,
+sum(ai.amount_total) as total_estado,
+(select 
+sum(
+ai.amount_total) as total
+from account_invoice ai 
+inner join account_journal aj 
+on ai.journal_id = aj.id 
+where ai.state in ('open','paid')
+and aj.tipo_venta = 'FEL'
+and cast(ai.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)) as total
+from account_invoice ai 
+inner join account_journal aj 
+on ai.journal_id = aj.id 
+where ai.state in ('open','paid')
+and aj.tipo_venta = 'FEL'
+and cast(ai.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)
+group by 
+ai.state_loan) as tem
+union all
+select 'Total' as state_loan,
+sum(
+ai.amount_total) as total, 100||'%' as porcentaje
+from account_invoice ai 
+inner join account_journal aj 
+on ai.journal_id = aj.id 
+where ai.state in ('open','paid')
+and aj.tipo_venta = 'FEL'
+and cast(ai.date_invoice::text as date) between cast($P{p_fecha_inicial_t}::text as date) and cast($P{p_fecha_final_t}::text as date)]]>
+		</queryString>
+		<field name="state_loan" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="state_loan"/>
+		</field>
+		<field name="total_estado" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.label" value="total_estado"/>
+		</field>
+		<field name="porcentaje" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="porcentaje"/>
+		</field>
+	</subDataset>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select 1]]>
+	</queryString>
+	<field name="?column?" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="?column?"/>
+	</field>
+	<title>
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="492" height="30" uuid="ac848c75-7570-4a5d-bc93-286c700f2f7b"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Montos Facturados por Estado Del "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="60" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="492" height="60" uuid="04168492-2582-44a3-9615-5df0b75acd56">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dtsMFE" uuid="7e3a916c-c1f6-4350-9275-293b7052c189">
+						<datasetParameter name="p_fecha_inicial_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_inicial}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_fecha_final_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha_final}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="164" uuid="dcaf9ec8-f1f4-4ef3-9ed1-e6285593320b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="164" height="30" uuid="8369145c-7410-455a-b121-c07f1e2b1fd0"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Estado]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="dd-MM-yyyy">
+								<reportElement x="0" y="0" width="164" height="30" uuid="25889c6e-a687-40e4-9592-595655362acb"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{state_loan}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="164" uuid="ef4490bd-4185-4694-98f0-9157fd3bb8e7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="164" height="30" uuid="d4269122-7637-4f36-a150-ea4aee4b60e4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField pattern="Q#,##0.00;Q-#,##0.00">
+								<reportElement x="0" y="0" width="164" height="30" uuid="58c6836c-b03b-489f-b56c-43c51fb5d5ca"/>
+								<box leftPadding="0" rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{total_estado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="164" uuid="048b1765-e4e4-4da1-8838-34464bae4223">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="164" height="30" uuid="161d605c-c000-4d82-bd50-37affe491db4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<text><![CDATA[Porcentaje]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="164" height="30" uuid="c5814977-3ae4-4e2a-bdf4-8816ee682c73"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="12"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{porcentaje}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

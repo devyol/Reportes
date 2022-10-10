@@ -1,0 +1,1380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="petrosur_cob_pds_" pageWidth="1108" pageHeight="612" orientation="Landscape" columnWidth="1108" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="909a794e-a456-44c7-9bba-775e13657185">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PetrosurProd"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#1FA670">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 5_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 5_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 5_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dtscob" uuid="ff90dede-0d31-46d0-962f-8a97c61f1e4f">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="PetrosurProd"/>
+		<parameter name="p_fecha_t" class="java.sql.Date"/>
+		<parameter name="p_fecha_despues_t" class="java.sql.Date"/>
+		<parameter name="p_tipo_cambio_t" class="java.lang.Double"/>
+		<parameter name="p_tipo_subsidio_diesel_t" class="java.lang.Double"/>
+		<parameter name="p_tipo_subsidio_regular_t" class="java.lang.Double"/>
+		<parameter name="p_tipo_subsidio_super_t" class="java.lang.Double"/>
+		<queryString language="SQL">
+			<![CDATA[select 
+'Venta del dia (Gal)' as descripcion,
+cast(qt.super as double precision) as super, 
+cast(qt.regular as double precision) as regular, 
+cast(qt.diesel as double precision) as diesel,
+cast(qt.super as double precision)+cast(qt.regular as double precision)+cast(qt.diesel as double precision) as total
+from(
+select cant.date, cant.super, cant.regular, cant.diesel
+from crosstab(
+'
+select 
+info.date_invoice,
+case 
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.cantidad
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(
+select 
+ai.date_invoice,
+ail.product_id, 
+sum(ail.quantity) cantidad
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in(8,9,10)
+and ai.state not in (''cancel'')
+and ai.company_id = 1
+group by ai.date_invoice, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by date_invoice desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+	when pt."name" = ''Diesel'' then 3
+	
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as cant
+("date" date, "super" varchar, "regular" varchar, "diesel" varchar)
+) qt
+where qt.date = $P{p_fecha_t}
+--------------------------------------------------------------------------------------------------------------------------------------------
+union all
+--------------------------------------------------------------------------------------------------------------------------------------------
+select 
+'Venta del dia (BBLS)' as descripcion,
+cast(qtb.super as double precision)/42.00 as super, 
+cast(qtb.regular as double precision)/42.00 as regular, 
+cast(qtb.diesel as double precision)/42.00 as diesel,
+cast(qtb.super as double precision)/42.00+cast(qtb.regular as double precision)/42.00+cast(qtb.diesel as double precision)/42.00 as total
+from(
+select cant.date, cant.super, cant.regular, cant.diesel
+from crosstab(
+'
+select 
+info.date_invoice,
+case 
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.cantidad
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(
+select 
+ai.date_invoice,
+ail.product_id, 
+sum(ail.quantity) cantidad
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in(8,9,10)
+and ai.state not in (''cancel'')
+and ai.company_id = 1
+group by ai.date_invoice, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by date_invoice desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+	
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as cant
+("date" date, "super" varchar, "regular" varchar, "diesel" varchar)
+) qtb
+where qtb.date = $P{p_fecha_t}
+--------------------------------------------------------------------------------------------------------------------------------------------
+union all
+--------------------------------------------------------------------------------------------------------------------------------------------
+select 
+'Precio Promedio (Q) con Impuestos' as descripcion,
+round((sum(cast(t.totsuper as numeric) * 1.12 + cast(im.idpsuper as numeric) + cast(c.super as numeric)*$P{p_tipo_subsidio_super_t})/sum(cast(c.super as numeric)))::numeric,5) as super,
+round((sum(cast(t.totregular as numeric) * 1.12 + cast(im.idpregular as numeric) + cast(c.regular as numeric)*$P{p_tipo_subsidio_regular_t})/sum(cast(c.regular as numeric)))::numeric,5) as regular,
+round((sum(cast(t.totdiesel as numeric) * 1.12 + cast(im.idpdiesel as numeric) + cast(c.diesel as numeric)*$P{p_tipo_subsidio_diesel_t})/sum(cast(c.diesel as numeric)))::numeric,5) as diesel,
+0 as total
+from account_invoice ai
+inner join (
+select cant.invoice_id, cant.super, cant.regular, cant.diesel
+from crosstab(
+'
+select 
+info.invoice_id,
+case 
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.cantidad
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(	
+select 
+ai.id invoice_id,
+ail.product_id, 
+sum(ail.quantity) cantidad
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in(8,9,10)
+group by ai.id, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by invoice_id desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+	
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as cant
+("invoice_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar)
+) as c
+on ai.id = c.invoice_id
+inner join (
+select tot.invoice_id, tot.totsuper, tot.totregular, tot.totdiesel
+from crosstab(
+'
+select 
+info.invoice_id,
+case 
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.total
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(	
+select 
+ai.id invoice_id,
+ail.product_id, 
+sum(ail.price_subtotal) total
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in(8,9,10)
+group by ai.id, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by invoice_id desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+	
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as tot
+("invoice_id" numeric, "totsuper" varchar, "totregular" varchar, "totdiesel" varchar)
+) as t
+on ai.id = t.invoice_id
+inner join (
+select tax.invoice_id, tax.idpsuper, tax.idpregular, tax.idpdiesel, tax.iva
+from crosstab(
+'select 
+info.invoice_id,
+tax.descripcion,
+info.imp
+from (
+select id, "name" descripcion
+from account_tax
+where id in (2,4,6,8)) as tax
+left join
+(	
+select 
+ai.id invoice_id,
+ait.tax_id, 
+sum(ait.amount) imp
+from account_invoice as ai
+left join account_invoice_tax as ait
+on ai.id = ait.invoice_id
+where ait.tax_id in (2,4,6,8)
+group by ai.id, ait.tax_id
+) as info
+on tax.id = info.tax_id
+order by invoice_id desc',
+'select d.descripcion
+from(
+select
+case 
+	when id = 6 then 1
+	when id = 4 then 2
+	when id = 8 then 3
+	when id = 2 then 4
+end ide,
+"name" descripcion
+from account_tax
+where id in (2,4,6,8)
+order by ide) as d'
+)as tax
+("invoice_id" numeric, "idpsuper" varchar, "idpregular" varchar, "idpdiesel" varchar, "iva" varchar)
+) as im
+on ai.id = im.invoice_id
+where ai.date_invoice = $P{p_fecha_t}
+and ai.state not in ('cancel')
+group by ai.date_invoice
+--------------------------------------------------------------------------------------------------------------------------------------------
+union all
+--------------------------------------------------------------------------------------------------------------------------------------------
+select 
+'Precio Promedio (US$ Cents) sin Impuestos' as descripcion,
+((sum(cast(t.totsuper as numeric) + ($P{p_tipo_subsidio_super_t} * cast(c.super as numeric)/1.12))  /  sum(cast(c.super as numeric))) / $P{p_tipo_cambio_t})*100 as super,
+((sum(cast(t.totregular as numeric) + ($P{p_tipo_subsidio_regular_t} * cast(c.regular as numeric)/1.12))  /  sum(cast(c.regular as numeric))) / $P{p_tipo_cambio_t})*100 as regular,
+((sum(cast(t.totdiesel as numeric) + ($P{p_tipo_subsidio_diesel_t}* cast(c.diesel as numeric)/1.12))  /  sum(cast(c.diesel as numeric))) / $P{p_tipo_cambio_t})*100 as diesel,
+0 as total
+from account_invoice ai
+inner join (
+select cant.invoice_id, cant.super, cant.regular, cant.diesel
+from crosstab(
+'
+select 
+info.invoice_id,
+case
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.cantidad
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(	
+select 
+ai.id invoice_id,
+ail.product_id, 
+sum(ail.quantity) cantidad
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in(8,9,10)
+group by ai.id, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by invoice_id desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+	
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as cant
+("invoice_id" numeric, "super" varchar, "regular" varchar, "diesel" varchar)
+) as c
+on ai.id = c.invoice_id
+inner join (
+select tot.invoice_id, tot.totsuper, tot.totregular, tot.totdiesel
+from crosstab(
+'
+select 
+info.invoice_id,
+case 
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.total
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(	
+select 
+ai.id invoice_id,
+ail.product_id, 
+sum(ail.price_subtotal) total
+from account_invoice as ai
+left join account_invoice_line as ail
+on ai.id = ail.invoice_id
+where ail.product_id in(8,9,10)
+group by ai.id, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by invoice_id desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+	
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as tot
+("invoice_id" numeric, "totsuper" varchar, "totregular" varchar, "totdiesel" varchar)
+) as t
+on ai.id = t.invoice_id
+inner join (
+select tax.invoice_id, tax.idpsuper, tax.idpregular, tax.idpdiesel, tax.iva
+from crosstab(
+'select 
+info.invoice_id,
+tax.descripcion,
+info.imp
+from (
+select id, "name" descripcion
+from account_tax
+where id in (2,4,6,8)) as tax
+left join
+(	
+select 
+ai.id invoice_id,
+ait.tax_id, 
+sum(ait.amount) imp
+from account_invoice as ai
+left join account_invoice_tax as ait
+on ai.id = ait.invoice_id
+where ait.tax_id in (2,4,6,8)
+group by ai.id, ait.tax_id
+) as info
+on tax.id = info.tax_id
+order by invoice_id desc',
+'select d.descripcion
+from(
+select
+case 
+	when id = 6 then 1
+	when id = 4 then 2
+	when id = 8 then 3
+	when id = 2 then 4
+end ide,
+"name" descripcion
+from account_tax
+where id in (2,4,6,8)
+order by ide) as d'
+)as tax
+("invoice_id" numeric, "idpsuper" varchar, "idpregular" varchar, "idpdiesel" varchar, "iva" varchar)
+) as im
+on ai.id = im.invoice_id
+where ai.date_invoice = $P{p_fecha_t}
+and ai.state not in ('cancel')
+and ai.company_id = 1
+group by ai.date_invoice
+--------------------------------------------------------------------------------------------------------------------------------------------
+union all
+--------------------------------------------------------------------------------------------------------------------------------------------
+select 
+'Ordenes colocados para ' ||to_char($P{p_fecha_despues_t}::date,'dd/mm/yyyy')||' (Gal)' as descripcion, 
+cast(qt.super as double precision) as super, 
+cast(qt.regular as double precision) as regular, 
+cast(qt.diesel as double precision) as diesel,
+cast(qt.super as double precision)+cast(qt.regular as double precision)+cast(qt.diesel as double precision) as total
+from(
+select cant.date, cant.super, cant.regular, cant.diesel
+from crosstab(
+'
+select 
+info.date_invoice,
+case 
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.cantidad
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(
+select 
+cast(ai.validity_date::text as date) as date_invoice ,
+ail.product_id, 
+sum(ail.product_uom_qty) cantidad
+from sale_order as ai
+left join sale_order_line as ail
+on ai.id = ail.order_id 
+where ail.product_id in(8,9,10)
+and ai.state not in (''cancel'')
+and ai.company_id = 1
+group by ai.validity_date, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by date_invoice desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as cant
+("date" date, "super" varchar, "regular" varchar, "diesel" varchar)
+) qt
+where qt.date = $P{p_fecha_despues_t}
+--------------------------------------------------------------------------------------------------------------------------------------------
+union all
+--------------------------------------------------------------------------------------------------------------------------------------------
+select 
+'Ordenes colocadas para ' ||to_char($P{p_fecha_despues_t}::date,'dd/mm/yyyy')||' (BBLS)' as descripcion, 
+cast(qtb.super as double precision)/42.00 as super, 
+cast(qtb.regular as double precision)/42.00 as regular, 
+cast(qtb.diesel as double precision)/42.00 as diesel,
+cast(qtb.super as double precision)/42.00+cast(qtb.regular as double precision)/42.00+cast(qtb.diesel as double precision)/42.00 as total
+from(
+select cant.date, cant.super, cant.regular, cant.diesel
+from crosstab(
+'
+select 
+info.date_invoice,
+case 
+	when pla.descripcion = ''Diesel'' then ''Diesel''
+	else pla.descripcion
+end as descripcion,
+info.cantidad
+from (
+select pp.id as produc_id, pt."name" as descripcion 
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id
+and pt.id in (8,9,10)
+) as pla
+left join
+(
+select 
+cast(ai.validity_date::text as date) as date_invoice ,
+ail.product_id, 
+sum(ail.product_uom_qty) cantidad
+from sale_order as ai
+left join sale_order_line as ail
+on ai.id = ail.order_id 
+where ail.product_id in(8,9,10)
+and ai.state not in (''cancel'')
+and ai.company_id = 1
+group by ai.validity_date, ail.product_id
+) as info
+on pla.produc_id = info.product_id
+order by date_invoice desc
+',
+'
+select t.descripcion
+from(
+select distinct descripcion, id
+from(
+select 
+case 
+	when pt."name" = ''Diesel'' then ''Diesel''
+	else pt."name"
+end as descripcion,
+case 
+	when pt."name" = ''Super'' then 1
+	when pt."name" = ''Regular'' then 2
+	when pt."name" = ''Diesel'' then 3
+end as id
+from product_template pt 
+inner join product_product pp 
+on pt.id = pp.product_tmpl_id 
+where pt.company_id = 1
+and pt.id in (8,9,10)) as ti) as t
+order by t.id
+'
+)as cant
+("date" date, "super" varchar, "regular" varchar, "diesel" varchar)
+) qtb
+where qtb.date = $P{p_fecha_despues_t}]]>
+		</queryString>
+		<field name="descripcion" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+		</field>
+		<field name="super" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="super"/>
+		</field>
+		<field name="regular" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="regular"/>
+		</field>
+		<field name="diesel" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="diesel"/>
+		</field>
+		<field name="total" class="java.lang.Double">
+			<property name="com.jaspersoft.studio.field.label" value="total"/>
+		</field>
+	</subDataset>
+	<parameter name="p_fecha" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select *
+from x_parametros_cob xpc 
+where xpc.x_fecha = $P{p_fecha}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="create_uid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="create_uid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="create_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="create_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="write_uid" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="write_uid"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="x_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="write_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="write_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="x_fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_tasa" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_tasa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_fecha_despues" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="x_fecha_despues"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_super_importacion" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_super_importacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_regular_importacion" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_regular_importacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_diesel_importacion" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_diesel_importacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_supoer_loca" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_supoer_loca"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_regular_local" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_regular_local"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_diesel_local" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_diesel_local"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_valor_promedio_importacion" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_valor_promedio_importacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_valor_promedio_local" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_valor_promedio_local"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_subsidio_super" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_subsidio_super"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_subsidio_regular" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_subsidio_regular"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<field name="x_subsidio_diesel" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="x_subsidio_diesel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="x_parametros_cob"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<textField>
+				<reportElement x="5" y="0" width="620" height="30" uuid="538eb277-fe98-4161-8586-57f08b555de3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd").format($P{p_fecha}) + " de " + (new SimpleDateFormat("MMMM",new Locale("es", "ES")).format($P{p_fecha})).toUpperCase() + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="360" splitType="Stretch">
+			<componentElement>
+				<reportElement x="5" y="0" width="720" height="60" uuid="d1febcdb-5b00-474b-92b7-32935e1f70a3">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 5_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 5_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table 5_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dtscob" uuid="708511ad-c2b6-48cb-8041-47d8c38f6597">
+						<datasetParameter name="p_fecha_t">
+							<datasetParameterExpression><![CDATA[$P{p_fecha}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_fecha_despues_t">
+							<datasetParameterExpression><![CDATA[$F{x_fecha_despues}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_tipo_cambio_t">
+							<datasetParameterExpression><![CDATA[$F{x_tasa}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_tipo_subsidio_super_t">
+							<datasetParameterExpression><![CDATA[$F{x_subsidio_super}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_tipo_subsidio_regular_t">
+							<datasetParameterExpression><![CDATA[$F{x_subsidio_regular}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="p_tipo_subsidio_diesel_t">
+							<datasetParameterExpression><![CDATA[$F{x_subsidio_diesel}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="320" uuid="e8123b60-eb8b-4974-80b9-4c00d9601643">
+						<jr:columnHeader style="Table 5_CH" height="30">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="320" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="d4dcc813-4dfb-4485-ab73-175de2d0c06e">
+									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+								</reportElement>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Descripcion]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 5_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="320" height="30" uuid="9973d620-ced6-40fc-b14b-1e4a43d716a0"/>
+								<box leftPadding="5"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="80a661d2-d929-4f12-a10f-b554c3b21290">
+						<jr:columnHeader style="Table 5_CH" height="30">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="57f1517b-a583-40a2-b0d4-33f44acd8586"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Super]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 5_TD" height="30">
+							<textField pattern="#,###.00000">
+								<reportElement x="0" y="0" width="100" height="30" uuid="ca75af16-ec88-4c0a-8876-554d60504a2a"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{super}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="289db8e7-0d6d-4cd9-9c54-b364fa60339d">
+						<jr:columnHeader style="Table 5_CH" height="30">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="3f334949-e076-463e-b426-5b78b11b2498"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Regular]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 5_TD" height="30">
+							<textField pattern="#,###.00000">
+								<reportElement x="0" y="0" width="100" height="30" uuid="f21300e7-7778-47af-b9f0-d57bcc8ea5bb"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{regular}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="5ba5233b-0d7e-43b5-a723-bfeca0b3883a">
+						<jr:columnHeader style="Table 5_CH" height="30">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="f4fffdf4-bd39-4b52-9f77-32de5021baf1"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Diesel]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 5_TD" height="30">
+							<textField pattern="#,###.00000">
+								<reportElement x="0" y="0" width="100" height="30" uuid="b1de9e24-b3d5-4b83-baef-77d1aa6876ee"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{diesel}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="d7a87d3a-4aa2-4c42-804e-09b20b3876af">
+						<jr:columnHeader style="Table 5_CH" height="30">
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="9643d1c0-5529-4ca1-994c-4efc2becc341"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 5_TD" height="30">
+							<textField pattern="#,###.00000">
+								<reportElement x="0" y="0" width="100" height="30" uuid="cb13a91d-d141-4356-9f54-14808cbcd745"/>
+								<box rightPadding="5"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement mode="Opaque" x="5" y="255" width="320" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="a57b45bf-bfb9-4ef9-bb33-5a5d93885d33"/>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tasa de cambio (Q/US$)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="325" y="255" width="100" height="30" uuid="ee26bab4-73d7-46ba-b5b8-44e75adc435a">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{x_tasa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="5" y="285" width="320" height="15" forecolor="#FFFFFF" backcolor="#1FA670" uuid="b7bd4c6b-7d9f-4978-a4de-f25f6e2bc5ef">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="325" y="285" width="100" height="15" forecolor="#FFFFFF" backcolor="#1FA670" uuid="ec421766-e4d6-4216-bb65-a472cc0a6adf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Super]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="425" y="285" width="100" height="15" forecolor="#FFFFFF" backcolor="#1FA670" uuid="6ba0aa57-172f-40f8-9a26-0e5b5f1210f8">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Regular]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="525" y="285" width="100" height="15" forecolor="#FFFFFF" backcolor="#1FA670" uuid="b908fd6d-bb23-412e-ba4b-811f8bf0c76c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Diesel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="625" y="285" width="100" height="15" forecolor="#FFFFFF" backcolor="#1FA670" uuid="464ff0c2-8b01-4d6e-8cc0-de3798bc709a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="725" y="285" width="180" height="15" forecolor="#FFFFFF" backcolor="#1FA670" uuid="4ab9c60d-a8a9-414c-b714-de4165e2e39c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Promedio (US$/Bbls)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="905" y="285" width="135" height="15" forecolor="#FFFFFF" backcolor="#1FA670" uuid="593ee00f-8cc5-4f12-ab3b-ef70cb83ca62">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total (US$)]]></text>
+			</staticText>
+			<textField pattern="#,###.00#">
+				<reportElement x="325" y="300" width="100" height="30" uuid="50a9ca8e-0d7d-4ba2-8451-d18208716219">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_super_importacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="425" y="300" width="100" height="30" uuid="f9e7cea3-6fab-4565-bf3f-00846e6a51d2"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_regular_importacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="525" y="300" width="100" height="30" uuid="1587ceed-b2da-4f78-bda8-bf8925c79cd4"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_diesel_importacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="325" y="330" width="100" height="30" uuid="f0433fae-e2b6-41f3-b389-bfa2687fc077"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_supoer_loca}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="425" y="330" width="100" height="30" uuid="86c1dcc2-46ea-4e29-a2b5-3413cf5673e4"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_regular_local}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="525" y="330" width="100" height="30" uuid="ea493cd9-4140-4d6c-96fd-557fb6c9d120"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_diesel_local}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="725" y="300" width="180" height="30" uuid="d743d7f3-6679-4409-a6fe-d88244b68325"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_valor_promedio_importacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="725" y="330" width="180" height="30" uuid="76acc5fc-2629-440c-86c7-219a42b23633"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_valor_promedio_local}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="625" y="300" width="100" height="30" uuid="550e7321-c927-4f60-b5cb-4cc07e86835c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_super_importacion}+$F{x_regular_importacion}+$F{x_diesel_importacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="625" y="330" width="100" height="30" uuid="463a9fc1-7e75-4cef-8675-11d91b5f7fcf"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{x_supoer_loca}+$F{x_regular_local}+$F{x_diesel_local}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="905" y="300" width="135" height="30" uuid="80e0f111-497a-4dc4-b200-c6d3218d83a6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{x_super_importacion}+$F{x_regular_importacion}+$F{x_diesel_importacion})*$F{x_valor_promedio_importacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.00#">
+				<reportElement x="905" y="330" width="135" height="30" uuid="f426850b-8e07-4d8d-8c85-02e3a0b7cdd8">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{x_supoer_loca}+$F{x_regular_local}+$F{x_diesel_local})*$F{x_valor_promedio_local}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="5" y="330" width="320" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="a884536d-bed8-4a85-93b3-8634d90d62fd">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Stock para apertura " + new SimpleDateFormat("dd/MM/yyyy").format($F{x_fecha_despues}) + " Compra Local (Bbls)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="5" y="300" width="320" height="30" forecolor="#FFFFFF" backcolor="#1FA670" uuid="1f3b84f2-503a-47d2-90f0-d74547d380ab">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#000000"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Stock para apertura " + new SimpleDateFormat("dd/MM/yyyy").format($F{x_fecha_despues}) + " (Bbls)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

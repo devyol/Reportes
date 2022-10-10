@@ -774,7 +774,7 @@ cast(ge.code::text as numeric)]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA["al " + new SimpleDateFormat("dd").format($P{p_fecha_final}) + " de " + new SimpleDateFormat("MMMM").format($P{p_fecha_final}) + " del "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["al " + new SimpleDateFormat("dd").format($P{p_fecha_final}) + " de " + (new SimpleDateFormat("MMMM",new Locale("es", "ES")).format($P{p_fecha_final})).toUpperCase()  + " del "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="80" y="90" width="400" height="15" uuid="e7feeb44-959f-45e7-9d38-dfa4c347de33">

@@ -484,13 +484,13 @@ and t1.code = t2.code
 				<textFieldExpression><![CDATA["MAYOR GENERAL"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="180" y="75" width="200" height="15" uuid="360a27fb-629d-4364-b1e9-b3ebd27c878b">
+				<reportElement x="130" y="75" width="310" height="15" uuid="360a27fb-629d-4364-b1e9-b3ebd27c878b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("dd").format($P{p_fecha_inicial}) + " " + new SimpleDateFormat("MMMM").format($P{p_fecha_inicial}) + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_inicial}) + " al " + new SimpleDateFormat("dd").format($P{p_fecha_final}) + " " + new SimpleDateFormat("MMMM").format($P{p_fecha_final}) + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd").format($P{p_fecha_inicial}) + " " + (new SimpleDateFormat("MMMM",new Locale("es", "ES")).format($P{p_fecha_inicial})).toUpperCase() + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_inicial}) + " al " + new SimpleDateFormat("dd").format($P{p_fecha_final}) + " " + (new SimpleDateFormat("MMMM",new Locale("es", "ES")).format($P{p_fecha_final})).toUpperCase() + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="80" y="90" width="400" height="15" uuid="e7feeb44-959f-45e7-9d38-dfa4c347de33">

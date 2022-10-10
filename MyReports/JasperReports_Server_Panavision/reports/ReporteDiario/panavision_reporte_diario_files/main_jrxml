@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="panavision_reporte_diario" pageWidth="612" pageHeight="792" columnWidth="608" leftMargin="2" rightMargin="2" topMargin="5" bottomMargin="5" uuid="4f1addf7-561c-4242-9ca3-9961cc35e99d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://157.245.134.183:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/ReporteDiario/panavision_reporte_diario_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/ReporteDiario/panavision_reporte_diario"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_fecha_inicial" class="java.sql.Date"/>
+	<parameter name="p_fecha_final" class="java.sql.Date"/>
+	<parameter name="p_moneda_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="p_no_hoja" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+am.id as move_id,
+rp."name" as compania,
+rp.vat as nit,
+case when rcu.symbol = '$' then 'Dolares'
+when rcu.symbol = 'Q' then 'Quetzales'
+end as moneda,
+to_char(am."date",'dd/mm/yyyy')as fecha,
+am."name" as asiento,
+am."ref" as documento,
+am."name" as referencia,
+am.narration as comentario
+from account_move am 
+inner join res_company rc
+on am.company_id = rc.id 
+inner join res_partner rp 
+on rp.id = rc.partner_id
+inner join res_currency rcu
+on rcu.id = am.currency_id
+where am.state = 'posted'
+and $X{IN,rcu.id,p_moneda_id}
+and cast(am."date"::text as date) between cast($P{p_fecha_inicial}::text as date) and cast($P{p_fecha_final}::text as date)
+order by am."date"]]>
+	</queryString>
+	<field name="move_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="move_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move"/>
+	</field>
+	<field name="compania" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="compania"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="nit" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="nit"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="moneda" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="moneda"/>
+	</field>
+	<field name="fecha" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+	</field>
+	<field name="asiento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="asiento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move"/>
+	</field>
+	<field name="documento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="documento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move"/>
+	</field>
+	<field name="referencia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="referencia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move"/>
+	</field>
+	<field name="comentario" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="comentario"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="account_move"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement x="200" y="17" width="200" height="12" uuid="1a33e637-1b3e-40fd-aa73-933693497ddd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{compania}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="29" width="150" height="12" uuid="c945968d-87f1-4162-85bf-34ade7294d4e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N.I.T.: " + $F{nit}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="200" y="5" width="199" height="12" uuid="c6f815d2-44bb-473b-8ad1-b0752d72ff4f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LIBRO DIARIO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="160" y="29" width="280" height="12" uuid="f081955b-c8e1-454c-ac15-bf55cbbd9335">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Del "+new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_inicial})+" Al " +new SimpleDateFormat("dd/MM/yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="5" width="160" height="12" uuid="0d691a46-0472-48c1-aa81-01df801e3bed">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(Expresado en "+$F{moneda}+")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="20" width="160" height="12" uuid="947b778f-47f5-4114-a3a8-03a26a1c7819">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Folio:  "+ ($V{PAGE_NUMBER}+($P{p_no_hoja}-1))]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="60" height="15" uuid="2e461d43-c324-4ff2-a2ed-1a0e8dbce8d7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43f69cf2-3bed-4d92-94b9-ef0803dee9d3"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="0" width="110" height="15" uuid="6426f8f8-1798-4144-9064-14185f0c6468">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="38d10759-a34c-47ed-8faf-aaf01c780689"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Referencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="60" height="15" uuid="0d1a05cb-8427-4ed4-b0e2-6da4b2aa0d11">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43f69cf2-3bed-4d92-94b9-ef0803dee9d3"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="140" height="15" uuid="288d845a-ce64-48e8-9a96-29d8eee93b06">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43f69cf2-3bed-4d92-94b9-ef0803dee9d3"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="60" height="15" uuid="d65acb6a-6993-474e-ae2d-f8501878df9e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43f69cf2-3bed-4d92-94b9-ef0803dee9d3"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Debe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="540" y="0" width="60" height="15" uuid="eefec62d-b22e-4338-afdf-b53bc1aa73b1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43f69cf2-3bed-4d92-94b9-ef0803dee9d3"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box rightPadding="5">
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Haber]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="0" width="110" height="15" uuid="af794ebe-7f8a-49d6-933f-e671018f3304">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bfa82adf-6c59-46e0-abc3-5a53e20b67ce"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="70" splitType="Stretch">
+			<subreport>
+				<reportElement x="280" y="0" width="320" height="70" uuid="e4f92f5a-3671-4fd6-b91b-48f2ef3b6b06">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="p_move_id">
+					<subreportParameterExpression><![CDATA[$F{move_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["repo:panavision_subreporte_diario.jrxml"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="0" y="0" width="60" height="20" uuid="0b72fac2-8891-4e57-9c90-d1bc920bc946">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="43f69cf2-3bed-4d92-94b9-ef0803dee9d3"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="170" y="0" width="110" height="20" uuid="516be75a-6d73-49a8-8094-3c610c465c12">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="38d10759-a34c-47ed-8faf-aaf01c780689"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referencia}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="0" width="110" height="20" uuid="d6154715-f91c-413a-987e-9657f1a03846">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bfa82adf-6c59-46e0-abc3-5a53e20b67ce"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="40" width="270" height="30" uuid="2fe62b66-0fd1-4738-b5ca-526fb2838caf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d56866f9-a180-4e0a-a475-f60d3cb51022"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comentario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

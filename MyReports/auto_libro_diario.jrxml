@@ -203,7 +203,7 @@ order by cast(aj.x_studio_poliza::text as numeric), aml."date", aml.id ) as ifp]
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("MMMM").format($P{p_fecha_final}).toUpperCase() + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new SimpleDateFormat("MMMM",new Locale("es", "ES")).format($P{p_fecha_final})).toUpperCase() + " de "+ new SimpleDateFormat("yyyy").format($P{p_fecha_final})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="80" y="90" width="400" height="15" uuid="e7feeb44-959f-45e7-9d38-dfa4c347de33">
@@ -271,7 +271,7 @@ order by cast(aj.x_studio_poliza::text as numeric), aml."date", aml.id ) as ifp]
 				</reportElement>
 			</line>
 			<textField>
-				<reportElement x="504" y="90" width="50" height="15" uuid="d7f3b028-41e8-4463-a291-f5b6f95d3cc3">
+				<reportElement x="490" y="90" width="90" height="15" uuid="d7f3b028-41e8-4463-a291-f5b6f95d3cc3">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>

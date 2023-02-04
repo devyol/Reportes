@@ -147,11 +147,6 @@
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/debe_mayor.jasper</location>
 		</link>
 		<link>
-			<name>ejemplo.jrxml</name>
-			<type>1</type>
-			<location>/home/erik/Escritorio/ejemplo.jrxml</location>
-		</link>
-		<link>
 			<name>factura_estacion_ipisa.jasper</name>
 			<type>1</type>
 			<location>/home/erik/JaspersoftWorkspace/Reportes/MyReports/factura_estacion_ipisa.jasper</location>
@@ -170,26 +165,6 @@
 			<name>haber_mayor.jasper</name>
 			<type>1</type>
 			<location>/home/erik/Documentos/ReportesJasper/Reportes/MyReports/haber_mayor.jasper</location>
-		</link>
-		<link>
-			<name>libreria_revelacion_ganancias_duenio_1.jrxml</name>
-			<type>1</type>
-			<location>/home/erik/Documentos/Devyol/Libreria Revelacion/InformesLibreriaRevelacion/libreria_revelacion_ganancias_duenio.jrxml</location>
-		</link>
-		<link>
-			<name>libreria_revelacion_ventas.jrxml</name>
-			<type>1</type>
-			<location>/home/erik/Documentos/Devyol/Libreria Revelacion/InformesLibreriaRevelacion/libreria_revelacion_ventas.jrxml</location>
-		</link>
-		<link>
-			<name>mc_libro_compras(1).jrxml</name>
-			<type>1</type>
-			<location>/home/erik/Descargas/mc_libro_compras(1).jrxml</location>
-		</link>
-		<link>
-			<name>mc_libro_compras.jrxml</name>
-			<type>1</type>
-			<location>/home/erik/Descargas/mc_libro_compras.jrxml</location>
 		</link>
 		<link>
 			<name>petrosur_reporte_pagos.jrxml</name>
